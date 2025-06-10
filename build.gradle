@@ -1,0 +1,66 @@
+plugins {
+    id 'org.springframework.boot' version '3.2.5'
+    id 'io.spring.dependency-management' version '1.1.4'
+    id 'java'
+    id 'org.jetbrains.kotlin.jvm' version '1.9.23'
+    id 'org.jetbrains.kotlin.plugin.spring' version '1.9.23'
+    id 'org.jetbrains.kotlin.kapt' version '1.9.23'
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    droolsVersion = '7.73.0.Final'
+}
+
+dependencies {
+    // Kotlin
+    implementation "org.jetbrains.kotlin:kotlin-reflect"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+
+    // Spring Boot & JPA
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'com.mysql:mysql-connector-j'
+
+    // QueryDSL
+    implementation "com.querydsl:querydsl-jpa:5.0.0:jakarta"
+    kapt "com.querydsl:querydsl-apt:5.0.0:jakarta"
+
+    //swagger
+    implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0"
+
+    //Drools engine
+    implementation "org.kie:kie-api:${droolsVersion}"
+    implementation "org.kie:kie-internal:${droolsVersion}"
+    implementation "org.kie:kie-ci:${droolsVersion}"
+    implementation "org.drools:drools-core:${droolsVersion}"
+    implementation "org.drools:drools-compiler:${droolsVersion}"
+
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+kapt {
+    correctErrorTypes = true
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs += 'build/generated/source/kapt/main'
+        }
+    }
+}
+
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+    kotlinOptions {
+        jvmTarget = '17'  // Java 버전에 맞춰서
+    }
+}

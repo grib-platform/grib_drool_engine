@@ -1,0 +1,51 @@
+spring:
+  application:
+    name: drools
+  profiles:
+    group:
+      local: local
+      dev:  dev
+  servlet:
+    multipart:
+      max-file-size: 2GB
+      max-request-size: 20GB
+      enabled: true
+
+---
+server:
+  port: 8020
+spring:
+  config:
+    activate:
+      on-profile: local
+  datasource:
+    url: jdbc:mysql://192.168.0.240:3306/aiot_dev
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: grib
+    password: grib12!@
+  jpa:
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+
+
+---
+server:
+  port: 8030
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    url: jdbc:mysql://192.168.0.240:3306/aiot_dev
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: grib
+    password: grib12!@
+  jpa:
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: none
+    show-sql: true
