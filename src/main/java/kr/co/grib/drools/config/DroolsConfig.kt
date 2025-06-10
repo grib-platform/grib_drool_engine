@@ -7,6 +7,7 @@ import org.kie.internal.io.ResourceFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
+
 @Configuration
 class DroolsConfig {
 
@@ -16,9 +17,8 @@ class DroolsConfig {
         val kieService = KieServices.Factory.get()
         val kiefileSystem = kieService.newKieFileSystem()
 
-        val dslr  = ResourceFactory.newClassPathResource("rules.dslr", "UTF-8")
-
-        kiefileSystem.write("src/main/resources/rules/rules.dslr", dslr)
+        val dslr  = ResourceFactory.newClassPathResource("rules/rule.drl", "UTF-8")
+        kiefileSystem.write("rules/rule.drl", dslr)
 
         val kieBuilder = kieService.newKieBuilder(kiefileSystem).buildAll()
         val results = kieBuilder.results

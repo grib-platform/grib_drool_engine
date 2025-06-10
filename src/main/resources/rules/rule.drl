@@ -1,0 +1,8 @@
+package rules
+
+rule "hello world rule"
+when
+    eval(true)
+then
+    System.out.println("Drools is working!");
+end
