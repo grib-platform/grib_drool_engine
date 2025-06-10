@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import kr.co.grib.drools.api.base.dto.BaseCtlDto
 import kr.co.grib.drools.api.rules.dto.RuleRequestDto
 import kr.co.grib.drools.api.rules.service.RuleService
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -26,7 +27,8 @@ class RuleController (
         @RequestBody req: RuleRequestDto
     ): ResponseEntity<BaseCtlDto> =
         ResponseEntity(
-            null
+            ruleService.doGetRules(req),
+            HttpStatus.OK
         )
 
 
