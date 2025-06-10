@@ -5,4 +5,8 @@ import kr.co.grib.drools.api.rules.dto.RuleRequestDto
 
 interface RuleService {
     fun doGetRules(req: RuleRequestDto):BaseCtlDto
+
+
+
+
 }

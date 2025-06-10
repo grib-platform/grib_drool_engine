@@ -49,3 +49,7 @@ spring:
     hibernate:
       ddl-auto: none
     show-sql: true
+
+---
+drools:
+  rule-path: rules/rule.drl
