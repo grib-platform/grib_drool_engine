@@ -29,6 +29,10 @@ spring:
     hibernate:
       ddl-auto: none
     show-sql: true
+  logging:
+    level:
+      root: debug
+      kr.co.grib.drools: debug
 
 
 ---
@@ -49,7 +53,12 @@ spring:
     hibernate:
       ddl-auto: none
     show-sql: true
+  logging:
+    level:
+      root: info
+      kr.co.grib.drools: info
 
 ---
 drools:
   rule-path: rules/rule.drl
+

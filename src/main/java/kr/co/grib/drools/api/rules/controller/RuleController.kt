@@ -5,10 +5,12 @@ import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
 import kr.co.grib.drools.api.base.dto.BaseCtlDto
 import kr.co.grib.drools.api.rules.dto.RuleRequestDto
+import kr.co.grib.drools.api.rules.dto.RuleResponseCtlDto
 import kr.co.grib.drools.api.rules.service.RuleService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -30,6 +32,19 @@ class RuleController (
             ruleService.doGetRules(req),
             HttpStatus.OK
         )
+
+    //<editor-fold desc="rule 생성 및 evaluation">
+    @Operation(summary = "Rule 평가" , description = "사용 가능 한 rule 이 있는지 조회 합니다.")
+    @PostMapping
+    fun doEvaluateRules(
+        @Parameter(required = true, description = "Ask rule 객체")
+        @RequestBody req: RuleRequestDto
+    ): ResponseEntity<RuleResponseCtlDto> =
+        ResponseEntity(
+            ruleService.doEvaluateRules(req),
+            HttpStatus.OK
+        )
+    //</editor-fold desc="rule 생성 및 evaluation">
 
 
 
