@@ -47,5 +47,21 @@ class RuleController (
     //</editor-fold desc="rule 생성 및 evaluation">
 
 
+    //<editor-fold desc="rule 조회">
+
+
+    //</editor-fold desc="rule 조회">
+
+
+    //<editor-fold desc="rule 수정">
+
+    //</editor-fold desc="rule 수정">
+
+    //<editor-fold desc="rule 삭제">
+
+    //</editor-fold desc="rule 삭제">
+
+
+
 
 }

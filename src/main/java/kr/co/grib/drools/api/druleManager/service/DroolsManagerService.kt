@@ -15,4 +15,17 @@ interface DroolsManagerService {
     fun initKieSession(groupId: String): KieSession?
     //<editor-fold desc="룰 그룹별 분리된 세션 처리, 동적으로 rule 관리 하고자 할때">
 
+    //<editor-fold desc="룰 존재 여부 확인 ">
+    fun selectRule(groupId: String): Boolean
+    //</editor-fold desc="룰 존재 여부 확인">
+
+    //<editor-fold desc="룰 ">
+
+    //</editor-fold desc="룰 존재 여부 확인 ">
+
+
+
+
+
+
 }

@@ -46,7 +46,7 @@ class RuleServiceImpl (
                 return rtn
             }
 
-            droolsManagerService.initRule(req.groupId, rulePath)
+            droolsManagerService.initRule(req.groupId,rulePath)
             val kieSession = droolsManagerService.initKieSession(req.groupId)
             if (kieSession == null){
                 rtn.success = false
