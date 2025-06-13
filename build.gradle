@@ -29,6 +29,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'com.mysql:mysql-connector-j'
 
+    //test용 db
+    implementation "com.h2database:h2"
+
     //logback
     implementation "org.springframework.boot:spring-boot-starter-logging"
 
