@@ -3,9 +3,9 @@ package rules
 import kr.co.grib.drools.api.druleManager.dto.RuleFactDto
 import kr.co.grib.drools.api.druleManager.dto.ActionResultDto
 
-rule "Check function value high"
+rule "[[${ruleName}]]"
 when
-    $fact : RuleFactDto(functionValue > 100.0)
+    $fact : RuleFactDto(functionValue > [[${functionValue}]])
     $result : ActionResultDto()
 then
     $result.setResult("ACTION_REQUIRED");
@@ -13,9 +13,9 @@ then
     System.out.println("Rule fired: functionValue > 100");
 end
 
-rule "Check function value medium"
+rule "[[${ruleName}]]"
 when
-    $fact : RuleFactDto(deviceId == "device-1" && functionValue > 50.0 && functionValue <= 100.0)
+    $fact : RuleFactDto(deviceId == [[${deviceId}]] && functionValue > [[${functionValue}]] && functionValue <= [[${functionValue}]])
     $result : ActionResultDto()
 then
     $result.setResult("CAUTION");
@@ -23,9 +23,9 @@ then
     System.out.println("Rule fired: functionValue between 50 and 100");
 end
 
-rule "Check function value low"
+rule "[[${ruleName}]]"
 when
-    $fact : RuleFactDto(functionValue <= 50.0)
+    $fact : RuleFactDto(functionValue <= [[${functionValue}]])
     $result : ActionResultDto()
 then
     $result.setResult("NORMAL");

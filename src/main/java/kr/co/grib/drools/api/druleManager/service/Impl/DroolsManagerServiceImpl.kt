@@ -1,12 +1,16 @@
 package kr.co.grib.drools.api.druleManager.service.Impl
 
+import kr.co.grib.drools.api.druleManager.dto.ActionResultDto
+import kr.co.grib.drools.api.druleManager.dto.RuleFactDto
 import kr.co.grib.drools.api.druleManager.service.DroolsManagerService
 import kr.co.grib.drools.utils.getLogger
 import org.kie.api.KieServices
 import org.kie.api.builder.Message
+import org.kie.api.io.ResourceType
 import org.kie.api.runtime.KieContainer
 import org.kie.api.runtime.KieSession
 import org.kie.internal.io.ResourceFactory
+import org.kie.internal.utils.KieHelper
 import org.springframework.stereotype.Service
 
 @Service
@@ -82,12 +86,37 @@ class DroolsManagerServiceImpl(
                throw IllegalStateException("initKieSession.error.groupId.$groupId")
           }
      }
-
     //</editor-fold desc="룰 그룹별 분리된 세션 처리, 동적으로 rule 관리 하고자 할때">
 
-    override fun selectRule(groupId: String): Boolean {
-        TODO("Not yet implemented")
+    //<editor-fold desc="kieHelper를 이용해 동적 .drl 문자열을 처리 할때">
+    override fun getRoleFromDrl(
+        drl: String,
+        fact: RuleFactDto
+    ): ActionResultDto {
+        val rtn = ActionResultDto()
+        val kieHelper = KieHelper()
+        try {
+            kieHelper.addContent(drl, ResourceType.DRL)
+            val kieSession = kieHelper.build().newKieSession()
+            if (kieSession == null){
+                logger.debug("kieSession.is.null")
+                return rtn
+            }
+
+            kieSession.insert(fact)
+            kieSession.insert(rtn)
+            kieSession.fireAllRules()
+            kieSession.dispose()
+
+            return  rtn
+        }catch (e: Exception){
+            logger.error("Error.kieSession.{}", e)
+        }
+
+        return rtn
     }
+    //</editor-fold desc="kieHelper를 이용해 동적 .drl 문자열을 처리 할때">
+
 
 
 

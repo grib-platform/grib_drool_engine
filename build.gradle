@@ -46,6 +46,9 @@ dependencies {
     implementation "org.drools:drools-core:${droolsVersion}"
     implementation "org.drools:drools-compiler:${droolsVersion}"
 
+    //tymeleaf for drl 파일
+    implementation "org.springframework.boot:spring-boot-starter-thymeleaf"
+
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }

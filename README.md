@@ -14,6 +14,11 @@
 http://localhost:8020/swagger-ui/index.html
 ```
 
+## drl 파일 양식 (template)
+```
+thymeleaf 를 사용 
+```
+
 ## 배포 
 ```
  jenkins 

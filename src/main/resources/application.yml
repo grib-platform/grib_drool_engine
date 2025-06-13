@@ -61,4 +61,10 @@ spring:
 ---
 drools:
   rule-path: rules/rule.drl
+  template:
+    prefix: templates/
+    suffix: .drl
+    encoding: UTF-8
+    order: 1
+
 
