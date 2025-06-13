@@ -29,6 +29,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'com.mysql:mysql-connector-j'
 
+    //test용 db
+    implementation "com.h2database:h2"
+
     //logback
     implementation "org.springframework.boot:spring-boot-starter-logging"
 
@@ -45,6 +48,9 @@ dependencies {
     implementation "org.kie:kie-ci:${droolsVersion}"
     implementation "org.drools:drools-core:${droolsVersion}"
     implementation "org.drools:drools-compiler:${droolsVersion}"
+
+    //tymeleaf for drl 파일
+    implementation "org.springframework.boot:spring-boot-starter-thymeleaf"
 
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
