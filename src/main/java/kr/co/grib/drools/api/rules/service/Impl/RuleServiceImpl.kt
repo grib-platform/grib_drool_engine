@@ -81,4 +81,22 @@ class RuleServiceImpl (
         }
         return rtn
     }
+
+    override fun doEvaluateThymeleafRules(
+        req: RuleRequestDto
+    ): RuleResponseCtlDto
+    {
+        val rtn = RuleResponseCtlDto()
+        try{
+
+
+
+
+        }catch (e: Exception){
+            logger.error("error.$e")
+        }
+        return rtn
+    }
+
+
 }

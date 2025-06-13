@@ -33,7 +33,7 @@ class RuleController (
             HttpStatus.OK
         )
 
-    //<editor-fold desc="rule 생성 및 evaluation">
+    //<editor-fold desc="rule 생성 및 evaluation , version drl 파일 ">
     @Operation(summary = "Rule 평가" , description = "사용 가능 한 rule 이 있는지 조회 합니다.")
     @PostMapping
     fun doEvaluateRules(
@@ -44,7 +44,25 @@ class RuleController (
             ruleService.doEvaluateRules(req),
             HttpStatus.OK
         )
-    //</editor-fold desc="rule 생성 및 evaluation">
+    //</editor-fold desc="rule 생성 및 evaluation , version drl 파일 ">
+
+    //<editor-fold desc="rule 생성 및 evaluation , version thymeleaf template 파일 ">
+    @Operation(summary = "Rule 평가" , description = "사용 가능 한 rule 이 있는지 조회 합니다.(thymeleaf 버전)")
+    @PostMapping
+    fun doEvaluateThymeleafRules(
+        @Parameter(required = true, description = "Ask rule 객체")
+        @RequestBody req: RuleRequestDto
+    ): ResponseEntity<RuleResponseCtlDto> =
+        ResponseEntity(
+            ruleService.doEvaluateThymeleafRules(req),
+            HttpStatus.OK
+        )
+
+
+    //<editor-fold desc="rule 생성 및 evaluation , version thymeleaf template 파일 ">
+
+
+
 
 
     //<editor-fold desc="rule 조회">
