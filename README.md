@@ -5,7 +5,7 @@
  언어  :  kotlin 
  spring boot version :  3.2.5
  DB :  mysql 
- Drool engine version : 7.76.0.Final
+ Drool engine version : 8.44.0.Final
    
 ````
 
@@ -14,3 +14,12 @@
 http://localhost:8020/swagger-ui/index.html
 ```
 
+## drl 파일 양식 (template)
+```
+thymeleaf 를 사용 
+```
+
+## 배포 
+```
+ jenkins 
+```

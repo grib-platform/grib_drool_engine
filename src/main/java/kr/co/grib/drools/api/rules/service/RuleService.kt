@@ -9,4 +9,6 @@ interface RuleService {
 
     fun doEvaluateRules(req: RuleRequestDto): RuleResponseCtlDto
 
+    fun doEvaluateThymeleafRules(req: RuleRequestDto): RuleResponseCtlDto
+
 }

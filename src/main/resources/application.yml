@@ -5,6 +5,7 @@ spring:
     group:
       local: local
       dev:  dev
+      test: test
   servlet:
     multipart:
       max-file-size: 2GB
@@ -59,6 +60,36 @@ spring:
       kr.co.grib.drools: info
 
 ---
+server:
+  port: 8040
+spring:
+  config:
+    activate:
+      on-profile: test
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    database-platform: org.hibernate.dialect.H2Dialect
+
+
+
+---
 drools:
   rule-path: rules/rule.drl
+  template:
+    prefix: templates/
+    suffix: .drl
+    encoding: UTF-8
+    order: 1
+
 

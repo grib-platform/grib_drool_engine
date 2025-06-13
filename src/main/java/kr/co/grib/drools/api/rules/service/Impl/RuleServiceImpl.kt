@@ -46,7 +46,7 @@ class RuleServiceImpl (
                 return rtn
             }
 
-            droolsManagerService.initRule(req.groupId, rulePath)
+            droolsManagerService.initRule(req.groupId,rulePath)
             val kieSession = droolsManagerService.initKieSession(req.groupId)
             if (kieSession == null){
                 rtn.success = false
@@ -81,4 +81,22 @@ class RuleServiceImpl (
         }
         return rtn
     }
+
+    override fun doEvaluateThymeleafRules(
+        req: RuleRequestDto
+    ): RuleResponseCtlDto
+    {
+        val rtn = RuleResponseCtlDto()
+        try{
+
+
+
+
+        }catch (e: Exception){
+            logger.error("error.$e")
+        }
+        return rtn
+    }
+
+
 }
