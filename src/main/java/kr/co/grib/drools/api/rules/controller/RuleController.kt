@@ -23,7 +23,7 @@ class RuleController (
     private val ruleService: RuleService
 ){
     @Operation(summary = "RULE 조회" , description = "사용 가능 한 rule 이 있는지 조회 합니다.")
-    @GetMapping
+    @GetMapping("/select")
     fun doGetRules(
         @Parameter(required = true, description = "Ask rule 객체")
         @RequestBody req: RuleRequestDto
@@ -34,32 +34,32 @@ class RuleController (
         )
 
     //<editor-fold desc="rule 생성 및 evaluation , version drl 파일 ">
-    @Operation(summary = "Rule 평가" , description = "사용 가능 한 rule 이 있는지 조회 합니다.")
-    @PostMapping
-    fun doEvaluateRules(
-        @Parameter(required = true, description = "Ask rule 객체")
-        @RequestBody req: RuleRequestDto
-    ): ResponseEntity<RuleResponseCtlDto> =
-        ResponseEntity(
-            ruleService.doEvaluateRules(req),
-            HttpStatus.OK
-        )
+//    @Operation(summary = "Rule 평가" , description = "사용 가능 한 rule 이 있는지 조회 합니다.")
+//    @PostMapping("/evaluate")
+//    fun doEvaluateRules(
+//        @Parameter(required = true, description = "Ask rule 객체")
+//        @RequestBody req: RuleRequestDto
+//    ): ResponseEntity<RuleResponseCtlDto> =
+//        ResponseEntity(
+//            ruleService.doEvaluateRules(req),
+//            HttpStatus.OK
+//        )
     //</editor-fold desc="rule 생성 및 evaluation , version drl 파일 ">
 
-    //<editor-fold desc="rule 생성 및 evaluation , version thymeleaf template 파일 ">
-    @Operation(summary = "Rule 평가" , description = "사용 가능 한 rule 이 있는지 조회 합니다.(thymeleaf 버전)")
-    @PostMapping
-    fun doEvaluateThymeleafRules(
+    //<editor-fold desc="test : rule 생성 및 evaluation , version thymeleaf template 파일 ">
+    @Operation(summary = "Rule 평가" , description = "test")
+    @PostMapping("/test")
+    fun doEvaluateRulesTest(
         @Parameter(required = true, description = "Ask rule 객체")
         @RequestBody req: RuleRequestDto
     ): ResponseEntity<RuleResponseCtlDto> =
         ResponseEntity(
-            ruleService.doEvaluateThymeleafRules(req),
+            ruleService.doEvaluateRulesT(req),
             HttpStatus.OK
         )
 
 
-    //<editor-fold desc="rule 생성 및 evaluation , version thymeleaf template 파일 ">
+    //<editor-fold desc="test : rule 생성 및 evaluation , version thymeleaf template 파일 ">
 
 
 

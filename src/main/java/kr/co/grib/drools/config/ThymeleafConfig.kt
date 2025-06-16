@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration
 import org.thymeleaf.TemplateEngine
 import org.thymeleaf.templatemode.TemplateMode
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver
+import org.thymeleaf.templateresolver.ITemplateResolver
 import org.thymeleaf.templateresolver.StringTemplateResolver
 
 @Configuration
@@ -40,10 +41,12 @@ class ThymeleafConfig(
     //3. TemplateEngine 등록 (파일 + 문자열 둘 다 처리)
     @Bean
     fun droolsTemplateEngine(
-        droolsTemplateResolver: ClassLoaderTemplateResolver
+        droolsTemplateResolver: ClassLoaderTemplateResolver,
+        stringTemplateResolver: StringTemplateResolver
     ): TemplateEngine {
         return TemplateEngine().apply {
-            setTemplateResolver(droolsTemplateResolver)
+            val resolvers: Set<ITemplateResolver> = linkedSetOf(droolsTemplateResolver, stringTemplateResolver)
+            setTemplateResolvers(resolvers)
         }
     }
 
@@ -54,6 +57,9 @@ class ThymeleafConfig(
         lateinit var suffix: String
         lateinit var encoding: String
         var order: Int = 1
+        lateinit var fileName: String
     }
+
+
 
 }

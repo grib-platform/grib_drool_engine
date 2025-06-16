@@ -12,6 +12,7 @@ spring:
       max-request-size: 20GB
       enabled: true
 
+
 ---
 server:
   port: 8020
@@ -85,11 +86,13 @@ spring:
 
 ---
 drools:
-  rule-path: rules/rule.drl
   template:
-    prefix: templates/
-    suffix: .drl
+    prefix: templates/rules/
+    suffix: .txt
     encoding: UTF-8
     order: 1
+    fileName: rule-template
+
+
 
 
