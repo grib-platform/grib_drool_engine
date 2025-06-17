@@ -11,13 +11,20 @@
 
 ## API test
 ```
-http://localhost:8020/swagger-ui/index.html
+ local :  http://localhost:8020/swagger-ui/index.html
 ```
 
-## drl 파일 양식 (template)
+## drl 파일 양식 (text 파일)
 ```
-thymeleaf 를 사용 
+thymeleaf 를 사용하여 template화 
 ```
+
+## DB 테이블 설계 
+![My Logo](readmeImg/DroolsTable.png)
+
+
+## Drools 흐름도 
+
 
 ## 배포 
 ```
