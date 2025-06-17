@@ -8,15 +8,15 @@ import kr.co.grib.drools.api.rules.dto.RuleRequestDto
 import kr.co.grib.drools.api.rules.dto.RuleResponseCtlDto
 import kr.co.grib.drools.api.rules.dto.RuleResponseDto
 import kr.co.grib.drools.api.rules.service.RuleService
+import kr.co.grib.drools.api.templateManager.service.RuleTemplateService
 import kr.co.grib.drools.define.StatusCode
 import kr.co.grib.drools.utils.getLogger
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 
 @Service
 class RuleServiceImpl (
     private val droolsManagerService: DroolsManagerService,
-    @Value("\${drools.rule-path}") private val rulePath: String,
+    private val ruleTemplateService: RuleTemplateService,
 ) : RuleService{
 
     private val logger = getLogger()
@@ -27,27 +27,73 @@ class RuleServiceImpl (
         return rtn;
     }
 
-    override fun doEvaluateRules(
+//    override fun doEvaluateRules(
+//        req: RuleRequestDto
+//    ): RuleResponseCtlDto {
+//        val rtn = RuleResponseCtlDto();
+//        val result = ActionResultDto()
+//        try {
+//
+//            if (req.groupId.isEmpty()){
+//                rtn.success = false
+//                rtn.code = StatusCode.GROUP_ID_IS_EMPTY
+//                return  rtn
+//            }
+//
+//            if (req.deviceId.isEmpty()){
+//                rtn.success = false
+//                rtn.code = StatusCode.DEVICE_ID_IS_EMPTY
+//                return rtn
+//            }
+//
+//            val kieSession = droolsManagerService.initKieSession(req.groupId)
+//            if (kieSession == null){
+//                rtn.success = false
+//                rtn.code = StatusCode.INIT_ERROR_KIESESSION
+//                return rtn
+//            }
+//
+//            val fact = RuleFactDto(
+//                groupId = req.groupId,
+//                deviceId = req.deviceId,
+//                functionName = req.functionName,
+//                functionValue = req.functionValue
+//            )
+//
+//            kieSession.insert(fact)
+//            kieSession.insert(result)
+//            kieSession.fireAllRules()
+//            kieSession.dispose()
+//
+//            rtn.success = true
+//            rtn.code = StatusCode.SUCCESS
+//            rtn.body = result.action?.let {
+//                RuleResponseDto(
+//                    groupId = req.groupId,
+//                    action = it,
+//                    result =  result.result
+//                )
+//            }
+//            return rtn
+//        }catch (e: Exception){
+//            logger.error("doEvaluateRules.Error.$e")
+//        }
+//        return rtn
+//    }
+
+    // thymeleaf  예제
+    override fun doEvaluateRulesT(
         req: RuleRequestDto
     ): RuleResponseCtlDto {
-        val rtn = RuleResponseCtlDto();
+        val rtn = RuleResponseCtlDto()
         val result = ActionResultDto()
         try {
 
-            if (req.groupId.isEmpty()){
-                rtn.success = false
-                rtn.code = StatusCode.GROUP_ID_IS_EMPTY
-                return  rtn
-            }
+            val chk = ruleTemplateService.initThymeleafRendering(req)
+            logger.info("chk.$chk")
+            val kieSession = droolsManagerService.initTemplateToDrools(chk)
 
-            if (req.deviceId.isEmpty()){
-                rtn.success = false
-                rtn.code = StatusCode.DEVICE_ID_IS_EMPTY
-                return rtn
-            }
-
-            droolsManagerService.initRule(req.groupId,rulePath)
-            val kieSession = droolsManagerService.initKieSession(req.groupId)
+            logger.info("kieSession.$kieSession")
             if (kieSession == null){
                 rtn.success = false
                 rtn.code = StatusCode.INIT_ERROR_KIESESSION
@@ -66,28 +112,7 @@ class RuleServiceImpl (
             kieSession.fireAllRules()
             kieSession.dispose()
 
-            rtn.success = true
-            rtn.code = StatusCode.SUCCESS
-            rtn.body = result.action?.let {
-                RuleResponseDto(
-                    groupId = req.groupId,
-                    action = it,
-                    result =  result.result
-                )
-            }
-            return rtn
-        }catch (e: Exception){
-            logger.error("doEvaluateRules.Error.$e")
-        }
-        return rtn
-    }
-
-    override fun doEvaluateThymeleafRules(
-        req: RuleRequestDto
-    ): RuleResponseCtlDto
-    {
-        val rtn = RuleResponseCtlDto()
-        try{
+            logger.info("check.$result")
 
 
 

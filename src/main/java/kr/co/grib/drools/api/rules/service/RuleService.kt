@@ -7,8 +7,8 @@ import kr.co.grib.drools.api.rules.dto.RuleResponseCtlDto
 interface RuleService {
     fun doGetRules(req: RuleRequestDto):BaseCtlDto
 
-    fun doEvaluateRules(req: RuleRequestDto): RuleResponseCtlDto
+//    fun doEvaluateRules(req: RuleRequestDto): RuleResponseCtlDto
 
-    fun doEvaluateThymeleafRules(req: RuleRequestDto): RuleResponseCtlDto
+    fun doEvaluateRulesT(req: RuleRequestDto): RuleResponseCtlDto
 
 }

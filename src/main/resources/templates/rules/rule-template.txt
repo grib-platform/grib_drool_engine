@@ -1,0 +1,35 @@
+package rules
+
+import kr.co.grib.drools.api.druleManager.dto.RuleFactDto
+import kr.co.grib.drools.api.druleManager.dto.ActionResultDto
+import kr.co.grib.drools.define.RuleStatusCode
+
+rule "[[${functionName}]] - High"
+when
+    $result : ActionResultDto()
+    $fact : RuleFactDto(functionValue > [[${functionValue}]] )
+then
+    $result.setResult(RuleStatusCode.HIGH.code);
+    $result.setAction("high");
+    System.out.println("Rule fired: high");
+end
+
+rule "[[${functionName}]] - Medium"
+when
+    $result : ActionResultDto()
+    $fact : RuleFactDto(deviceId == "[[${deviceId}]]" && functionValue > [[${functionValue}]] && functionValue <= [[${functionValue}]])
+then
+    $result.setResult(RuleStatusCode.MIDIUM.code);
+    $result.setAction("MIDIUM");
+    System.out.println("Rule fired: MEDIUM");
+end
+
+rule "[[${functionName}]] - Low"
+when
+    $result : ActionResultDto()
+    $fact : RuleFactDto(functionValue <= [[${functionValue}]])
+then
+    $result.setResult(RuleStatusCode.LOW.code);
+    $result.setAction("Low");
+    System.out.println("Rule fired: Low");
+end
