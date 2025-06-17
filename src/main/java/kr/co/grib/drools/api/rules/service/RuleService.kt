@@ -7,7 +7,7 @@ import kr.co.grib.drools.api.rules.dto.RuleResponseCtlDto
 interface RuleService {
 
     //<editor-fold desc="[POST] /create Drool 생성">
-    fun doPostCreateRule()
+    fun doPostCreateRule(req: RuleRequestDto):BaseCtlDto
     //</editor-fold desc="[POST] /create Drool 생성">
 
 

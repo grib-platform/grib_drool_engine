@@ -34,6 +34,36 @@ class DroolsManagerServiceImpl(
 
     }
     //</editor-fold desc="variable to Map">
+
+    //<editor-fold desc="template text 에서 특정 Rule 가져와서 특정  rule 실행 하기">
+    override fun getTemplateRules(
+        ruleName: String,
+        ruleString: String
+    ): KieSession? {
+
+        if (ruleName.isBlank()) {
+            logger.error("ruleName.is.empty.or.null")
+            return null
+        }
+
+        val pattern = Regex("""rule\s+"$ruleName"\s+(.|\n)*?end""")
+        if (ruleString.isBlank()){
+            logger.error("ruleString.is.empty.or.null")
+            return null
+        }
+        return try {
+            // 조건으로 찾았을때 null 일 수도 있으니까.
+            pattern.find(ruleString)?.value?.let { createKeySession(it) }
+
+        }catch (e: Exception) {
+            logger.error("Fail.to.getTemplateRules.$e")
+            throw IllegalStateException("KieSession.select.failed.$e")
+        }
+
+    }
+    //</editor-fold desc="template text 에서 특정 Rule 가져와서 특정  rule 실행 하기">
+
+
     //<editor-fold desc="KieSession 생성">
     private fun createKeySession(
         str: String
@@ -44,13 +74,4 @@ class DroolsManagerServiceImpl(
         return kieBase.newKieSession()
     }
     //</editor-fold desc="KieSession 생성">
-
-    //<editor-fold desc="template text 에서 특정 Rule 가져와서 특정  rule 실행 하기">
-    override fun getTemplateRules(
-        ruleName: String,
-        ruleString: String
-    ): String? {
-        TODO("Not yet implemented")
-    }
-    //</editor-fold desc="template text 에서 특정 Rule 가져와서 특정  rule 실행 하기">
 }

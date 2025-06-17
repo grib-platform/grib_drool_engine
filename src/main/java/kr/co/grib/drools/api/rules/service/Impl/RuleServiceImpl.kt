@@ -1,5 +1,6 @@
 package kr.co.grib.drools.api.rules.service.Impl
 
+import com.fasterxml.jackson.databind.ser.Serializers.Base
 import kr.co.grib.drools.api.base.dto.BaseCtlDto
 import kr.co.grib.drools.api.druleManager.dto.ActionResultDto
 import kr.co.grib.drools.api.druleManager.dto.RuleFactDto
@@ -22,6 +23,7 @@ class RuleServiceImpl (
 ) : RuleService{
 
     private val logger = getLogger()
+
 
     override
     fun doGetRules(req: RuleRequestDto) :BaseCtlDto{
@@ -130,5 +132,23 @@ class RuleServiceImpl (
         return rtn
     }
 
+    //<editor-fold desc="[POST] /create Drool 생성">
+    override fun doPostCreateRule(
+        req: RuleRequestDto
+    ): BaseCtlDto {
+        val rtn  = BaseCtlDto()
+        try {
+
+
+
+
+
+
+        }catch (e: Exception){
+            logger.error("doPostCreateRule.error.$e")
+        }
+        return rtn
+    }
+    //<editor-fold desc="[POST] /create Drool 생성">
 
 }

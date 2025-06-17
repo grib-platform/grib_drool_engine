@@ -3,33 +3,34 @@ package rules
 import kr.co.grib.drools.api.druleManager.dto.RuleFactDto
 import kr.co.grib.drools.api.druleManager.dto.ActionResultDto
 import kr.co.grib.drools.define.RuleStatusCode
+import kr.co.grib.drools.define.ActionStatusCode
 
-rule "[[${functionName}]] - High"
+rule "[[${functionName}]]"
 when
     $result : ActionResultDto()
     $fact : RuleFactDto(functionValue > [[${functionValue}]] )
 then
     $result.setResult(RuleStatusCode.HIGH.code);
-    $result.setAction("high");
+    $result.setAction(ActionStatusCode.ACTION1.code);
     System.out.println("Rule fired: high");
 end
 
-rule "[[${functionName}]] - Medium"
+rule "[[${functionName}]]"
 when
     $result : ActionResultDto()
-    $fact : RuleFactDto(deviceId == "[[${deviceId}]]" && functionValue > [[${functionValue}]] && functionValue <= [[${functionValue}]])
+    $fact : RuleFactDto(functionValue > [[${functionValue}]] && functionValue <= [[${functionValue}]])
 then
     $result.setResult(RuleStatusCode.MIDIUM.code);
-    $result.setAction("MIDIUM");
+    $result.setAction(ActionStatusCode.ACTION2.code);
     System.out.println("Rule fired: MEDIUM");
 end
 
-rule "[[${functionName}]] - Low"
+rule "[[${functionName}]]"
 when
     $result : ActionResultDto()
     $fact : RuleFactDto(functionValue <= [[${functionValue}]])
 then
     $result.setResult(RuleStatusCode.LOW.code);
-    $result.setAction("Low");
+    $result.setAction(ActionStatusCode.ACTION3.code);
     System.out.println("Rule fired: Low");
 end

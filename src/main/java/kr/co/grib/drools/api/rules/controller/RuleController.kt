@@ -24,16 +24,16 @@ class RuleController (
 ){
 
     //<editor-fold desc="[POST] /create Drool 생성">
-//    @Operation(summary = "RULE 생성" , description = "Template 기반으로 rule을 생성 합니다.")
-//    @PostMapping("/create")
-//    fun doPostCreateRule(
-//        @Parameter(required = true, description = "rule 객체")
-//        @RequestBody req: RuleRequestDto
-//    ): ResponseEntity<BaseCtlDto> =
-//        ResponseEntity(
-//            ruleService.doPostCreateRule(req),
-//            HttpStatus.OK
-//        )
+    @Operation(summary = "RULE 생성" , description = "Template 기반으로 rule을 생성 합니다.")
+    @PostMapping("/create")
+    fun doPostCreateRule(
+        @Parameter(required = true, description = "rule 객체")
+        @RequestBody req: RuleRequestDto
+    ): ResponseEntity<BaseCtlDto> =
+        ResponseEntity(
+            ruleService.doPostCreateRule(req),
+            HttpStatus.OK
+        )
     //</editor-fold desc="[POST] /create Drool 생성">
 
     @Operation(summary = "RULE 조회" , description = "사용 가능 한 rule 이 있는지 조회 합니다.")
