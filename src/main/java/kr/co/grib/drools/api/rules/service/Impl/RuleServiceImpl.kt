@@ -9,12 +9,14 @@ import kr.co.grib.drools.api.rules.dto.RuleResponseCtlDto
 import kr.co.grib.drools.api.rules.dto.RuleResponseDto
 import kr.co.grib.drools.api.rules.service.RuleService
 import kr.co.grib.drools.api.templateManager.service.RuleTemplateService
+import kr.co.grib.drools.config.RequestInfoConfig
 import kr.co.grib.drools.define.StatusCode
 import kr.co.grib.drools.utils.getLogger
 import org.springframework.stereotype.Service
 
 @Service
 class RuleServiceImpl (
+    private val requestInfoConfig: RequestInfoConfig,
     private val droolsManagerService: DroolsManagerService,
     private val ruleTemplateService: RuleTemplateService,
 ) : RuleService{
@@ -113,6 +115,11 @@ class RuleServiceImpl (
             kieSession.dispose()
 
             logger.info("check.$result")
+
+
+
+
+
 
 
 

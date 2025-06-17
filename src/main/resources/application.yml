@@ -21,7 +21,7 @@ spring:
     activate:
       on-profile: local
   datasource:
-    url: jdbc:mysql://192.168.0.240:3306/aiot_dev
+    url: jdbc:mysql://192.168.0.240:3306/drools_dev
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: grib
     password: grib12!@
@@ -45,7 +45,7 @@ spring:
     activate:
       on-profile: dev
   datasource:
-    url: jdbc:mysql://192.168.0.240:3306/aiot_dev
+    url: jdbc:mysql://192.168.0.240:3306/drools_dev
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: grib
     password: grib12!@
@@ -93,6 +93,12 @@ drools:
     order: 1
     fileName: rule-template
 
-
+---
+spring doc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method
 
 

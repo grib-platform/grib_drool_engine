@@ -16,10 +16,7 @@ class DroolsManagerServiceImpl(
     private val kieServices: KieServices
 ): DroolsManagerService
 {
-    private val kieContainers = mutableMapOf<String,KieContainer>()
      private val logger = getLogger()
-
-    //<editor-fold desc="Drool Create">
     //<editor-fold desc="variable to Map">
     override fun initTemplateToDrools(
         str: String
@@ -47,21 +44,13 @@ class DroolsManagerServiceImpl(
         return kieBase.newKieSession()
     }
     //</editor-fold desc="KieSession 생성">
-    //</editor-fold desc="Drool Create">
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    //<editor-fold desc="template text 에서 특정 Rule 가져와서 특정  rule 실행 하기">
+    override fun getTemplateRules(
+        ruleName: String,
+        ruleString: String
+    ): String? {
+        TODO("Not yet implemented")
+    }
+    //</editor-fold desc="template text 에서 특정 Rule 가져와서 특정  rule 실행 하기">
 }
