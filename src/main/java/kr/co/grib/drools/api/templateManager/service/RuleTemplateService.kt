@@ -9,7 +9,6 @@ interface RuleTemplateService {
     fun initThymeleafRendering(data: RuleRequestDto, templateFileName: String): String
     //</editor-fold desc="Thymeleaf text 파일 rendering">
 
-
     //<editor-fold desc="Thymeleaf text 파일 rendering">
     fun initThymeleafRenderAllRules(data: RuleCreateRequestDto): String
     //</editor-fold desc="Thymeleaf text 파일 rendering">
