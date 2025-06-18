@@ -1,0 +1,108 @@
+package rules.[[${groupId}]];
+
+import kr.co.grib.drools.api.druleManager.dto.RuleFactDto;
+import kr.co.grib.drools.api.druleManager.dto.ActionResultDto;
+import kr.co.grib.drools.define.RuleStatusCode;
+import kr.co.grib.drools.define.ActionStatusCode;
+
+
+// 단일 조건 - functionValue 범위 비교 예시
+rule "[[${functionName1}]]_high"
+when
+    $result : ActionResultDto()
+    $fact : RuleFactDto(
+        deviceId == "[[${deviceId1}]]",
+        functionName == "[[${functionName1}]]",
+        functionValue > [[${functionValue1}]]
+    )
+then
+    $result.setResult(RuleStatusCode.HIGH.code);
+    $result.setAction(ActionStatusCode.ACTION1.code);
+    System.out.println("Rule fired: [[${functionName1}]] high");
+end
+
+rule "[[${functionName1}]]_medium"
+when
+    $result : ActionResultDto()
+    $fact : RuleFactDto(
+        deviceId == "[[${deviceId1}]]",
+        functionName == "[[${functionName1}]]",
+        functionValue > [[${functionValue2}]] && functionValue <= [[${functionValue1}]]
+    )
+then
+    $result.setResult(RuleStatusCode.MIDIUM.code);
+    $result.setAction(ActionStatusCode.ACTION2.code);
+    System.out.println("Rule fired: [[${functionName1}]] medium");
+end
+
+rule "[[${functionName1}]]_low"
+when
+    $result : ActionResultDto()
+    $fact : RuleFactDto(
+        deviceId == "[[${deviceId1}]]",
+        functionName == "[[${functionName1}]]",
+        functionValue <= [[${functionValue2}]]
+    )
+then
+    $result.setResult(RuleStatusCode.LOW.code);
+    $result.setAction(ActionStatusCode.ACTION3.code);
+    System.out.println("Rule fired: [[${functionName1}]] low");
+end
+
+// 복수 조건 - AND 조건 예시
+rule "[[${functionName1}]]_and_[[${functionName2}]]_check"
+when
+    $result : ActionResultDto()
+    $fact1 : RuleFactDto(
+        deviceId == "[[${deviceId1}]]",
+        functionName == "[[${functionName1}]]",
+        functionValue > [[${functionValue1}]]
+    )
+    $fact2 : RuleFactDto(
+        deviceId == "[[${deviceId2}]]",
+        functionName == "[[${functionName2}]]",
+        functionValue < [[${functionValue2}]]
+    )
+then
+    $result.setResult(RuleStatusCode.HIGH.code);
+    $result.setAction(ActionStatusCode.ACTION1.code);
+    System.out.println("Rule fired: [[${functionName1}]] high and [[${functionName2}]] low");
+end
+
+// 복수 조건 - OR 조건 예시
+rule "[[${functionName1}]]_or_[[${functionName2}]]_check"
+when
+    $result : ActionResultDto()
+    (
+        RuleFactDto(
+            deviceId == "[[${deviceId1}]]",
+            functionName == "[[${functionName1}]]",
+            functionValue > [[${functionValue1}]]
+        )
+        or
+        RuleFactDto(
+            deviceId == "[[${deviceId2}]]",
+            functionName == "[[${functionName2}]]",
+            functionValue > [[${functionValue2}]]
+        )
+    )
+then
+    $result.setResult(RuleStatusCode.MIDIUM.code);
+    $result.setAction(ActionStatusCode.ACTION2.code);
+    System.out.println("Rule fired: [[${functionName1}]] or [[${functionName2}]] condition met");
+end
+
+// 특정 값 비교 예시 (equals)
+rule "[[${functionName3}]]_equals"
+when
+    $result : ActionResultDto()
+    $fact : RuleFactDto(
+        deviceId == "[[${deviceId3}]]",
+        functionName == "[[${functionName3}]]",
+        functionValue == [[${functionValue3}]]
+    )
+then
+    $result.setResult(RuleStatusCode.LOW.code);
+    $result.setAction(ActionStatusCode.ACTION3.code);
+    System.out.println("Rule fired: [[${functionName3}]] equals [[${functionValue3}]]");
+end

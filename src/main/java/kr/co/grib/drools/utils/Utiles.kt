@@ -1,9 +1,9 @@
 package kr.co.grib.drools.utils
 
-import org.slf4j.LoggerFactory
+import kr.co.grib.drools.api.rules.dto.RuleCreateRequestDto
+import kr.co.grib.drools.api.rules.dto.RuleRequestDto
 import org.slf4j.Logger
-import org.thymeleaf.TemplateEngine
-import org.thymeleaf.context.Context
+import org.slf4j.LoggerFactory
 import kotlin.reflect.full.memberProperties
 
 //logger  관련
@@ -23,8 +23,40 @@ object Utiles {
     fun isValidDroolsTemplate(template: String): Boolean {
         return template.isNotEmpty() && template.isNotBlank()
     }
-
     //</editor-fold desc="Drools 템플릿 유효성 검사">
+
+    //<editor-fold desc="Thymeleaf placeholder : single">
+    fun convertToTemplateVariable(
+        request: RuleRequestDto
+    ): Map<String,Any?> {
+        val result = mutableMapOf<String,Any?>()
+        //groupId 고정으로 넣기
+        result["groupId"] = request.groupId
+
+        request.facts.forEachIndexed{
+            index, fact ->
+            val idx = index + 1
+            result["deviceId$idx"] = fact.deviceId
+            result["functionName$idx"] = fact.functionName
+            result["functionValue$idx"] = fact.functionValue
+        }
+        return result
+    }
+    //<editor-fold desc="Thymeleaf placeholder : single">
+
+    //<editor-fold desc="Thymeleaf placeholder : every rules">
+    fun convertToTemplateEveryVariable(
+        request: RuleCreateRequestDto
+    ): Map<String,Any?> {
+        val result = mutableMapOf<String,Any?>()
+        //groupId 고정으로 넣기
+        result["groupId"] = request.ruleGroup
+        result["singleRules"] = request.singleRules
+        result["andRules"] = request.andRules
+        result["orRules"] = request.orRules
+        return result
+    }
+    //<editor-fold desc="Thymeleaf placeholder : every rules">
 
 
 
