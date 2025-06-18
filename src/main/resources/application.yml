@@ -91,7 +91,7 @@ drools:
     suffix: .txt
     encoding: UTF-8
     order: 1
-    fileName: rule-template
+    fileName: rule-templates
 
 ---
 spring doc:
