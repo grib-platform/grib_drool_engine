@@ -1,5 +1,7 @@
 package kr.co.grib.drools.api.templateManager.service.Impl
 
+import kr.co.grib.drools.api.rules.dto.RuleCreateRequestDto
+import kr.co.grib.drools.api.rules.dto.RuleRequestDto
 import kr.co.grib.drools.api.templateManager.service.RuleTemplateService
 import kr.co.grib.drools.config.ThymeleafConfig
 import kr.co.grib.drools.utils.Utiles
@@ -18,18 +20,38 @@ class RuleTemplateServiceImpl(
 
     //<editor-fold desc="Thymeleaf text 파일 rendering">
     override fun initThymeleafRendering(
-        data: Any
+        data: RuleRequestDto,
+        templateFileName: String,
     ):String {
         var result = "";
         try {
             val context = Context().apply{
-                setVariables(Utiles.getVariableToMap(data))
+                logger.info("data.$data")
+                setVariables(Utiles.convertToTemplateVariable(data))
             }
-            result = templateEngine.process(properties.fileName, context)
+            result = templateEngine.process(templateFileName, context)
         }catch (e: Exception){
             logger.error("thymeleaf.rule.context.error.$e")
         }
 
+        return result
+    }
+    //</editor-fold desc="Thymeleaf text 파일 rendering">
+
+    //<editor-fold desc="Thymeleaf text 파일 rendering">
+    override fun initThymeleafRenderAllRules(
+        data: RuleCreateRequestDto
+    ): String {
+        var result = "";
+        try {
+            val context = Context().apply{
+                logger.info("data.$data")
+                setVariables(Utiles.convertToTemplateEveryVariable(data))
+            }
+            result = templateEngine.process(properties.fileName, context)
+        }catch (e: Exception){
+            logger.error("Thymeleaf.rule.context.error.$e")
+        }
         return result
     }
     //</editor-fold desc="Thymeleaf text 파일 rendering">

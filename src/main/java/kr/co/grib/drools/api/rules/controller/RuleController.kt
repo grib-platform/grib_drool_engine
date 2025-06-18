@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
 import kr.co.grib.drools.api.base.dto.BaseCtlDto
+import kr.co.grib.drools.api.rules.dto.RuleCreateRequestDto
 import kr.co.grib.drools.api.rules.dto.RuleRequestDto
 import kr.co.grib.drools.api.rules.dto.RuleResponseCtlDto
 import kr.co.grib.drools.api.rules.service.RuleService
@@ -22,33 +23,10 @@ import org.springframework.web.bind.annotation.RestController
 class RuleController (
     private val ruleService: RuleService
 ){
-    @Operation(summary = "RULE 조회" , description = "사용 가능 한 rule 이 있는지 조회 합니다.")
-    @GetMapping("/select")
-    fun doGetRules(
-        @Parameter(required = true, description = "Ask rule 객체")
-        @RequestBody req: RuleRequestDto
-    ): ResponseEntity<BaseCtlDto> =
-        ResponseEntity(
-            ruleService.doGetRules(req),
-            HttpStatus.OK
-        )
-
-    //<editor-fold desc="rule 생성 및 evaluation , version drl 파일 ">
-//    @Operation(summary = "Rule 평가" , description = "사용 가능 한 rule 이 있는지 조회 합니다.")
-//    @PostMapping("/evaluate")
-//    fun doEvaluateRules(
-//        @Parameter(required = true, description = "Ask rule 객체")
-//        @RequestBody req: RuleRequestDto
-//    ): ResponseEntity<RuleResponseCtlDto> =
-//        ResponseEntity(
-//            ruleService.doEvaluateRules(req),
-//            HttpStatus.OK
-//        )
-    //</editor-fold desc="rule 생성 및 evaluation , version drl 파일 ">
 
     //<editor-fold desc="test : rule 생성 및 evaluation , version thymeleaf template 파일 ">
-    @Operation(summary = "Rule 평가" , description = "test")
-    @PostMapping("/test")
+    @Operation(summary = "Rule 평가" , description = "Rule 생성")
+    @PostMapping("/createRules")
     fun doEvaluateRulesTest(
         @Parameter(required = true, description = "Ask rule 객체")
         @RequestBody req: RuleRequestDto
@@ -58,8 +36,20 @@ class RuleController (
             HttpStatus.OK
         )
 
-
     //<editor-fold desc="test : rule 생성 및 evaluation , version thymeleaf template 파일 ">
+
+    //<editor-fold desc="[POST] /create Drool 생성">
+    @Operation(summary = "RULE 생성" , description = "Template 기반으로 rule을 생성 합니다.")
+    @PostMapping("/create")
+    fun doPostCreateRule(
+        @Parameter(required = true, description = "rule 객체")
+        @RequestBody req: RuleCreateRequestDto
+    ): ResponseEntity<BaseCtlDto> =
+        ResponseEntity(
+            ruleService.doPostCreateRule(req),
+            HttpStatus.OK
+        )
+    //</editor-fold desc="[POST] /create Drool 생성">
 
 
 

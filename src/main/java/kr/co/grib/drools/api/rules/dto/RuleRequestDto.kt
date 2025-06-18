@@ -5,6 +5,10 @@ import io.swagger.v3.oas.annotations.media.Schema
 data class RuleRequestDto (
     @Schema(description = "groupId")
     val groupId: String,
+    val facts: List<RuleRequestFactDto>
+)
+
+data class RuleRequestFactDto(
     @Schema(description = "deviceId")
     val deviceId: String,
     @Schema(description = "function 이름")

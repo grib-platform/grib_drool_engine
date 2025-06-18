@@ -4,5 +4,7 @@ data class ActionResultDto (
     @get:JvmName("getResult")
     var result: String = "NO_ACTION",
     @get:JvmName("getAction")
-    var action: String? = null
+    var action: String? = null,
+    @get:JvmName("setRuleFired")
+    var ruleFired: String? = null,
 )
