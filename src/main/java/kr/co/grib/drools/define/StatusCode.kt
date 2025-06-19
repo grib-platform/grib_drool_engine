@@ -16,6 +16,9 @@ enum class StatusCode(@get:JsonValue val code: String) {
 
     INIT_ERROR_KIESESSION("init.error.kiesession"),
 
+    JWT_TOKEN_HEADER_ERROR("jwt.token.header.error"),
+    JWT_TOKEN_INVALID_EXPIRED("jwt.token.invalid.expired"),
+    JWT_TOKEN_IS_EMPTY("jwt.token.is.empty"),
 
 
 

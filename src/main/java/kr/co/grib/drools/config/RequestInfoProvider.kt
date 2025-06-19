@@ -6,7 +6,7 @@ import org.springframework.web.context.request.RequestContextHolder
 import org.springframework.web.context.request.ServletRequestAttributes
 
 @Component
-class RequestInfoConfig {
+class RequestInfoProvider {
 
     fun getCurrentRequest(): HttpServletRequest? {
         return (RequestContextHolder.getRequestAttributes() as? ServletRequestAttributes)?.request
