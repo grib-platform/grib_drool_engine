@@ -5,7 +5,6 @@ import io.jsonwebtoken.Jwts
 import kr.co.grib.drools.utils.getLogger
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
-import java.nio.charset.StandardCharsets
 import java.util.*
 
 /**
@@ -23,6 +22,7 @@ class JwtTokenProvider (
     private val logger = getLogger()
 
     /**
+     * 현재 구 버전 사용 하고 있음
      * JWT 토큰에서 Claims (정보집합)를 파싱해서 반환
      * @param token JWT 토큰 문자열
      * @return Claims 토큰의 클레임(정보) 객체
@@ -69,8 +69,5 @@ class JwtTokenProvider (
             false
         }
     }
-
 }
-
-
 //</editor-fold desc="Jwt token filter">
