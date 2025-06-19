@@ -51,6 +51,12 @@ class RuleController (
         )
     //</editor-fold desc="[POST] /create Drool 생성">
 
+    // 기존 rule에 rule 추가
+    
+
+    // 기존 rule에 rule 삭제
+
+    //rule 실행
 
 
 
