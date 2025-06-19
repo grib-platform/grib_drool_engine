@@ -5,12 +5,9 @@ import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import kr.co.grib.drools.api.base.dto.BaseCtlDto
 import kr.co.grib.drools.define.StatusCode
-import kr.co.grib.drools.utils.getLogger
-import org.apache.http.HttpHeaders
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
-import kotlin.math.log
 
 @Component
 class JwtTokenFilter (

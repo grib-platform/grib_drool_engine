@@ -13,6 +13,7 @@ enum class StatusCode(@get:JsonValue val code: String) {
 
     CREATED_BY_IS_EMPTY("created.by.is.empty"),
     RULE_GROUP_IS_EMPTY("rule.group.is.empty"),
+    RULE_SET_NAME_IS_EMPTY("rule.set.name.is.empty"),
 
     INIT_ERROR_KIESESSION("init.error.kiesession"),
 

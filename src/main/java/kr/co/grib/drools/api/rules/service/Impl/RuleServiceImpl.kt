@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class RuleServiceImpl (
-    private val requestInfoConfig: RequestInfoProvider,
+    private val requestInfoProvider: RequestInfoProvider,
     private val droolsManagerService: DroolsManagerService,
     private val ruleTemplateService: RuleTemplateService,
 ) : RuleService{
@@ -133,8 +133,7 @@ class RuleServiceImpl (
             kieSession.dispose()
 
             logger.info("check.$result")
-
-
+            logger.info(requestInfoProvider.getUserName())
 
         }catch (e: Exception){
             logger.error("error.$e")
@@ -147,29 +146,28 @@ class RuleServiceImpl (
         req: RuleCreateRequestDto
     ): BaseCtlDto {
         val rtn  = BaseCtlDto()
-        var drl  = ""
+        val username = requestInfoProvider.getUserName()
+        var drlText  = ""
         try {
             logger.info("req.$req")
-            if (req.createdBy.isEmpty()){
-                rtn.success = false
-                rtn.code = StatusCode.CREATED_BY_IS_EMPTY.name
-                return rtn
-            }
-
             if (req.ruleGroup.isEmpty()){
                 rtn.success = false
                 rtn.code = StatusCode.RULE_GROUP_IS_EMPTY.name
+                rtn.message = StatusCode.RULE_GROUP_IS_EMPTY
                 return rtn
             }
 
-            if (req.ruleGroup.isEmpty()){
+            if (req.ruleSetName.isEmpty()){
                 rtn.success = false
-                rtn.code = StatusCode.RULE_GROUP_IS_EMPTY.name
-
+                rtn.code = StatusCode.RULE_SET_NAME_IS_EMPTY.name
+                rtn.message = StatusCode.RULE_SET_NAME_IS_EMPTY
                 return rtn
             }
 
-            drl = ruleTemplateService.initThymeleafRenderAllRules(req)
+            drlText = ruleTemplateService.initThymeleafRenderAllRules(req)
+
+
+
 
 
 
