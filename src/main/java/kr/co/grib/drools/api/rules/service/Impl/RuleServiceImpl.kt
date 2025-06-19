@@ -1,6 +1,5 @@
 package kr.co.grib.drools.api.rules.service.Impl
 
-import com.fasterxml.jackson.databind.ser.Serializers.Base
 import kr.co.grib.drools.api.base.dto.BaseCtlDto
 import kr.co.grib.drools.api.druleManager.dto.ActionResultDto
 import kr.co.grib.drools.api.druleManager.dto.RuleFactDto
@@ -8,18 +7,16 @@ import kr.co.grib.drools.api.druleManager.service.DroolsManagerService
 import kr.co.grib.drools.api.rules.dto.RuleCreateRequestDto
 import kr.co.grib.drools.api.rules.dto.RuleRequestDto
 import kr.co.grib.drools.api.rules.dto.RuleResponseCtlDto
-import kr.co.grib.drools.api.rules.dto.RuleResponseDto
 import kr.co.grib.drools.api.rules.service.RuleService
 import kr.co.grib.drools.api.templateManager.service.RuleTemplateService
-import kr.co.grib.drools.config.RequestInfoConfig
+import kr.co.grib.drools.config.RequestInfoProvider
 import kr.co.grib.drools.define.StatusCode
-import kr.co.grib.drools.utils.Utiles
 import kr.co.grib.drools.utils.getLogger
 import org.springframework.stereotype.Service
 
 @Service
 class RuleServiceImpl (
-    private val requestInfoConfig: RequestInfoConfig,
+    private val requestInfoConfig: RequestInfoProvider,
     private val droolsManagerService: DroolsManagerService,
     private val ruleTemplateService: RuleTemplateService,
 ) : RuleService{
@@ -93,14 +90,14 @@ class RuleServiceImpl (
             if (req.groupId.isEmpty() || req.groupId.isBlank()){
                 logger.error("groupId.is.null")
                 rtn.success = false
-                rtn.code = StatusCode.GROUP_ID_IS_EMPTY
+                rtn.code = StatusCode.GROUP_ID_IS_EMPTY.name
                 return rtn
             }
 
             if (req.facts.isEmpty()) {
                 logger.error("fact.is.null")
                 rtn.success = false
-                rtn.code = StatusCode.FACTS_IS_EMPTY
+                rtn.code = StatusCode.FACTS_IS_EMPTY.name
                 return rtn
             }
 
@@ -111,7 +108,7 @@ class RuleServiceImpl (
             logger.info("kieSession.$kieSession")
             if (kieSession == null){
                 rtn.success = false
-                rtn.code = StatusCode.INIT_ERROR_KIESESSION
+                rtn.code = StatusCode.INIT_ERROR_KIESESSION.name
                 return rtn
             }
 
@@ -150,22 +147,31 @@ class RuleServiceImpl (
         req: RuleCreateRequestDto
     ): BaseCtlDto {
         val rtn  = BaseCtlDto()
+        var drl  = ""
         try {
             logger.info("req.$req")
             if (req.createdBy.isEmpty()){
                 rtn.success = false
-                rtn.code = StatusCode.CREATED_BY_IS_EMPTY
+                rtn.code = StatusCode.CREATED_BY_IS_EMPTY.name
                 return rtn
             }
 
             if (req.ruleGroup.isEmpty()){
                 rtn.success = false
-                rtn.code = StatusCode.RULE_GROUP_IS_EMPTY
+                rtn.code = StatusCode.RULE_GROUP_IS_EMPTY.name
                 return rtn
             }
 
-            val chk = ruleTemplateService.initThymeleafRenderAllRules(req)
-            logger.info("chk.$chk")
+            if (req.ruleGroup.isEmpty()){
+                rtn.success = false
+                rtn.code = StatusCode.RULE_GROUP_IS_EMPTY.name
+
+                return rtn
+            }
+
+            drl = ruleTemplateService.initThymeleafRenderAllRules(req)
+
+
 
 
 

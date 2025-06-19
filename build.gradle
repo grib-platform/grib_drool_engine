@@ -27,6 +27,7 @@ dependencies {
     // Spring Boot & JPA
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'com.mysql:mysql-connector-j'
 
     //test용 db
@@ -52,7 +53,16 @@ dependencies {
     //tymeleaf for drl 파일
     implementation "org.springframework.boot:spring-boot-starter-thymeleaf"
 
+    //JWT (신규 버전인데 토큰 생성에 구 버전이 들어가서 안됨)
+//    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+//    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+//    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'  // JSON 파싱용
 
+    //JWT (구버전)
+    implementation 'io.jsonwebtoken:jjwt:0.9.1'
+    implementation 'javax.xml.bind:jaxb-api:2.3.1'
+
+    //test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
