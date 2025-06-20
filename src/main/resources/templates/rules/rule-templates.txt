@@ -1,8 +1,10 @@
+[# th:if="${includeHeader}"]
 package rules.[(${groupId})];
 
 import kr.co.grib.drools.api.druleManager.dto.RuleFactDto;
 import kr.co.grib.drools.api.druleManager.dto.ActionResultDto;
 import kr.co.grib.drools.define.RuleStatusCode;
+[/]
 
 [# th:each="rule : ${singleRules}" ]
 rule "[(${rule.ruleName})]"
