@@ -24,7 +24,10 @@ thymeleaf 를 사용하여 template화
 
 
 ## Drools 흐름도 
-
+```
+  - 삭제를 하더라도 tb_drools_modify_history에는 삭제 내역 까지 남음 
+  
+```
 
 ## 배포 
 ```

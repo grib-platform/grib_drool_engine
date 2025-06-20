@@ -18,7 +18,7 @@ class Drools (
     var ruleNm: String = "",
 
     @Column(name= "rule_text",  nullable = false)
-    var ruleTest: String = "",
+    var ruleText: String = "",
 
     @Column(name = "enable" , nullable = false)
     var enable: Boolean = false,

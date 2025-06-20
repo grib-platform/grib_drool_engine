@@ -2,6 +2,7 @@ package kr.co.grib.drools.api.templateManager.service.Impl
 
 import kr.co.grib.drools.api.rules.dto.RuleCreateRequestDto
 import kr.co.grib.drools.api.rules.dto.RuleRequestDto
+import kr.co.grib.drools.api.templateManager.dto.RuleTemplateDto
 import kr.co.grib.drools.api.templateManager.service.RuleTemplateService
 import kr.co.grib.drools.config.ThymeleafConfig
 import kr.co.grib.drools.utils.Utiles
@@ -31,7 +32,7 @@ class RuleTemplateServiceImpl(
             }
             result = templateEngine.process(templateFileName, context)
         }catch (e: Exception){
-            logger.error("thymeleaf.rule.context.error.$e")
+            throw IllegalStateException("thymeleaf.rule.context.error.$e")
         }
 
         return result
@@ -40,7 +41,7 @@ class RuleTemplateServiceImpl(
 
     //<editor-fold desc="Thymeleaf text 파일 rendering">
     override fun initThymeleafRenderAllRules(
-        data: RuleCreateRequestDto
+        data: RuleTemplateDto
     ): String {
         var result = "";
         try {
@@ -50,7 +51,7 @@ class RuleTemplateServiceImpl(
             }
             result = templateEngine.process(properties.fileName, context)
         }catch (e: Exception){
-            logger.error("Thymeleaf.rule.context.error.$e")
+            throw IllegalStateException("Thymeleaf.rule.context.error.$e")
         }
         return result
     }
