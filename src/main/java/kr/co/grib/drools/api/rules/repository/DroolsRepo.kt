@@ -1,10 +1,12 @@
 package kr.co.grib.drools.api.rules.repository
 
+import com.querydsl.core.types.Projections
 import com.querydsl.jpa.impl.JPAQueryFactory
 import jakarta.persistence.EntityManager
 import kr.co.grib.drools.Entity.Drools
 import org.springframework.transaction.annotation.Transactional
 import kr.co.grib.drools.Entity.QDrools
+import kr.co.grib.drools.api.rules.dto.RuleAddResponseDto
 import kr.co.grib.drools.api.rules.dto.RuleInsertReqDto
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Propagation
@@ -16,6 +18,25 @@ class DroolsRepo(
     private val em: EntityManager
 ) {
     private val drools = QDrools.drools
+
+    //<editor-fold desc="select  rules">
+    fun selectRulesText(
+        ruleId: Int
+    ): RuleAddResponseDto?{
+        return  queryFactory
+            .select(
+                Projections.constructor(
+                    RuleAddResponseDto::class.java,
+                    drools.ruleText,
+                    drools.ruleGroup
+                )
+            )
+            .from(drools)
+            .where(
+                drools.id.eq(ruleId.toLong())
+            ).fetchOne()
+    }
+    //</editor-fold desc="select  rules">
 
 
     //<editor-fold desc="select 등록 rule 확인, UNIQUE(RULE_GROUP, RULE_NM), RULE_GROUP은 중복 되면 안됨 ">
@@ -32,7 +53,7 @@ class DroolsRepo(
         val result: Int = count?.toInt() ?:0
         return result
     }
-    //</editor-fold desc="select 등록 rule 확인, UNIQUE(RULE_GROUP, RULE_NM)">
+    //</editor-fold desc="select 등록 rule 확인, UNIQUE(RULE_GROUP, RULE_NM), RULE_GROUP은 중복 되면 안됨">
 
 
 

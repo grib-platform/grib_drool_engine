@@ -12,6 +12,7 @@ enum class StatusCode(@get:JsonValue val code: String) {
     RULE_ALREADY_EXISTS("rule.already.exists"),
     RULE_ID_IS_EMPTY("rule.id.is.empty"),
     RULE_CODITION_IS_EMPTY("rule.condition.is.empty"),
+    RULE_INFO_IS_NULL("rule.info.is.null"),
 
     //RULE FILE
     INIT_ERROR_KIESESSION("init.error.kiesession"),

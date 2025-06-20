@@ -41,13 +41,14 @@ class RuleTemplateServiceImpl(
 
     //<editor-fold desc="Thymeleaf text 파일 rendering">
     override fun initThymeleafRenderAllRules(
-        data: RuleTemplateDto
+        data: RuleTemplateDto,
+        header: Boolean
     ): String {
         var result = "";
         try {
             val context = Context().apply{
                 logger.info("data.$data")
-                setVariables(Utiles.convertToTemplateEveryVariable(data))
+                setVariables(Utiles.convertToTemplateEveryVariable(data, header))
             }
             result = templateEngine.process(properties.fileName, context)
         }catch (e: Exception){

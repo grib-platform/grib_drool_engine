@@ -179,7 +179,8 @@ class RuleServiceImpl (
                     singleRules = req.singleRules,
                     andRules = req.andRules,
                     orRules = req.orRules
-                )
+                ),
+                true
             )
 
             logger.info("rule.Drl.create.info.$ruleDrl")
@@ -249,19 +250,25 @@ class RuleServiceImpl (
                 return rtn
             }
 
-
-
-//           addDrl = ruleTemplateService.initThymeleafRenderAllRules(
-//               RuleTemplateDto(
-//                   ruleGroup = req.ruleGroup,
-//                   singleRules = req.singleRules,
-//                   andRules = req.andRules,
-//                   orRules = req.orRules
-//               )
-//           )
+           val ruleInfo = droolsRepo.selectRulesText(req.ruleId)
+           if (ruleInfo == null){
+                rtn.success = false
+                rtn.code = StatusCode.RULE_INFO_IS_NULL.name
+                rtn.message = StatusCode.RULE_INFO_IS_NULL
+               return rtn
+           }
 
 
 
+           addDrl = ruleTemplateService.initThymeleafRenderAllRules(
+               RuleTemplateDto(
+                   ruleGroup = ruleInfo.ruleGroup,
+                   singleRules = req.singleRules,
+                   andRules = req.andRules,
+                   orRules = req.orRules
+               ),
+               false
+           )
 
 
 

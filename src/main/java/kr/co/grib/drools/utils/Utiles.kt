@@ -46,7 +46,8 @@ object Utiles {
 
     //<editor-fold desc="Thymeleaf placeholder : every rules">
     fun convertToTemplateEveryVariable(
-        request: RuleTemplateDto
+        request: RuleTemplateDto,
+        header: Boolean
     ): Map<String,Any?> {
         val result = mutableMapOf<String,Any?>()
         //groupId 고정으로 넣기
@@ -54,11 +55,16 @@ object Utiles {
         result["singleRules"] = request.singleRules
         result["andRules"] = request.andRules
         result["orRules"] = request.orRules
+        result["header"] = header
         return result
     }
     //<editor-fold desc="Thymeleaf placeholder : every rules">
 
+    //<editor-fold desc="drl text 합치기">
+    fun mergeDrlTextAvoidingDuplicates(){
 
+    }
+    //<editor-fold desc="drl text 합치기">
 
 
 }

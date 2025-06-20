@@ -10,7 +10,7 @@ interface RuleTemplateService {
     //</editor-fold desc="Thymeleaf text 파일 rendering">
 
     //<editor-fold desc="Thymeleaf text 파일 rendering">
-    fun initThymeleafRenderAllRules(data: RuleTemplateDto): String
+    fun initThymeleafRenderAllRules(data: RuleTemplateDto, header:Boolean): String
     //</editor-fold desc="Thymeleaf text 파일 rendering">
 
     //<editor-fold desc="Thymeleaf text 파일 rendering">

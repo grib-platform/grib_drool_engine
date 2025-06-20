@@ -71,4 +71,8 @@ class DroolsManagerServiceImpl(
         return kieBase.newKieSession()
     }
     //</editor-fold desc="KieSession 생성">
+
+
+
+
 }
