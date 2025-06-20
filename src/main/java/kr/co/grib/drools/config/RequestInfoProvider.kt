@@ -39,8 +39,6 @@ class RequestInfoProvider {
     fun getApiUri(): String ?= getCurrentRequest()?.requestURI
 
     //<editor-fold desc="token 에서 나온  username">
-    fun getUserName(): String ?= getCurrentRequest()?.getAttribute("username").toString()
+    fun getUserName(): String = getCurrentRequest()?.getAttribute("username").toString()
     //</editor-fold desc="token 에서 나온  username">
-
-
 }
