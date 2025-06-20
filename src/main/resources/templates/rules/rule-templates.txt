@@ -3,7 +3,6 @@ package rules.[(${groupId})];
 import kr.co.grib.drools.api.druleManager.dto.RuleFactDto;
 import kr.co.grib.drools.api.druleManager.dto.ActionResultDto;
 import kr.co.grib.drools.define.RuleStatusCode;
-import kr.co.grib.drools.define.ActionStatusCode;
 
 [# th:each="rule : ${singleRules}" ]
 rule "[(${rule.ruleName})]"
@@ -16,7 +15,7 @@ when
     )
 then
     $result.setResult(RuleStatusCode.HIGH.code);
-    $result.setAction(ActionStatusCode.ACTION1.code);
+    $result.setAction(RuleStatusCode.HIGH.name);
     $result.setRuleFired("rule SINGLE: [(${rule.ruleName})]");
     System.out.println("Rule fired: [(${rule.ruleName})]");
 end
@@ -34,7 +33,7 @@ when
     )
 then
     $result.setResult(RuleStatusCode.NORMAL.code);
-    $result.setAction(ActionStatusCode.ACTION2.code);
+    $result.setAction(RuleStatusCode.NORMAL.name);
     $result.setRuleFired("rule AND: [(${rule.ruleName})]");
     System.out.println("Rule fired: [(${rule.ruleName})]");
 end
@@ -52,7 +51,7 @@ when
     )
 then
     $result.setResult(RuleStatusCode.HIGH.code);
-    $result.setAction(ActionStatusCode.ACTION3.code);
+    $result.setAction(RuleStatusCode.HIGH.name);
     $result.setRuleFired("rule OR: [(${rule.ruleName})]");
     System.out.println("Rule fired: [(${rule.ruleName})]");
 end

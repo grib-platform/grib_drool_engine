@@ -3,7 +3,6 @@ package rules.[[${groupId}]];
 import kr.co.grib.drools.api.druleManager.dto.RuleFactDto;
 import kr.co.grib.drools.api.druleManager.dto.ActionResultDto;
 import kr.co.grib.drools.define.RuleStatusCode;
-import kr.co.grib.drools.define.ActionStatusCode;
 
 
 // 단일 조건 - functionValue 범위 비교 예시
@@ -17,7 +16,7 @@ when
     )
 then
     $result.setResult(RuleStatusCode.HIGH.code);
-    $result.setAction(ActionStatusCode.ACTION1.code);
+    $result.setAction(ARuleStatusCode.HIGH.name);
     System.out.println("Rule fired: [[${functionName1}]] high");
 end
 
@@ -31,7 +30,7 @@ when
     )
 then
     $result.setResult(RuleStatusCode.MIDIUM.code);
-    $result.setAction(ActionStatusCode.ACTION2.code);
+    $result.setAction(RuleStatusCode.MIDIUM.name);
     System.out.println("Rule fired: [[${functionName1}]] medium");
 end
 
@@ -45,7 +44,7 @@ when
     )
 then
     $result.setResult(RuleStatusCode.LOW.code);
-    $result.setAction(ActionStatusCode.ACTION3.code);
+    $result.setAction(RuleStatusCode.LOW.name);
     System.out.println("Rule fired: [[${functionName1}]] low");
 end
 
@@ -65,7 +64,7 @@ when
     )
 then
     $result.setResult(RuleStatusCode.HIGH.code);
-    $result.setAction(ActionStatusCode.ACTION1.code);
+    $result.setAction(ARuleStatusCode.HIGH.name);
     System.out.println("Rule fired: [[${functionName1}]] high and [[${functionName2}]] low");
 end
 
@@ -88,7 +87,7 @@ when
     )
 then
     $result.setResult(RuleStatusCode.MIDIUM.code);
-    $result.setAction(ActionStatusCode.ACTION2.code);
+    $result.setAction(RuleStatusCode.MIDIUM.name);
     System.out.println("Rule fired: [[${functionName1}]] or [[${functionName2}]] condition met");
 end
 
@@ -103,6 +102,6 @@ when
     )
 then
     $result.setResult(RuleStatusCode.LOW.code);
-    $result.setAction(ActionStatusCode.ACTION3.code);
+    $result.setAction(RuleStatusCode.LOW.name);
     System.out.println("Rule fired: [[${functionName3}]] equals [[${functionValue3}]]");
 end

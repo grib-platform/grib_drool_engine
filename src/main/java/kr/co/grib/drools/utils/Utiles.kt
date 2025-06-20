@@ -1,7 +1,7 @@
 package kr.co.grib.drools.utils
 
-import kr.co.grib.drools.api.rules.dto.RuleCreateRequestDto
 import kr.co.grib.drools.api.rules.dto.RuleRequestDto
+import kr.co.grib.drools.api.templateManager.dto.RuleTemplateDto
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import kotlin.reflect.full.memberProperties
@@ -46,7 +46,7 @@ object Utiles {
 
     //<editor-fold desc="Thymeleaf placeholder : every rules">
     fun convertToTemplateEveryVariable(
-        request: RuleCreateRequestDto
+        request: RuleTemplateDto
     ): Map<String,Any?> {
         val result = mutableMapOf<String,Any?>()
         //groupId 고정으로 넣기

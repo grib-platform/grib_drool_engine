@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
 import kr.co.grib.drools.api.base.dto.BaseCtlDto
+import kr.co.grib.drools.api.rules.dto.RuleAddRequestDto
 import kr.co.grib.drools.api.rules.dto.RuleCreateRequestDto
 import kr.co.grib.drools.api.rules.dto.RuleRequestDto
 import kr.co.grib.drools.api.rules.dto.RuleResponseCtlDto
@@ -51,33 +52,29 @@ class RuleController (
         )
     //</editor-fold desc="[POST] /create Drool 생성">
 
-    // 기존 rule에 rule 추가
-    
+    //<editor-fold desc="[POST] /addRule rule 추가">
+    @Operation(summary = "RULE 추가" , description = "Template 기반으로 rule을 추가 합니다.")
+    @PostMapping("/addRule")
+    fun doPostAddRule(
+        @Parameter(required = true, description = "rule 객체")
+        @RequestBody req: RuleAddRequestDto
+    ): ResponseEntity<BaseCtlDto> =
+        ResponseEntity(
+            ruleService.doPostAddRule(req),
+            HttpStatus.OK
+        )
+    //</editor-fold desc="[POST] /addRule rule 추가">
+
 
     // 기존 rule에 rule 삭제
 
-    //rule 실행
+    // RULE 수정
 
+    //rule 실행 (전체)
 
+    // 특정  rule 실행
 
-
-    //<editor-fold desc="rule 조회">
-
-
-    //</editor-fold desc="rule 조회">
-
-
-    //<editor-fold desc="rule 수정">
-
-    //</editor-fold desc="rule 수정">
-
-    //<editor-fold desc="rule 삭제">
-
-    //</editor-fold desc="rule 삭제">
-
-
-
-
+    //Rule text에서 rule 규칙 읽어 내서 등록 파라미터로 읽어 내기
 
 
 }

@@ -1,17 +1,19 @@
 package kr.co.grib.drools.api.rules.dto
 
 import io.swagger.v3.oas.annotations.media.Schema
+import kr.co.grib.drools.define.RuleEnableType
 import kr.co.grib.drools.define.RuleTypeCode
 
 data class RuleCreateRequestDto (
+
     @Schema(description = "룰 그룹 ID")
     val ruleGroup: String,
 
     @Schema(description = "전체 룰 세트 명")
     val ruleSetName: String,
 
-    @Schema(description = "룰 활성 여부")
-    val enable: Char ,
+    @Schema(description = "룰 활성 여부(Y/N)")
+    val enable: RuleEnableType ,
 
     @Schema(description = "single rule conditions")
     val singleRules: List<SingleRuleDto> ?= null,
@@ -40,7 +42,7 @@ data class AndRuleDto(
     val maxValue: Double
 )
 
-data class OrRuleCondtionDto(
+data class OrRuleConditionDto(
     val deviceId: String,
     val functionName: String
 )
@@ -48,7 +50,7 @@ data class OrRuleCondtionDto(
 data class OrRuleDto(
     val ruleName: String,
     val ruleType: RuleTypeCode = RuleTypeCode.OR,
-    val conditions: List<OrRuleCondtionDto> ?= null
+    val conditions: List<OrRuleConditionDto> ?= null
 )
 
 

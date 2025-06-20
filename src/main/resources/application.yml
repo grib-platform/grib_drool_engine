@@ -48,7 +48,7 @@ spring:
     activate:
       on-profile: dev
   datasource:
-    url: jdbc:mysql://huring.grib-iot.com:9506/aiot_dev
+    url: jdbc:mysql://huring.grib-iot.com:9506/drools_dev
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: grib
     password: grib12!@

@@ -68,20 +68,29 @@ class JwtTokenFilter (
             return
         }
 
+
         // 유효한 토큰인 경우 username과 roles 추출
         val username = jwtTokenProvider.getUsernameFromToken(token)
-        val roles = jwtTokenProvider.getRoleFromToken(token)
-
+        //username
         logger.info("username.$username")
-        logger.info("roles.$roles")
+
+        if (username.isNullOrBlank()){
+            logger.info("token.has.username.$username")
+            JwtFilterUtil.doErrorResponse(
+                response,
+                BaseCtlDto(
+                    success = false,
+                    code = StatusCode.JWT_HAS_NO_USER_NAME.name,
+                    message = StatusCode.JWT_HAS_NO_USER_NAME)
+            )
+            logger.warn(StatusCode.JWT_HAS_NO_USER_NAME)
+            return
+        }
 
         // 인증 성공 상태 및 정보 request attribute에 세팅
         request.setAttribute("apiStatus", "NORMAL")
         request.setAttribute("username", username)
-        request.setAttribute("roles", roles)
-
         // 다음 필터 또는 컨트롤러 실행
         filterChain.doFilter(request, response)
     }
-
 }
