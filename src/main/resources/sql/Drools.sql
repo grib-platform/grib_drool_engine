@@ -37,6 +37,7 @@ create table tb_drools_modify_history
     rule_action_type varchar(50)     not null comment '룰 변경 타입(UPDATE,DELETE,CREATE)',
     updated_by       varchar(255)    not null comment '룰 수정자',
     updated_at       timestamp       not null comment '룰 수정일',
+    rule_contents    longtext        null comment '추가/변경/삭제 된 RULE',
     constraint tb_drools_modify_history_rule_id_foreign
         foreign key (rule_id) references tb_drools (id)
 );
