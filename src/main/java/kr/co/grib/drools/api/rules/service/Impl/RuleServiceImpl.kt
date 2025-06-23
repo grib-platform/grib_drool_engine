@@ -15,6 +15,7 @@ import kr.co.grib.drools.api.templateManager.service.RuleTemplateService
 import kr.co.grib.drools.config.RequestInfoProvider
 import kr.co.grib.drools.define.RuleOperationType
 import kr.co.grib.drools.define.StatusCode
+import kr.co.grib.drools.utils.Utiles
 import kr.co.grib.drools.utils.getLogger
 import org.springframework.stereotype.Service
 
@@ -30,124 +31,6 @@ class RuleServiceImpl (
 ) : RuleService{
 
     private val logger = getLogger()
-
-
-//    override fun doEvaluateRules(
-//        req: RuleRequestDto
-//    ): RuleResponseCtlDto {
-//        val rtn = RuleResponseCtlDto();
-//        val result = ActionResultDto()
-//        try {
-//
-//            if (req.groupId.isEmpty()){
-//                rtn.success = false
-//                rtn.code = StatusCode.GROUP_ID_IS_EMPTY
-//                return  rtn
-//            }
-//
-//            if (req.deviceId.isEmpty()){
-//                rtn.success = false
-//                rtn.code = StatusCode.DEVICE_ID_IS_EMPTY
-//                return rtn
-//            }
-//
-//            val kieSession = droolsManagerService.initKieSession(req.groupId)
-//            if (kieSession == null){
-//                rtn.success = false
-//                rtn.code = StatusCode.INIT_ERROR_KIESESSION
-//                return rtn
-//            }
-//
-//            val fact = RuleFactDto(
-//                groupId = req.groupId,
-//                deviceId = req.deviceId,
-//                functionName = req.functionName,
-//                functionValue = req.functionValue
-//            )
-//
-//            kieSession.insert(fact)
-//            kieSession.insert(result)
-//            kieSession.fireAllRules()
-//            kieSession.dispose()
-//
-//            rtn.success = true
-//            rtn.code = StatusCode.SUCCESS
-//            rtn.body = result.action?.let {
-//                RuleResponseDto(
-//                    groupId = req.groupId,
-//                    action = it,
-//                    result =  result.result
-//                )
-//            }
-//            return rtn
-//        }catch (e: Exception){
-//            logger.error("doEvaluateRules.Error.$e")
-//        }
-//        return rtn
-//    }
-
-    // thymeleaf  예제
-    override fun doEvaluateRulesT(
-        req: RuleRequestDto
-    ): RuleResponseCtlDto {
-        val rtn = RuleResponseCtlDto()
-        val result = ActionResultDto()
-        try {
-
-            // data 에 대한
-            if (req.groupId.isEmpty() || req.groupId.isBlank()){
-                logger.error("groupId.is.null")
-                rtn.success = false
-                rtn.code = StatusCode.GROUP_ID_IS_EMPTY.name
-                return rtn
-            }
-
-            if (req.facts.isEmpty()) {
-                logger.error("fact.is.null")
-                rtn.success = false
-                rtn.code = StatusCode.FACTS_IS_EMPTY.name
-                return rtn
-            }
-
-            val chk = ruleTemplateService.initThymeleafRendering(req,"rule-template-test")
-            logger.info("chk.$chk")
-            val kieSession = droolsManagerService.initTemplateToDrools(chk)
-
-            logger.info("kieSession.$kieSession")
-            if (kieSession == null){
-                rtn.success = false
-                rtn.code = StatusCode.INIT_ERROR_KIESESSION.name
-                return rtn
-            }
-
-            /**
-             * 기준 값 발화 시점
-             * 실시간 측정 값은 어디에 둬야 하는 건가?
-             * */
-            kieSession.insert(result)
-            req.facts.map { it ->
-                val fact = RuleFactDto(
-                    groupId = req.groupId,
-                    deviceId = it.deviceId,
-                    functionName = it.functionName,
-                    functionValue = it.functionValue
-                )
-                kieSession.insert(fact)
-            }
-
-            kieSession.fireAllRules()
-            val fireRulesCount = kieSession.fireAllRules();
-            logger.info("kieSession.$fireRulesCount ")
-            kieSession.dispose()
-
-            logger.info("check.$result")
-            logger.info(requestInfoProvider.getUserName())
-
-        }catch (e: Exception){
-            logger.error("error.$e")
-        }
-        return rtn
-    }
 
     //<editor-fold desc="[POST] /create Drool 생성">
     override fun doPostCreateRule(
@@ -210,6 +93,7 @@ class RuleServiceImpl (
                     RuleInsertReqDto(
                         ruleId = rule,
                         ruleActionType = RuleOperationType.CREATE,
+                        ruleText = ruleDrl,
                         createdBy = username
                     )
                 )
@@ -225,12 +109,14 @@ class RuleServiceImpl (
     }
     //<editor-fold desc="[POST] /create Drool 생성">
 
-    //<editor-fold desc="[POST] /addRule rule 추가">
-    override fun doPostAddRule(
+    //<editor-fold desc="[PATCH] /addRule rule 추가">
+    override fun doPatchAddRule(
         req: RuleAddRequestDto
     ): BaseCtlDto {
         var rtn = BaseCtlDto()
         var addDrl  = ""
+        var mergedText = ""
+        val username = requestInfoProvider.getUserName()
         try {
             //ruleId 가 없을때
             if (req.ruleId == null || req.ruleId == 0){
@@ -258,8 +144,6 @@ class RuleServiceImpl (
                return rtn
            }
 
-
-
            addDrl = ruleTemplateService.initThymeleafRenderAllRules(
                RuleTemplateDto(
                    ruleGroup = ruleInfo.ruleGroup,
@@ -270,14 +154,199 @@ class RuleServiceImpl (
                false
            )
 
+            /**
+             * 같은 이름의 rule이 존재 하면 덮어쓰고
+             * 그렇지 않으면 신규 추가
+             * **/
+            mergedText = Utiles.mergeDrlRuleOverwrite(ruleInfo.ruleText, addDrl)
+            val update = droolsRepo.updateRule(req.ruleId.toLong() ,  mergedText )
 
-
-
+            //HISTORY 추가
+            if (update >=1){
+                droolsModifyHistoryRepo.saveDroolsModifyHistory(
+                    RuleInsertReqDto(
+                        ruleId = req.ruleId,
+                        ruleActionType = RuleOperationType.UPDATE,
+                        ruleText = addDrl,
+                        createdBy = username
+                    )
+                )
+            }
+            rtn.success = true
+            rtn.code = StatusCode.SUCCESS.name
+            rtn.message = StatusCode.SUCCESS
         }catch (e: Exception){
             logger.error("doPostAddRule.error.$e")
         }
         return rtn
     }
-    //</editor-fold desc="[POST] /addRule rule 추가">
 
+    //</editor-fold desc="[PATCH] /addRule rule 추가">
+
+    //<editor-fold desc="[DELETE] /deleteRule rule 삭제">
+    override fun doDeleteRule(
+        ruleId: Int,
+        ruleName: List<String>
+    ):BaseCtlDto {
+        val rtn = BaseCtlDto()
+        val username = requestInfoProvider.getUserName()
+        try {
+            //ruleId 체크
+            if (ruleId == null || ruleId == 0) {
+                rtn.success = false
+                rtn.code = StatusCode.RULE_ID_IS_EMPTY.name
+                rtn.message = StatusCode.RULE_ID_IS_EMPTY
+                return  rtn
+            }
+
+            //검색할 rule name 체크
+            if (ruleName.isNullOrEmpty()){
+                rtn.success = false
+                rtn.code = StatusCode.RULE_NAME_IS_EMPTY.name
+                rtn.message = StatusCode.RULE_NAME_IS_EMPTY
+                return rtn
+            }
+
+            val drl = droolsRepo.selectRulesText(ruleId)
+            if (drl == null) {
+                rtn.success = false
+                rtn.code = StatusCode.RULE_IS_EMPTY.name
+                rtn.message = StatusCode.RULE_IS_EMPTY
+                return rtn
+            }
+            // check ruleName 이 있는지 없는지
+            val check = Utiles.countExistingRules(drl.ruleText, ruleName)
+            logger.info("check.$check")
+            if (check <=0){
+                rtn.success = false
+                rtn.code = StatusCode.RULE_NO_EXISTS.name
+                rtn.message = StatusCode.RULE_NO_EXISTS
+                return rtn
+            }
+
+            val deleteDrlStr =  Utiles.removeRuleByRuleName(drl.ruleText, ruleName)
+            val updated = droolsRepo.updateRule(ruleId.toLong(), deleteDrlStr)
+            if (updated >=1){
+                droolsModifyHistoryRepo.saveDroolsModifyHistory(
+                    RuleInsertReqDto(
+                        ruleId = ruleId,
+                        ruleActionType = RuleOperationType.DELETE,
+                        ruleText = Utiles.extractRulesByNames(drl.ruleText, ruleName),
+                        createdBy = username
+                    )
+                )
+            }
+
+            rtn.success = true
+            rtn.code = StatusCode.SUCCESS.name
+            rtn.message = StatusCode.SUCCESS
+        }catch (e: Exception){
+            logger.error("doDeleteRule.error.$e")
+        }
+        return rtn
+    }
+    //</editor-fold desc="[DELETE] /deleteRule rule 삭제">
+
+    //<editor-fold desc="[DELETE] /remove rule 자체 삭제">
+    override fun doRemoveRule(
+        ruleId: Int
+    ):BaseCtlDto {
+        val rtn = BaseCtlDto()
+        try{
+            //ruleId 체크
+            if (ruleId == null || ruleId == 0) {
+                rtn.success = false
+                rtn.code = StatusCode.RULE_ID_IS_EMPTY.name
+                rtn.message = StatusCode.RULE_ID_IS_EMPTY
+                return  rtn
+            }
+
+            //history를 먼저 삭제를 하고, Drools 삭제
+            val history = droolsModifyHistoryRepo.deleteDroolsModifyHistory(ruleId.toLong())
+            if (history>=1){
+                droolsRepo.deleteRule(ruleId.toLong())
+            }
+
+        }catch (e: Exception){
+            logger.error("doRemove.error.$e")
+        }
+        return  rtn
+    }
+    //</editor-fold desc="[DELETE] /remove rule 자체 삭제">
+
+    //<editor-fold desc="[POST] /execute rule 파일 실행">
+    override fun doPostExecute(
+        req: RuleRequestDto
+    ): RuleResponseCtlDto {
+        val rtn = RuleResponseCtlDto()
+        val result = ActionResultDto()
+        try {
+            if (req.ruleId == null || req.ruleId == 0){
+                rtn.success = false
+                rtn.code = StatusCode.RULE_ID_IS_EMPTY.name
+                rtn.message = StatusCode.RULE_ID_IS_EMPTY
+            }
+            // data 에 대한
+            if (req.ruleGroup.isEmpty() || req.ruleGroup.isBlank()){
+                logger.error("groupId.is.null")
+                rtn.success = false
+                rtn.code = StatusCode.GROUP_ID_IS_EMPTY.name
+                return rtn
+            }
+
+            if (req.facts.isEmpty()) {
+                logger.error("fact.is.null")
+                rtn.success = false
+                rtn.code = StatusCode.FACTS_IS_EMPTY.name
+                return rtn
+            }
+
+           val chk = droolsRepo.selectRulesText(req.ruleId)
+           if (chk == null)
+           {
+               rtn.success = false
+               rtn.code = StatusCode.RULE_NO_EXISTS.name
+               rtn.message = StatusCode.RULE_NO_EXISTS
+               return rtn
+           }
+
+            val kieSession = droolsManagerService.initTemplateToDrools(chk.ruleText)
+
+            logger.info("kieSession.$kieSession")
+            if (kieSession == null){
+                rtn.success = false
+                rtn.code = StatusCode.INIT_ERROR_KIESESSION.name
+                return rtn
+            }
+
+            /**
+             * 기준 값 발화 시점
+             * 실시간 측정 값은 어디에 둬야 하는 건가?
+             * */
+            kieSession.insert(result)
+            req.facts.map { it ->
+                val fact = RuleFactDto(
+                    groupId = req.ruleGroup,
+                    deviceId = it.deviceId,
+                    functionName = it.functionName,
+                    functionValue = it.functionValue
+                )
+                kieSession.insert(fact)
+            }
+
+            kieSession.fireAllRules()
+            val fireRulesCount = kieSession.fireAllRules();
+            logger.info("kieSession.$fireRulesCount ")
+            kieSession.dispose()
+
+            logger.info("check.$result")
+            logger.info(requestInfoProvider.getUserName())
+
+        }catch (e: Exception){
+            logger.error("error.$e")
+        }
+        return rtn
+
+    }
+    //</editor-fold desc="[POST] /execute rule 파일 실행">
 }

@@ -18,6 +18,9 @@ class DroolsModifyHistory (
     @Column(name = "rule_action_type", nullable = false)
     var ruleActionType: String = "",
 
+    @Column(name = "rule_contents", nullable = false)
+    var ruleContents: String = "",
+
     @Column(name = "updated_by" , nullable =  false)
     var updatedBy: String = "",
 

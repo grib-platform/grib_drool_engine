@@ -25,15 +25,25 @@ class DroolsModifyHistoryRepo(
         val ruleHistory = DroolsModifyHistory(
             ruleId = req.ruleId.toLong(),
             ruleActionType = req.ruleActionType.name,
+            ruleContents = req.ruleText,
             updatedBy = req.createdBy,
             updatedAt = LocalDateTime.now()
         )
         em.persist(ruleHistory)
         em.flush()
     }
-
     //</editor-fold desc="HISTORY 등록">
 
-
+    //<editor-fold desc="Delete history 삭제">
+    @Transactional
+    fun deleteDroolsModifyHistory(
+        ruleId: Long
+    ): Long {
+        return queryFactory
+            .delete(droolsModifyHistory)
+            .where(droolsModifyHistory.ruleId.eq(ruleId))
+            .execute()
+    }
+    //</editor-fold desc="Delete history 삭제">
 
 }
