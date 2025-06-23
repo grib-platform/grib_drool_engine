@@ -27,8 +27,8 @@ class DroolsRepo(
             .select(
                 Projections.constructor(
                     RuleAddResponseDto::class.java,
-                    drools.ruleText,
-                    drools.ruleGroup
+                    drools.ruleGroup,
+                    drools.ruleText
                 )
             )
             .from(drools)
@@ -78,6 +78,29 @@ class DroolsRepo(
     }
     //</editor-fold desc="insert 룰 등록">
 
+    //<editor-fold desc="update 룰 수정">
+    @Transactional
+    fun updateRule(
+        ruleId: Long,
+        ruleText: String
+    ): Long {
+        return queryFactory
+            .update(drools)
+            .set(drools.ruleText, ruleText)
+            .where(drools.id.eq(ruleId))
+            .execute();
+    }
+    //</editor-fold desc="update 룰 수정">
 
-
+    //<editor-fold desc="Delete 룰 삭제">
+    @Transactional
+    fun deleteRule(
+        ruleId: Long
+    ): Long {
+        return queryFactory
+            .delete(drools)
+            .where(drools.id.eq(ruleId))
+            .execute()
+    }
+    //</editor-fold desc="Delete 룰 삭제">
 }

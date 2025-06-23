@@ -3,8 +3,10 @@ package kr.co.grib.drools.api.rules.dto
 import io.swagger.v3.oas.annotations.media.Schema
 
 data class RuleRequestDto (
-    @Schema(description = "groupId")
-    val groupId: String,
+    @Schema(description = "ruleId")
+    val ruleId: Int,
+    @Schema(description = "ruleGroup")
+    val ruleGroup: String,
     val facts: List<RuleRequestFactDto>
 )
 

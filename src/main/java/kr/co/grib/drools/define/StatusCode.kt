@@ -7,12 +7,15 @@ enum class StatusCode(@get:JsonValue val code: String) {
     SUCCESS(""),
 
     // RULE
+    RULE_IS_EMPTY("rule.is.empty"),
     RULE_GROUP_IS_EMPTY("rule.group.is.empty"),
     RULE_SET_NAME_IS_EMPTY("rule.set.name.is.empty"),
+    RULE_NAME_IS_EMPTY("rule.name.is.empty"),
     RULE_ALREADY_EXISTS("rule.already.exists"),
     RULE_ID_IS_EMPTY("rule.id.is.empty"),
     RULE_CODITION_IS_EMPTY("rule.condition.is.empty"),
     RULE_INFO_IS_NULL("rule.info.is.null"),
+    RULE_NO_EXISTS("rule.no.exists"),
 
     //RULE FILE
     INIT_ERROR_KIESESSION("init.error.kiesession"),
