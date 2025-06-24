@@ -7,7 +7,7 @@ import kr.co.grib.drools.define.RuleStatusCode;
 [/]
 
 [# th:each="rule : ${singleRules}" ]
-rule "[(${rule.ruleName})]"
+rule "[(${rule.ruleName})] "
 when
     $result : ActionResultDto()
     $fact : RuleFactDto(
@@ -21,7 +21,6 @@ then
     $result.setRuleFired("[(${rule.ruleName})]");
     System.out.println("Rule fired: [(${rule.ruleName})]");
 end
-
 [/]
 
 [# th:each="rule : ${andRules}" ]
