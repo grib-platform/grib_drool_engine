@@ -44,7 +44,8 @@ data class AndRuleDto(
 
 data class OrRuleConditionDto(
     val deviceId: String,
-    val functionName: String
+    val functionName: String,
+    val functionValue: Int
 )
 
 data class OrRuleDto(
