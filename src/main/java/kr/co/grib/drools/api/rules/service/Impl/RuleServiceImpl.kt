@@ -13,6 +13,7 @@ import kr.co.grib.drools.api.rules.service.RuleService
 import kr.co.grib.drools.api.templateManager.dto.RuleTemplateDto
 import kr.co.grib.drools.api.templateManager.service.RuleTemplateService
 import kr.co.grib.drools.config.RequestInfoProvider
+import kr.co.grib.drools.define.RuleExecuteType
 import kr.co.grib.drools.define.RuleOperationType
 import kr.co.grib.drools.define.StatusCode
 import kr.co.grib.drools.utils.Utiles
@@ -286,13 +287,6 @@ class RuleServiceImpl (
                 rtn.code = StatusCode.RULE_ID_IS_EMPTY.name
                 rtn.message = StatusCode.RULE_ID_IS_EMPTY
             }
-            // data 에 대한
-            if (req.ruleGroup.isEmpty() || req.ruleGroup.isBlank()){
-                logger.error("groupId.is.null")
-                rtn.success = false
-                rtn.code = StatusCode.GROUP_ID_IS_EMPTY.name
-                return rtn
-            }
 
             if (req.facts.isEmpty()) {
                 logger.error("fact.is.null")
@@ -310,6 +304,7 @@ class RuleServiceImpl (
                return rtn
            }
 
+
             val kieSession = droolsManagerService.initTemplateToDrools(chk.ruleText)
 
             logger.info("kieSession.$kieSession")
@@ -326,7 +321,7 @@ class RuleServiceImpl (
             kieSession.insert(result)
             req.facts.map { it ->
                 val fact = RuleFactDto(
-                    groupId = req.ruleGroup,
+                    groupId = chk.ruleGroup,
                     deviceId = it.deviceId,
                     functionName = it.functionName,
                     functionValue = it.functionValue
@@ -335,12 +330,40 @@ class RuleServiceImpl (
             }
 
             kieSession.fireAllRules()
-            val fireRulesCount = kieSession.fireAllRules();
-            logger.info("kieSession.$fireRulesCount ")
             kieSession.dispose()
 
-            logger.info("check.$result")
-            logger.info(requestInfoProvider.getUserName())
+            if (result.result.isNullOrBlank() ||
+                result.ruleFired.isNullOrBlank() ||
+                result.action.isNullOrBlank()){
+
+                rtn.success = false
+                rtn.code = StatusCode.FAIL_TO_RULE_FIRE.code
+                rtn.message = StatusCode.FAIL_TO_RULE_FIRE
+                return rtn
+            }
+
+            droolsAuditHistoryRepo.saveDroolsAuditHistory(
+                 RuleAuditHistoryDto(
+                     ruleName = result.ruleFired!!,
+                     ruleAditIp = requestInfoProvider.getClientIp()!!,
+                     ruleApiMethod = requestInfoProvider.getApiMethod()!!,
+                     ruleApi = requestInfoProvider.getApiUri()!!,
+                     ruleFact = req.facts.toString(),
+                     ruleResult = result.result,
+                     ruleAditStatus = RuleExecuteType.SUCCESS.code,
+                     ruleMsg =  result.action!!,
+                     userName = requestInfoProvider.getUserName()
+                 )
+            )
+
+            rtn.body = RuleResponseDto(
+                groupId = chk.ruleGroup,
+                result = result.result,
+                action = result.action!!
+            )
+            rtn.success = true
+            rtn.code = StatusCode.SUCCESS.code
+            rtn.message =  StatusCode.SUCCESS
 
         }catch (e: Exception){
             logger.error("error.$e")

@@ -21,6 +21,7 @@ enum class StatusCode(@get:JsonValue val code: String) {
     INIT_ERROR_KIESESSION("init.error.kiesession"),
     GROUP_ID_IS_EMPTY("groupId.is.empty"),
     FACTS_IS_EMPTY("facts.is.empty"),
+    FAIL_TO_RULE_FIRE("fail.to.rule.fire"),
 
     //TOKEN
     JWT_TOKEN_HEADER_ERROR("jwt.token.header.error"),

@@ -18,7 +18,7 @@ when
 then
     $result.setResult(RuleStatusCode.HIGH.code);
     $result.setAction(RuleStatusCode.HIGH.name);
-    $result.setRuleFired("rule SINGLE: [(${rule.ruleName})]");
+    $result.setRuleFired("[(${rule.ruleName})]");
     System.out.println("Rule fired: [(${rule.ruleName})]");
 end
 
@@ -36,7 +36,7 @@ when
 then
     $result.setResult(RuleStatusCode.NORMAL.code);
     $result.setAction(RuleStatusCode.NORMAL.name);
-    $result.setRuleFired("rule AND: [(${rule.ruleName})]");
+    $result.setRuleFired("[(${rule.ruleName})]");
     System.out.println("Rule fired: [(${rule.ruleName})]");
 end
 
@@ -48,13 +48,13 @@ when
     $result : ActionResultDto()
     $fact : RuleFactDto(
         [# th:each="cond, stat : ${rule.conditions}" ]
-            (deviceId == "[(${cond.deviceId})]" && functionName == "[(${cond.functionName})]")[(${stat.last} ? '' : ' ||')]
+            (deviceId == "[(${cond.deviceId})]" && functionName == "[(${cond.functionName})]" && functionValue > [(${cond.functionValue})])[(${stat.last} ? '' : ' ||')]
         [/]
     )
 then
     $result.setResult(RuleStatusCode.HIGH.code);
     $result.setAction(RuleStatusCode.HIGH.name);
-    $result.setRuleFired("rule OR: [(${rule.ruleName})]");
+    $result.setRuleFired("[(${rule.ruleName})]");
     System.out.println("Rule fired: [(${rule.ruleName})]");
 end
 [/]
