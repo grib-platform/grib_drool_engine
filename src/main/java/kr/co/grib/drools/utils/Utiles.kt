@@ -31,7 +31,7 @@ object Utiles {
     ): Map<String,Any?> {
         val result = mutableMapOf<String,Any?>()
         //groupId 고정으로 넣기
-        result["groupId"] = request.groupId
+        //result["groupId"] = request.ruleGroup
 
         request.facts.forEachIndexed{
             index, fact ->

@@ -8,6 +8,7 @@ enum class RuleStatusCode(@JvmField val code: String){
 
     HIGH ("temperature.is.high"),
     LOW ("temperature.is.low"),
+    NORMAL("temperature.is.normal"),
     MIDIUM ("temerature.is.midium"),
 
 }

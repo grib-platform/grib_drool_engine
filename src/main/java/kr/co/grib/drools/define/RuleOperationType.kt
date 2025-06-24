@@ -35,3 +35,8 @@ enum class RuleEnableType(@get:JsonValue val code: Boolean) {
 }
 
 
+enum class RuleExecuteType(@get:JsonValue val code: String) {
+    SUCCESS("RULE.FIRE.SUCCESS"),
+    FAILE("RULE.FIRE.FAIL")
+}
+
