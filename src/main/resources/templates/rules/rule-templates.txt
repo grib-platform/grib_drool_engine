@@ -7,7 +7,7 @@ import kr.co.grib.drools.define.RuleStatusCode;
 [/]
 
 [# th:each="rule : ${singleRules}" ]
-rule "[(${rule.ruleName})] "
+rule "[(${groupId})]_[(${rule.ruleName})] "
 when
     $result : ActionResultDto()
     $fact : RuleFactDto(
@@ -24,7 +24,7 @@ end
 [/]
 
 [# th:each="rule : ${andRules}" ]
-rule "[(${rule.ruleName})]"
+rule "[(${groupId})]_[(${rule.ruleName})]"
 when
     $result : ActionResultDto()
     $fact : RuleFactDto(
@@ -42,7 +42,7 @@ end
 [/]
 
 [# th:each="rule : ${orRules}" ]
-rule "[(${rule.ruleName})]"
+rule "[(${groupId})]_[(${rule.ruleName})]"
 when
     $result : ActionResultDto()
     $fact : RuleFactDto(

@@ -2,8 +2,8 @@ package kr.co.grib.drools.api.rules.repository
 
 import com.querydsl.jpa.impl.JPAQueryFactory
 import jakarta.persistence.EntityManager
-import kr.co.grib.drools.Entity.DroolsModifyHistory
-import kr.co.grib.drools.Entity.QDroolsModifyHistory
+import kr.co.grib.drools.api.rules.Entity.DroolsModifyHistory
+import kr.co.grib.drools.api.rules.Entity.QDroolsModifyHistory
 import kr.co.grib.drools.api.rules.dto.RuleInsertReqDto
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Propagation

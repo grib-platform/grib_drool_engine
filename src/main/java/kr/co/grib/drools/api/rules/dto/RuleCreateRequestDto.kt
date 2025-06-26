@@ -1,8 +1,8 @@
 package kr.co.grib.drools.api.rules.dto
 
 import io.swagger.v3.oas.annotations.media.Schema
-import kr.co.grib.drools.define.RuleEnableType
-import kr.co.grib.drools.define.RuleTypeCode
+import kr.co.grib.drools.api.rules.define.RuleEnableType
+import kr.co.grib.drools.api.rules.define.RuleTypeCode
 
 data class RuleCreateRequestDto (
 
@@ -13,15 +13,15 @@ data class RuleCreateRequestDto (
     val ruleSetName: String,
 
     @Schema(description = "룰 활성 여부(Y/N)")
-    val enable: RuleEnableType ,
+    val enable: RuleEnableType,
 
-    @Schema(description = "single rule conditions")
+    @Schema(description = "string rule conditions")
     val singleRules: List<SingleRuleDto> ?= null,
 
-    @Schema(description = "And rule conditions")
+    @Schema(description = "range rule conditions")
     val andRules: List<AndRuleDto> ?= null,
 
-    @Schema(description = "Or rule conditions")
+    @Schema(description = "default rule conditions")
     val orRules: List<OrRuleDto> ?= null
 )
 
