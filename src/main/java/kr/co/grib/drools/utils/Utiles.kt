@@ -1,7 +1,9 @@
 package kr.co.grib.drools.utils
 
+import kr.co.grib.drools.api.HRules.dto.FnData
+import kr.co.grib.drools.api.HRules.dto.RuleDto
 import kr.co.grib.drools.api.rules.dto.RuleRequestDto
-import kr.co.grib.drools.api.templateManager.dto.RuleTemplateDto
+import kr.co.grib.drools.api.rules.templateManager.dto.RuleTemplateDto
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import kotlin.reflect.full.memberProperties
@@ -182,4 +184,64 @@ object Utiles {
         }
     }
     //</editor-fold desc="RuleName 중 실제로 존해 하는 rule 갯수 반환">
+
+    //<editor-fold desc="rule 평가">
+    fun setEvaluationRules(
+        rule: RuleDto,
+        data: List<FnData>
+    ): Boolean {
+        if (rule.conditions.isEmpty()){
+            return false
+        }
+
+        for (condition in rule.conditions) {
+            val actualFnData  = data.find { it.functionName == condition.function } ?: return false
+            val actualValue = actualFnData.functionValue
+
+            val matching = when(rule.type) {
+                "string" -> actualValue.toString() == condition.value.toString()
+                "default" -> {
+                    val functionVale = (actualValue as Number).toDouble()
+                    val compareValue = (condition.value as? Number)?.toDouble()
+                        ?: condition.value.toString().toDoubleOrNull() ?: return false
+                    getCompareValue(functionVale, compareValue, condition.operator.op)
+                }
+                "range" -> {
+                    val functionValue =  (actualValue as Number).toDouble()
+                    val minValue = (condition.value1 as? Number)?.toDouble()
+                        ?: condition.value1.toString().toDoubleOrNull() ?: return false
+                    val maxValue = (condition.value2 as? Number)?.toDouble()
+                        ?: condition.value2.toString().toDoubleOrNull() ?: return false
+                    when(condition.operator.op) {
+                        //min 부터 max 까지의 범위에 포함 되는지 (여부를 검사하는 표현
+                        "inside" -> functionValue in minValue .. maxValue
+                        "outside" -> functionValue < minValue || functionValue > maxValue
+                        else ->  false
+                    }
+                }
+                else -> false
+            }
+
+            if (!matching) return false
+        }
+        return true
+    }
+    //</editor-fold desc="rule 평가">
+
+    //<editor-fold desc="rule 평가">
+    fun getCompareValue(
+        functionValue: Double, //a
+        compareValue: Double, //b
+        operation: String
+    ): Boolean {
+        return when(operation) {
+            "greater than" -> functionValue > compareValue
+            "greater than or equal to" -> functionValue >= compareValue
+            "less than" -> functionValue < compareValue
+            "less than or eqaul to" -> functionValue <= compareValue
+            "equal to" -> functionValue == compareValue
+            else ->  false
+        }
+    }
+    //</editor-fold desc="rule 평가">
 }

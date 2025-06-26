@@ -2,20 +2,20 @@ package kr.co.grib.drools.api.rules.service.Impl
 
 import com.fasterxml.jackson.databind.ser.Serializers.Base
 import kr.co.grib.drools.api.base.dto.BaseCtlDto
-import kr.co.grib.drools.api.druleManager.dto.ActionResultDto
-import kr.co.grib.drools.api.druleManager.dto.RuleFactDto
-import kr.co.grib.drools.api.druleManager.service.DroolsManagerService
+import kr.co.grib.drools.api.rules.druleManager.dto.ActionResultDto
+import kr.co.grib.drools.api.rules.druleManager.dto.RuleFactDto
+import kr.co.grib.drools.api.rules.druleManager.service.DroolsManagerService
 import kr.co.grib.drools.api.rules.dto.*
 import kr.co.grib.drools.api.rules.repository.DroolsAuditHistoryRepo
 import kr.co.grib.drools.api.rules.repository.DroolsModifyHistoryRepo
 import kr.co.grib.drools.api.rules.repository.DroolsRepo
 import kr.co.grib.drools.api.rules.service.RuleService
-import kr.co.grib.drools.api.templateManager.dto.RuleTemplateDto
-import kr.co.grib.drools.api.templateManager.service.RuleTemplateService
+import kr.co.grib.drools.api.rules.templateManager.dto.RuleTemplateDto
+import kr.co.grib.drools.api.rules.templateManager.service.RuleTemplateService
 import kr.co.grib.drools.config.RequestInfoProvider
-import kr.co.grib.drools.define.RuleExecuteType
-import kr.co.grib.drools.define.RuleOperationType
-import kr.co.grib.drools.define.StatusCode
+import kr.co.grib.drools.api.rules.define.RuleExecuteType
+import kr.co.grib.drools.api.rules.define.RuleOperationType
+import kr.co.grib.drools.api.rules.define.StatusCode
 import kr.co.grib.drools.utils.Utiles
 import kr.co.grib.drools.utils.getLogger
 import org.springframework.stereotype.Service
@@ -39,7 +39,7 @@ class RuleServiceImpl (
     ): BaseCtlDto {
         val rtn  = BaseCtlDto()
         val username = requestInfoProvider.getUserName()
-        var ruleDrl  = ""
+        var ruleDrl: String
         try {
             logger.info("req.$req")
             if (req.ruleGroup.isEmpty()){
@@ -60,6 +60,7 @@ class RuleServiceImpl (
             ruleDrl = ruleTemplateService.initThymeleafRenderAllRules(
                 RuleTemplateDto(
                     ruleGroup = req.ruleGroup,
+                    ruleName = "",
                     singleRules = req.singleRules,
                     andRules = req.andRules,
                     orRules = req.orRules
@@ -115,8 +116,8 @@ class RuleServiceImpl (
         req: RuleAddRequestDto
     ): BaseCtlDto {
         var rtn = BaseCtlDto()
-        var addDrl  = ""
-        var mergedText = ""
+        var addDrl: String
+        var mergedText: String
         val username = requestInfoProvider.getUserName()
         try {
             //ruleId 가 없을때
@@ -148,6 +149,7 @@ class RuleServiceImpl (
            addDrl = ruleTemplateService.initThymeleafRenderAllRules(
                RuleTemplateDto(
                    ruleGroup = ruleInfo.ruleGroup,
+                   ruleName = "",
                    singleRules = req.singleRules,
                    andRules = req.andRules,
                    orRules = req.orRules

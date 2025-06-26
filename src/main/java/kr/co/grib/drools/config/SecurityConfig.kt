@@ -31,7 +31,8 @@ class SecurityConfig (
                         "/v3/api-docs/**",
                         "/swagger-ui.html",
                         "/api-docs/**",
-                        "/api/v1/rule/**").permitAll() // 인증없이 접근 허용
+                        "/api/v1/rule/**",
+                        "/api/v1/hRule/**").permitAll() // 인증없이 접근 허용
                     .anyRequest().authenticated() // 그 외 요청은 인증 필요
             }
             .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter::class.java) // JWT 필터 등록

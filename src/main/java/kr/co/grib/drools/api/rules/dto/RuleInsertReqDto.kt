@@ -1,8 +1,8 @@
 package kr.co.grib.drools.api.rules.dto
 
 import io.swagger.v3.oas.annotations.media.Schema
-import kr.co.grib.drools.define.RuleEnableType
-import kr.co.grib.drools.define.RuleOperationType
+import kr.co.grib.drools.api.rules.define.RuleEnableType
+import kr.co.grib.drools.api.rules.define.RuleOperationType
 
 data class RuleInsertReqDto (
     @Schema(description = "룰 ID")

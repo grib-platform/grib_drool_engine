@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController
 
 
 @RestController
-@Tag(name="Service to Rule Engine API" , description = "service 에서 rule engine 처리 api를 기술 합니다. ")
+@Tag(name="Service to Drool Engine API" , description = "service 에서 Drools engine 처리 api를 기술 합니다. ")
 @RequestMapping("/api/v1/rule")
 class RuleController (
     private val ruleService: RuleService

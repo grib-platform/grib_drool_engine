@@ -3,13 +3,13 @@ package kr.co.grib.drools.api.rules.repository
 import com.querydsl.core.types.Projections
 import com.querydsl.jpa.impl.JPAQueryFactory
 import jakarta.persistence.EntityManager
-import kr.co.grib.drools.Entity.Drools
-import org.springframework.transaction.annotation.Transactional
-import kr.co.grib.drools.Entity.QDrools
+import kr.co.grib.drools.api.rules.Entity.Drools
+import kr.co.grib.drools.api.rules.Entity.QDrools
 import kr.co.grib.drools.api.rules.dto.RuleAddResponseDto
 import kr.co.grib.drools.api.rules.dto.RuleInsertReqDto
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Propagation
+import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
 
 @Repository
