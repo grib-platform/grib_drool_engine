@@ -14,8 +14,6 @@ class Drools (
     @Column(name = "rule_group", nullable = false)
     var ruleGroup: String ="",
 
-    @Column(name= "rule_nm" , nullable =  false)
-    var ruleNm: String = "",
 
     @Column(name= "rule_text",  nullable = false)
     var ruleText: String = "",

@@ -6,8 +6,6 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import kr.co.grib.drools.api.HRules.dto.HRuleDataRequest
 import kr.co.grib.drools.api.HRules.dto.HRuleResponseCtlDto
 import kr.co.grib.drools.api.HRules.service.HRuleService
-import kr.co.grib.drools.api.rules.dto.RuleRequestDto
-import kr.co.grib.drools.api.rules.dto.RuleResponseCtlDto
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping

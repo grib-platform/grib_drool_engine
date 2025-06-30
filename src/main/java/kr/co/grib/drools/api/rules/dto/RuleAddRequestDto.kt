@@ -7,13 +7,13 @@ data class RuleAddRequestDto (
     @Schema(description = "룰 ID")
     val ruleId: Int,
 
-    @Schema(description = "single rule conditions")
-    val singleRules: List<SingleRuleDto> ?= null,
+    @Schema(description = "String rule conditions")
+    val stringRules: List<StringRuleDto> ?= null,
 
-    @Schema(description = "And rule conditions")
-    val andRules: List<AndRuleDto> ?= null,
+    @Schema(description = "Default rule conditions")
+    val defaultRules: List<DefaultRuleDto> ?= null,
 
-    @Schema(description = "Or rule conditions")
-    val orRules: List<OrRuleDto> ?= null
+    @Schema(description = "Range rule conditions")
+    val rangeRules: List<RangeRuleDto> ?= null
 )
 
