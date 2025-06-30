@@ -10,9 +10,21 @@ enum class RuleOperationType {
 }
 
 enum class RuleTypeCode(@get:JsonValue val code: String) {
-    SINGLE("single"),
-    AND("and"),
-    OR("or")
+    NONE(""),
+    STRING("string"),
+    DEFAULT("default"),
+    RANGE("range"),
+}
+
+enum class RuleOperationCode(@get:JsonValue val code: String) {
+    NONE(""),
+    MATCH("match"),
+    GT("greater than"),
+    GTE("greater than or equal to"),
+    LT("less than"),
+    LTE("less than or equal to"),
+    INSIDE("inside"),
+    OUTSIDE("outside"),
 }
 
 enum class RuleEnableType(@get:JsonValue val code: Boolean) {
@@ -30,10 +42,7 @@ enum class RuleEnableType(@get:JsonValue val code: Boolean) {
             }
         }
     }
-
-
 }
-
 
 enum class RuleExecuteType(@get:JsonValue val code: String) {
     SUCCESS("RULE.FIRE.SUCCESS"),

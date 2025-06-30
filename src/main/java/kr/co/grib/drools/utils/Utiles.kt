@@ -52,11 +52,11 @@ object Utiles {
         header: Boolean
     ): Map<String,Any?> {
         val result = mutableMapOf<String,Any?>()
-        //groupId 고정으로 넣기
-        result["groupId"] = request.ruleGroup
-        result["singleRules"] = request.singleRules
-        result["andRules"] = request.andRules
-        result["orRules"] = request.orRules
+        //ruleGroup 고정으로 넣기
+        result["ruleGroup"] = request.ruleGroup
+        result["stringRules"] = request.stringRules
+        result["defaultRules"] = request.defaultRules
+        result["rangeRules"] = request.rangeRules
         result["includeHeader"] = header
         return result
     }
