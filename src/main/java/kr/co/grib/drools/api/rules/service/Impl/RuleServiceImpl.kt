@@ -49,27 +49,19 @@ class RuleServiceImpl (
                 return rtn
             }
 
-            if (req.ruleSetName.isEmpty()){
-                rtn.success = false
-                rtn.code = StatusCode.RULE_SET_NAME_IS_EMPTY.name
-                rtn.message = StatusCode.RULE_SET_NAME_IS_EMPTY
-                return rtn
-            }
-
             //Rule 파일 만들기
             ruleDrl = ruleTemplateService.initThymeleafRenderAllRules(
                 RuleTemplateDto(
                     ruleGroup = req.ruleGroup,
-                    ruleName = "",
-                    singleRules = req.singleRules,
-                    andRules = req.andRules,
-                    orRules = req.orRules
+                    stringRules = req.stringRules,
+                    defaultRules = req.defaultRules,
+                    rangeRules = req.rangeRules
                 ),
                 true
             )
 
             logger.info("rule.Drl.create.info.$ruleDrl")
-            val ruleChk = droolsRepo.countDrools(req.ruleGroup, req.ruleSetName)
+            val ruleChk = droolsRepo.countDrools(req.ruleGroup)
             logger.info("rule.in.DB.check.$ruleChk")
             if (ruleChk >=1){
                 rtn.success = false
@@ -83,7 +75,6 @@ class RuleServiceImpl (
                     ruleGroup = req.ruleGroup,
                     ruleText = ruleDrl,
                     createdBy = username,
-                    ruleSetName = req.ruleSetName,
                     ruleActionType = RuleOperationType.CREATE,
                     enabled = req.enable
                 )
@@ -129,9 +120,9 @@ class RuleServiceImpl (
             }
 
             //추가 rule이 없을때
-            if(req.singleRules.isNullOrEmpty() &&
-                req.andRules.isNullOrEmpty() &&
-                req.orRules.isNullOrEmpty()){
+            if(req.stringRules.isNullOrEmpty() &&
+                req.defaultRules.isNullOrEmpty() &&
+                req.rangeRules.isNullOrEmpty()){
                 rtn.success = false
                 rtn.code = StatusCode.RULE_CODITION_IS_EMPTY.name
                 rtn.message = StatusCode.RULE_CODITION_IS_EMPTY
@@ -149,10 +140,9 @@ class RuleServiceImpl (
            addDrl = ruleTemplateService.initThymeleafRenderAllRules(
                RuleTemplateDto(
                    ruleGroup = ruleInfo.ruleGroup,
-                   ruleName = "",
-                   singleRules = req.singleRules,
-                   andRules = req.andRules,
-                   orRules = req.orRules
+                   stringRules = req.stringRules,
+                   defaultRules = req.defaultRules,
+                   rangeRules = req.rangeRules
                ),
                false
            )
@@ -259,6 +249,7 @@ class RuleServiceImpl (
             //ruleId 체크
             if (ruleId == null || ruleId == 0) {
                 rtn.success = false
+                rtn.code = StatusCode.RULE_ID_IS_EMPTY.name
                 rtn.code = StatusCode.RULE_ID_IS_EMPTY.name
                 rtn.message = StatusCode.RULE_ID_IS_EMPTY
                 return  rtn

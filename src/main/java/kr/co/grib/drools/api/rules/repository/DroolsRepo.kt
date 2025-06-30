@@ -41,8 +41,7 @@ class DroolsRepo(
 
     //<editor-fold desc="select 등록 rule 확인, UNIQUE(RULE_GROUP, RULE_NM), RULE_GROUP은 중복 되면 안됨 ">
     fun countDrools(
-        ruleGroup: String,
-        ruleName: String
+        ruleGroup: String
     ): Int {
         val count = queryFactory
             .select(drools.count())
@@ -64,7 +63,6 @@ class DroolsRepo(
     ): Int {
         val rules = Drools(
              ruleGroup = req.ruleGroup,
-             ruleNm = req.ruleSetName,
              ruleText = req.ruleText,
              enable = req.enabled.code,
              createdAt = LocalDateTime.now(),
