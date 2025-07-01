@@ -112,10 +112,10 @@ class RuleServiceImpl (
         val username = requestInfoProvider.getUserName()
         try {
             //ruleId 가 없을때
-            if (req.ruleId == null || req.ruleId == 0){
+            if (req.ruleGroup.isNullOrEmpty()){
                 rtn.success = false
-                rtn.code = StatusCode.RULE_ID_IS_EMPTY.name
-                rtn.message = StatusCode.RULE_ID_IS_EMPTY
+                rtn.code = StatusCode.RULE_GROUP_IS_EMPTY.name
+                rtn.message = StatusCode.RULE_GROUP_IS_EMPTY
                 return rtn
             }
 
@@ -129,7 +129,7 @@ class RuleServiceImpl (
                 return rtn
             }
 
-           val ruleInfo = droolsRepo.selectRulesText(req.ruleId)
+           val ruleInfo = droolsRepo.selectRulesText(req.ruleGroup)
            if (ruleInfo == null){
                 rtn.success = false
                 rtn.code = StatusCode.RULE_INFO_IS_NULL.name
@@ -152,13 +152,15 @@ class RuleServiceImpl (
              * 그렇지 않으면 신규 추가
              * **/
             mergedText = Utiles.mergeDrlRuleOverwrite(ruleInfo.ruleText, addDrl)
-            val update = droolsRepo.updateRule(req.ruleId.toLong() ,  mergedText )
+            val update = droolsRepo.updateRule(req.ruleGroup ,  mergedText )
+
+            logger.info("check.rule.id.{}", ruleInfo.ruleId)
 
             //HISTORY 추가
             if (update >=1){
                 droolsModifyHistoryRepo.saveDroolsModifyHistory(
                     RuleInsertReqDto(
-                        ruleId = req.ruleId,
+                        ruleId = ruleInfo.ruleId.toInt(),
                         ruleActionType = RuleOperationType.UPDATE,
                         ruleText = addDrl,
                         createdBy = username
@@ -178,35 +180,36 @@ class RuleServiceImpl (
 
     //<editor-fold desc="[DELETE] /deleteRule rule 삭제">
     override fun doDeleteRule(
-        ruleId: Int,
+        ruleGroup: String,
         ruleName: List<String>
     ):BaseCtlDto {
         val rtn = BaseCtlDto()
         val username = requestInfoProvider.getUserName()
         try {
             //ruleId 체크
-            if (ruleId == null || ruleId == 0) {
+            if (ruleGroup.isNullOrEmpty()) {
                 rtn.success = false
-                rtn.code = StatusCode.RULE_ID_IS_EMPTY.name
-                rtn.message = StatusCode.RULE_ID_IS_EMPTY
+                rtn.code = StatusCode.RULE_GROUP_IS_EMPTY.name
+                rtn.message = StatusCode.RULE_GROUP_IS_EMPTY
                 return  rtn
             }
 
-            //검색할 rule name 체크
-            if (ruleName.isNullOrEmpty()){
-                rtn.success = false
-                rtn.code = StatusCode.RULE_NAME_IS_EMPTY.name
-                rtn.message = StatusCode.RULE_NAME_IS_EMPTY
-                return rtn
-            }
-
-            val drl = droolsRepo.selectRulesText(ruleId)
+            val drl = droolsRepo.selectRulesText(ruleGroup)
             if (drl == null) {
                 rtn.success = false
                 rtn.code = StatusCode.RULE_IS_EMPTY.name
                 rtn.message = StatusCode.RULE_IS_EMPTY
                 return rtn
             }
+
+            //삭제할 rulename 목록 여부
+            if(ruleName.isNullOrEmpty()){
+                rtn.success = false
+                rtn.code = StatusCode.RULE_NAME_IS_EMPTY.name
+                rtn.message = StatusCode.RULE_NAME_IS_EMPTY
+                return rtn
+            }
+
             // check ruleName 이 있는지 없는지
             val check = Utiles.countExistingRules(drl.ruleText, ruleName)
             logger.info("check.$check")
@@ -218,11 +221,12 @@ class RuleServiceImpl (
             }
 
             val deleteDrlStr =  Utiles.removeRuleByRuleName(drl.ruleText, ruleName)
-            val updated = droolsRepo.updateRule(ruleId.toLong(), deleteDrlStr)
+            val updated = droolsRepo.updateRule(ruleGroup, deleteDrlStr)
+            logger.info("drl.check.ruleId.{}", drl.ruleId)
             if (updated >=1){
                 droolsModifyHistoryRepo.saveDroolsModifyHistory(
                     RuleInsertReqDto(
-                        ruleId = ruleId,
+                        ruleId = drl.ruleId.toInt(),
                         ruleActionType = RuleOperationType.DELETE,
                         ruleText = Utiles.extractRulesByNames(drl.ruleText, ruleName),
                         createdBy = username
@@ -242,25 +246,37 @@ class RuleServiceImpl (
 
     //<editor-fold desc="[DELETE] /remove rule 자체 삭제">
     override fun doRemoveRule(
-        ruleId: Int
+        ruleGroup: String
     ):BaseCtlDto {
         val rtn = BaseCtlDto()
         try{
             //ruleId 체크
-            if (ruleId == null || ruleId == 0) {
+            if (ruleGroup.isNullOrEmpty()) {
                 rtn.success = false
-                rtn.code = StatusCode.RULE_ID_IS_EMPTY.name
-                rtn.code = StatusCode.RULE_ID_IS_EMPTY.name
-                rtn.message = StatusCode.RULE_ID_IS_EMPTY
+                rtn.code = StatusCode.RULE_GROUP_IS_EMPTY.name
+                rtn.message = StatusCode.RULE_GROUP_IS_EMPTY
                 return  rtn
             }
 
-            //history를 먼저 삭제를 하고, Drools 삭제
-            val history = droolsModifyHistoryRepo.deleteDroolsModifyHistory(ruleId.toLong())
-            if (history>=1){
-                droolsRepo.deleteRule(ruleId.toLong())
+            //해당 rule 이 존재 하는지 확인
+            val check = droolsRepo.selectRulesText(ruleGroup)
+            logger.info("check.{}", check)
+            if (check == null){
+                rtn.success = false
+                rtn.code = StatusCode.RULE_ID_IS_EMPTY.name
+                rtn.message = StatusCode.RULE_ID_IS_EMPTY
+                return rtn
             }
 
+            //history를 먼저 삭제를 하고, Drools 삭제
+            val history = droolsModifyHistoryRepo.deleteDroolsModifyHistory(check.ruleId)
+            if (history>=1){
+                droolsRepo.deleteRule(check.ruleId)
+            }
+
+            rtn.success = true
+            rtn.code = StatusCode.SUCCESS.name
+            rtn.message = StatusCode.SUCCESS
         }catch (e: Exception){
             logger.error("doRemove.error.$e")
         }
@@ -275,10 +291,11 @@ class RuleServiceImpl (
         val rtn = RuleResponseCtlDto()
         val result = ActionResultDto()
         try {
-            if (req.ruleId == null || req.ruleId == 0){
+            if (req.ruleGroup.isNullOrEmpty()){
                 rtn.success = false
-                rtn.code = StatusCode.RULE_ID_IS_EMPTY.name
-                rtn.message = StatusCode.RULE_ID_IS_EMPTY
+                rtn.code = StatusCode.RULE_GROUP_IS_EMPTY.name
+                rtn.message = StatusCode.RULE_GROUP_IS_EMPTY
+                return rtn
             }
 
             if (req.facts.isEmpty()) {
@@ -288,7 +305,7 @@ class RuleServiceImpl (
                 return rtn
             }
 
-           val chk = droolsRepo.selectRulesText(req.ruleId)
+           val chk = droolsRepo.selectRulesText(req.ruleGroup)
            if (chk == null)
            {
                rtn.success = false
@@ -350,9 +367,8 @@ class RuleServiceImpl (
             )
 
             rtn.body = RuleResponseDto(
-                groupId = chk.ruleGroup,
-                result = result.result,
-                action = result.action!!
+                ruleGroup = chk.ruleGroup,
+                result = result.ruleFired.toString(),
             )
             rtn.success = true
             rtn.code = StatusCode.SUCCESS.code

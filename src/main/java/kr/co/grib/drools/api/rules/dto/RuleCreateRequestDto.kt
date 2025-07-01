@@ -24,20 +24,18 @@ data class RuleCreateRequestDto (
 )
 
 data class StringRuleDto(
-    @Schema(description = "ruleName (STRING, DEFAULT, RANGE)", example = "DEFAULT")
-    val ruleName: RuleOperationCode = RuleOperationCode.NONE,
+    val ruleName: RuleTypeCode,
     @Schema(description = "ruleType (NONE,MATCH,GT(>),GTE(>=),LT(<),LTE(<=),INSIDE(&),OUTSIDE(||))", example = "GT")
-    val ruleType: RuleTypeCode = RuleTypeCode.STRING,
+    val ruleType: RuleOperationCode,
     val deviceId: String,
     val functionName: String,
     val functionValue: Double
 )
 
 data class DefaultRuleDto(
-    @Schema(description = "ruleName (NONE, STRING, DEFAULT), REANGE", example = "STRING")
-    val ruleName: RuleOperationCode = RuleOperationCode.NONE,
+    val ruleName: RuleTypeCode,
     @Schema(description = "ruleType (NONE,MATCH,GT(>),GTE(>=),LT(<),LTE(<=))", example = "GT")
-    val ruleType: RuleTypeCode = RuleTypeCode.DEFAULT,
+    val ruleType: RuleOperationCode,
     val deviceId: String,
     val functionName: String,
     val functionValue: Double
@@ -46,14 +44,13 @@ data class DefaultRuleDto(
 data class RuleConditionDto(
     val deviceId: String,
     @Schema(description = "ruleType (INSIDE(&&), OUTSIDE(||))", example = "INSIDE")
-    val ruleRangeType: RuleOperationCode = RuleOperationCode.NONE,
+    val ruleRangeType: RuleOperationCode,
     val minValue: Double,
     val maxValue: Double
 )
 
 data class RangeRuleDto(
-    val ruleName: RuleOperationCode = RuleOperationCode.NONE,
-    val ruleType: RuleTypeCode = RuleTypeCode.NONE,
+    val ruleName: RuleTypeCode,
     val functionName: String,
     val conditions: RuleConditionDto? = null
 )
