@@ -31,7 +31,7 @@ class DroolsAuditHistoryRepo (
             ruleResult = req.ruleResult,
             status = req.ruleAditStatus,
             message = req.ruleMsg,
-            createdBy = req.ruleName,
+            createdBy = req.userName,
             createdAt = LocalDateTime.now()
         )
         em.persist(ruleHistory)

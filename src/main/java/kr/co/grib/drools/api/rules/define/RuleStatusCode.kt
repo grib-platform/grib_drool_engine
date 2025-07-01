@@ -6,12 +6,11 @@ package kr.co.grib.drools.api.rules.define
  * **/
 enum class RuleStatusCode(@JvmField val code: String){
 
-    HIGH ("temperature.is.high"),
-    LOW ("temperature.is.low"),
-    NORMAL("temperature.is.normal"),
-    MIDIUM ("temerature.is.midium"),
-
-
-
+    MATCH("string value match"),
+    GT("default value greater than"),
+    GTE("default value greater than to"),
+    LT("default value less than"),
+    LTE("default value less than or equal to"),
+    RANGE("value range"),
 
 }

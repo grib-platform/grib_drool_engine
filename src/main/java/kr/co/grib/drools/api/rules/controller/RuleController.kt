@@ -58,13 +58,13 @@ class RuleController (
     @Operation(summary = "RULE 삭제" , description = "Rule을 삭제 합니다.")
     @DeleteMapping("/deleteRule")
     fun doDeleteRule(
-        @Parameter(required = true, description = "rule ID")
-        @RequestParam ruleId: Int,
+        @Parameter(required = true, description = "rule group")
+        @RequestParam ruleGroup: String,
         @Parameter(required = true, description = "rule name")
         @RequestParam ruleName: List<String>,
         ): ResponseEntity<BaseCtlDto> =
         ResponseEntity(
-            ruleService.doDeleteRule(ruleId, ruleName),
+            ruleService.doDeleteRule(ruleGroup, ruleName),
             HttpStatus.OK
         )
     //</editor-fold desc="[DELETE] /deleteRule rule 삭제">
@@ -73,11 +73,11 @@ class RuleController (
     @Operation(summary = "RULE 자체 삭제" , description = "Rule 자체를 삭제 합니다.")
     @DeleteMapping("/remove")
     fun doRemoveRule(
-        @Parameter(required = true, description = "rule ID")
-        @RequestParam ruleId: Int
+        @Parameter(required = true, description = "rule Group")
+        @RequestParam ruleGroup: String
     ): ResponseEntity<BaseCtlDto> =
         ResponseEntity(
-            ruleService.doRemoveRule(ruleId),
+            ruleService.doRemoveRule(ruleGroup),
             HttpStatus.OK
         )
     //</editor-fold desc="[DELETE] /remove rule 자체 삭제">
