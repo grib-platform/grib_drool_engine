@@ -26,6 +26,13 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: grib
     password: grib12!@
+    hikari:
+      max-lifetime: 600000
+      idle-timeout: 300000
+      minimum-idle: 2
+      maximum-pool-size: 10
+      validation-timeout: 3000
+      connection-test-query: SELECT 1
   jpa:
     database: mysql
     database-platform: org.hibernate.dialect.MySQL8Dialect
@@ -52,6 +59,13 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: grib
     password: grib12!@
+    hikari:
+      max-lifetime: 600000
+      idle-timeout: 300000
+      minimum-idle: 2
+      maximum-pool-size: 10
+      validation-timeout: 3000
+      connection-test-query: SELECT 1
   jpa:
     database: mysql
     database-platform: org.hibernate.dialect.MySQL8Dialect

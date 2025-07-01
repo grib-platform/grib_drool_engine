@@ -1,33 +1,33 @@
-<!--/* Rule Template 에서의 header 유무 */-->
 [# th:if="${includeHeader}"]
 package rules.[(${ruleGroup})];
 
-import kr.co.grib.drools.api.druleManager.dto.RuleFactDto;
-import kr.co.grib.drools.api.druleManager.dto.ActionResultDto;
-import kr.co.grib.drools.define.RuleStatusCode;
+import kr.co.grib.drools.api.rules.druleManager.dto.RuleFactDto;
+import kr.co.grib.drools.api.rules.druleManager.dto.ActionResultDto;
+import kr.co.grib.drools.api.rules.define.RuleStatusCode;
 [/]
 
-<!--/* String Rule. Equal Rule에 해당  */-->
+// String Rule. Equal Rule에 해당
 [# th:each="rule : ${stringRules}" ]
-rule "[(${ruleGroup})]_${stringRules}"
+rule "[(${ruleGroup})]_[(${rule.ruleName})]_[(${rule.ruleType})]"
 when
     $result : ActionResultDto()
     $fact : RuleFactDto(
         deviceId == "[(${rule.deviceId})]",
         functionName == "[(${rule.functionName})]",
-        functionValue > [(${rule.functionValue})]
+        functionValue == [(${rule.functionValue})]
     )
 then
-    $result.setResult(RuleStatusCode.HIGH.code);
-    $result.setAction(RuleStatusCode.HIGH.name);
-    $result.setRuleFired("[(${rule.ruleName})]");
-    System.out.println("Rule fired: [(${rule.ruleName})]");
+    $result.setResult(RuleStatusCode.MATCH.code);
+    $result.setAction(RuleStatusCode.MATCH.name());
+    $result.setRuleFired("[(${ruleGroup})]_[(${rule.ruleType.code})]_[(${rule.functionValue})]");
+    System.out.println("Rule fired: [(${ruleGroup})]_[(${rule.ruleType.code})]_[(${rule.functionValue})]");
 end
 [/]
 
-<!--/* Default Rule : > , >= , < , <= 인 경우 */-->
+// Default Rule : > , >= , < , <= 인 경우
 [# th:each="rule : ${defaultRules}" ]
-rule "[(${ruleGroup})]_[(${rule.ruleType})]_[(${rule.ruleName})] "
+[# th:if="${rule.ruleType.name == 'GT'}" ]
+rule "[(${ruleGroup})]_[(${rule.ruleName})]_[(${rule.ruleType})]"
 when
     $result : ActionResultDto()
     $fact : RuleFactDto(
@@ -36,13 +36,15 @@ when
         functionValue > [(${rule.functionValue})]
     )
 then
-    $result.setResult(RuleStatusCode.HIGH.code);
-    $result.setAction(RuleStatusCode.HIGH.name);
-    $result.setRuleFired("[(${rule.ruleName})]");
-    System.out.println("Rule fired: [(${rule.ruleName})]");
+    $result.setResult(RuleStatusCode.GT.code);
+    $result.setAction(RuleStatusCode.GT.name());
+    $result.setRuleFired("[(${ruleGroup})]_[(${rule.ruleType.code})]_[(${rule.functionValue})]");
+    System.out.println("Rule fired: [(${ruleGroup})]_[(${rule.ruleType.code})]_[(${rule.functionValue})]");
 end
+[/]
 
-rule "[(${ruleGroup})]_[(${rule.ruleName})] "
+[# th:if="${rule.ruleType.name == 'GTE'}" ]
+rule "[(${ruleGroup})]_[(${rule.ruleName})]_[(${rule.ruleType})]"
 when
     $result : ActionResultDto()
     $fact : RuleFactDto(
@@ -51,14 +53,15 @@ when
         functionValue >= [(${rule.functionValue})]
     )
 then
-    $result.setResult(RuleStatusCode.HIGH.code);
-    $result.setAction(RuleStatusCode.HIGH.name);
-    $result.setRuleFired("[(${rule.ruleName})]");
-    System.out.println("Rule fired: [(${rule.ruleName})]");
+    $result.setResult(RuleStatusCode.GTE.code);
+    $result.setAction(RuleStatusCode.GTE.name());
+    $result.setRuleFired("[(${ruleGroup})]_[(${rule.ruleType.code})]_[(${rule.functionValue})]");
+    System.out.println("Rule fired: [(${ruleGroup})]_[(${rule.ruleType.code})]_[(${rule.functionValue})]");
 end
+[/]
 
-
-rule "[(${ruleGroup})]_[(${rule.ruleName})] "
+[# th:if="${rule.ruleType.name == 'LT'}" ]
+rule "[(${ruleGroup})]_[(${rule.ruleName})]_[(${rule.ruleType})]"
 when
     $result : ActionResultDto()
     $fact : RuleFactDto(
@@ -67,13 +70,15 @@ when
         functionValue < [(${rule.functionValue})]
     )
 then
-    $result.setResult(RuleStatusCode.HIGH.code);
-    $result.setAction(RuleStatusCode.HIGH.name);
-    $result.setRuleFired("[(${rule.ruleName})]");
-    System.out.println("Rule fired: [(${rule.ruleName})]");
+    $result.setResult(RuleStatusCode.LT.code);
+    $result.setAction(RuleStatusCode.LT.name());
+    $result.setRuleFired("[(${ruleGroup})]_[(${rule.ruleType.code})]_[(${rule.functionValue})]");
+    System.out.println("Rule fired: [(${ruleGroup})]_[(${rule.ruleType.code})]_[(${rule.functionValue})]");
 end
+[/]
 
-rule "[(${ruleGroup})]_[(${rule.ruleName})] "
+[# th:if="${rule.ruleType.name == 'LTE'}" ]
+rule "[(${ruleGroup})]_[(${rule.ruleName})]_[(${rule.ruleType})]"
 when
     $result : ActionResultDto()
     $fact : RuleFactDto(
@@ -82,34 +87,35 @@ when
         functionValue <= [(${rule.functionValue})]
     )
 then
-    $result.setResult(RuleStatusCode.HIGH.code);
-    $result.setAction(RuleStatusCode.HIGH.name);
-    $result.setRuleFired("[(${rule.ruleName})]");
-    System.out.println("Rule fired: [(${rule.ruleName})]");
+    $result.setResult(RuleStatusCode.LTE.code);
+    $result.setAction(RuleStatusCode.LTE.name());
+    $result.setRuleFired("[(${ruleGroup})]_[(${rule.ruleType.code})]_[(${rule.functionValue})]");
+    System.out.println("Rule fired: [(${ruleGroup})]_[(${rule.ruleType.code})]_[(${rule.functionValue})]");
 end
 [/]
+[/]
 
-<!--/* RangeRule. and, or 룰에 해당  */-->
-[# th:each="rule : ${rangeRule}" ]
-rule "[(${ruleGroup})]_[(${rule.ruleName})]"
+// RangeRule. and, or 룰에 해당
+[# th:each="rule : ${rangeRules}" ]
+rule "[(${ruleGroup})]_[(${rule.ruleName})]_[(${rule.conditions.ruleRangeType})]"
 when
     $result : ActionResultDto()
     $fact : RuleFactDto(
-        deviceId == "[(${rule.deviceId})]",
+        deviceId == "[(${rule.conditions.deviceId})]",
         functionName == "[(${rule.functionName})]",
-        [# th:switch="${rule.conditions.ruleRangeType}"]
-            [# th:case="'INSIDE'"]
-                functionValue >= [(${rule.conditions.minValue})] && functionValue <= [(${rule.conditions.maxValue})]
-            [/#]
-            [# th:case="'INSIDE'"]
-                functionValue <  [(${rule.conditions.minValue})] || functionValue > [(${rule.conditions.maxValue})]
-            [/#]
-        [/#]
+    [# th:switch="${rule.conditions.ruleRangeType.name}"]
+      [# th:case="'INSIDE'"]
+        functionValue >= [(${rule.conditions.minValue})] && functionValue <= [(${rule.conditions.maxValue})]
+      [/]
+      [# th:case="'OUTSIDE'"]
+        functionValue <  [(${rule.conditions.minValue})] || functionValue > [(${rule.conditions.maxValue})]
+      [/]
+    [/]
     )
 then
-    $result.setResult(RuleStatusCode.NORMAL.code);
-    $result.setAction(RuleStatusCode.NORMAL.name);
-    $result.setRuleFired("[(${rule.ruleName})]");
-    System.out.println("Rule fired: [(${rule.ruleName})]");
+    $result.setResult(RuleStatusCode.RANGE.code);
+    $result.setAction(RuleStatusCode.RANGE.name());
+    $result.setRuleFired("[(${ruleGroup})]_[(${rule.conditions.ruleRangeType.code})]_[(${rule.conditions.maxValue})]_[(${rule.conditions.minValue})]");
+    System.out.println("Rule fired: [(${ruleGroup})]_[(${rule.conditions.ruleRangeType.code})]_[(${rule.conditions.maxValue})]_[(${rule.conditions.minValue})]");
 end
 [/]

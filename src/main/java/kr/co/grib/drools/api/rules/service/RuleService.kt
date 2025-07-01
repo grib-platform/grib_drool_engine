@@ -17,11 +17,11 @@ interface RuleService {
     //</editor-fold desc="[PATCH] /addRule rule 추가">
 
     //<editor-fold desc="[DELETE] /deleteRule rule 삭제">
-    fun doDeleteRule(ruleId: Int, ruleName: List<String>):BaseCtlDto
+    fun doDeleteRule(ruleGroup: String, ruleName: List<String>):BaseCtlDto
     //</editor-fold desc="[DELETE] /deleteRule rule 삭제">
 
     //<editor-fold desc="[DELETE] /remove rule 자체 삭제">
-    fun doRemoveRule(ruleId: Int):BaseCtlDto
+    fun doRemoveRule(ruleGroup: String):BaseCtlDto
     //</editor-fold desc="[DELETE] /remove rule 자체 삭제">
 
     //<editor-fold desc="[POST] /execute rule 파일 실행">

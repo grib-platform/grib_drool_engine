@@ -21,19 +21,20 @@ class DroolsRepo(
 
     //<editor-fold desc="select  rules">
     fun selectRulesText(
-        ruleId: Int
+        ruleGroup: String
     ): RuleAddResponseDto?{
         return  queryFactory
             .select(
                 Projections.constructor(
                     RuleAddResponseDto::class.java,
+                    drools.id,
                     drools.ruleGroup,
                     drools.ruleText
                 )
             )
             .from(drools)
             .where(
-                drools.id.eq(ruleId.toLong())
+                drools.ruleGroup.eq(ruleGroup)
             ).fetchOne()
     }
     //</editor-fold desc="select  rules">
@@ -79,13 +80,13 @@ class DroolsRepo(
     //<editor-fold desc="update 룰 수정">
     @Transactional
     fun updateRule(
-        ruleId: Long,
+        ruleGroup: String,
         ruleText: String
     ): Long {
         return queryFactory
             .update(drools)
             .set(drools.ruleText, ruleText)
-            .where(drools.id.eq(ruleId))
+            .where(drools.ruleGroup.eq(ruleGroup))
             .execute();
     }
     //</editor-fold desc="update 룰 수정">

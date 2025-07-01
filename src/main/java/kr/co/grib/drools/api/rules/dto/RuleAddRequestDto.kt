@@ -4,8 +4,8 @@ import io.swagger.v3.oas.annotations.media.Schema
 
 data class RuleAddRequestDto (
 
-    @Schema(description = "룰 ID")
-    val ruleId: Int,
+    @Schema(description = "룰 group 명")
+    val ruleGroup:String,
 
     @Schema(description = "String rule conditions")
     val stringRules: List<StringRuleDto> ?= null,

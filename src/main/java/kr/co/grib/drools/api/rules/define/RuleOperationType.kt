@@ -13,7 +13,17 @@ enum class RuleTypeCode(@get:JsonValue val code: String) {
     NONE(""),
     STRING("string"),
     DEFAULT("default"),
-    RANGE("range"),
+    RANGE("range");
+
+    companion object {
+        @JvmStatic
+        @JsonCreator
+        fun fromValue(value: String?): RuleTypeCode? {
+            if (value == null) return null
+            return RuleTypeCode.values()
+                .firstOrNull { it.code.equals(value, ignoreCase = true) || it.name.equals(value, ignoreCase = true) }
+        }
+    }
 }
 
 enum class RuleOperationCode(@get:JsonValue val code: String) {
@@ -23,8 +33,17 @@ enum class RuleOperationCode(@get:JsonValue val code: String) {
     GTE("greater than or equal to"),
     LT("less than"),
     LTE("less than or equal to"),
-    INSIDE("inside"),
-    OUTSIDE("outside"),
+    INSIDE("inside, And"),
+    OUTSIDE("outside, Or");
+
+    companion object {
+        @JvmStatic
+        @JsonCreator
+        fun fromValue(value: String?): RuleOperationCode? {
+            if (value == null) return null
+            return values().firstOrNull { it.code.equals(value, ignoreCase = true) || it.name.equals(value, ignoreCase = true) }
+        }
+    }
 }
 
 enum class RuleEnableType(@get:JsonValue val code: Boolean) {
