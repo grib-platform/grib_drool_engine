@@ -6,6 +6,9 @@ import kr.co.grib.drools.api.HRules.dto.RuleDto
 import kr.co.grib.drools.api.rules.dto.RuleRequestDto
 import kr.co.grib.drools.api.rules.templateManager.dto.RuleTemplateDto
 import com.fasterxml.jackson.core.type.TypeReference
+import kr.co.grib.drools.api.CRules.dto.ActionDto
+import kr.co.grib.drools.api.CRules.dto.ConditionsDto
+import kr.co.grib.drools.api.CRules.dto.RedisRuleDto
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import kotlin.reflect.full.memberProperties
@@ -260,12 +263,27 @@ object Utiles {
         objectMapper.readValue(jsonStr, object : TypeReference<List<Map<String,Any>>>() {})
     //</editor-fold desc="json String to List<map>">
 
+    //<editor-fold desc="json string to List<map>">
+    fun getJsonToListDto(jsonStr: String): List<RedisRuleDto> =
+        objectMapper.readValue(jsonStr, object : TypeReference<List<RedisRuleDto>>() {})
+    //</editor-fold desc="json String to List<map>">
+
     //<editor-fold desc="json string to List<객체>">
     fun <T> getJsonToDto(jsonStr: String, dtoClass: Class<T>): T =
         objectMapper.readValue(jsonStr, dtoClass)
     //<editor-fold desc="json string to List<객체>">
 
-
+    //<editor-fold desc="redis String Rule to Object ">
+    fun getStringParseRule(
+        ruleList: List<RedisRuleDto>
+    ): List<Triple<ConditionsDto, ActionDto, Boolean>> {
+        return ruleList.map { raw ->
+            val condition = getJsonToDto(raw.conditions, ConditionsDto::class.java)
+            val action = getJsonToDto(raw.actions, ActionDto::class.java)
+            Triple(condition, action, raw.active)
+        }
+    }
+    //<editor-fold desc="redis String Rule to Object ">
 
 
 

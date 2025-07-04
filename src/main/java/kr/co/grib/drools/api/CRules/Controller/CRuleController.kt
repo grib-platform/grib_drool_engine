@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
 import kr.co.grib.drools.api.CRules.Service.CRuleService
 import kr.co.grib.drools.api.CRules.dto.CRuleDataRequest
-import kr.co.grib.drools.api.HRules.dto.HRuleResponseCtlDto
+import kr.co.grib.drools.api.CRules.dto.CRuleResponseCtlDto
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
@@ -25,7 +25,7 @@ class CRuleController (
     fun doPostCRuleExecute(
         @Parameter(required = true, description = "Ask rule 객체")
         @RequestBody req: CRuleDataRequest
-    ): ResponseEntity<HRuleResponseCtlDto> =
+    ): ResponseEntity<CRuleResponseCtlDto> =
         ResponseEntity(
             cRuleService.doPostCRuleExecute(req),
             HttpStatus.OK
