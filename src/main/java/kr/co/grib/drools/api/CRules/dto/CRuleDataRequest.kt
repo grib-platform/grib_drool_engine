@@ -1,7 +1,7 @@
 package kr.co.grib.drools.api.CRules.dto
 
 class CRuleDataRequest (
-    val deviceId: String,
+    val ruleGroup: String,
     val functionInfo:  List<CFnData>
 )
 
