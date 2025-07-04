@@ -6,11 +6,14 @@ import jakarta.servlet.http.HttpServletResponse
 import kr.co.grib.drools.api.base.dto.BaseCtlDto
 import kr.co.grib.drools.api.rules.define.StatusCode
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
 
 @Component
 class JwtTokenFilter (
+    @Value("\${spring.profiles.active:}")
+    private val activeProfile: String,
     private val jwtTokenProvider: JwtTokenProvider
 ) : OncePerRequestFilter() {
 
@@ -26,6 +29,18 @@ class JwtTokenFilter (
             filterChain.doFilter(request,response)
             return
         }
+
+        //TODO. 삭제 요망
+        //<editor-fold desc="JWT 로그인 연동 제외 :  test 용 ">
+        if(activeProfile == "local"){
+            //TODO. test를 위해 임의 지정
+            val username = "GIRB_CURRENT_000002"
+            request.setAttribute("username", username)
+            filterChain.doFilter(request,response)
+            return
+        }
+        //</editor-fold desc="JWT 로그인 연동 제외 :  test 용 ">
+
 
         // Authorization 헤더가 없거나 "Bearer "로 시작하지 않으면 에러 처리
         if (!JwtFilterUtil.hasValidAuthorizationHeader(request)){
@@ -69,8 +84,9 @@ class JwtTokenFilter (
         }
 
 
-        // 유효한 토큰인 경우 username과 roles 추출
+        //TODO. 유효한 토큰인 경우 username과 roles 추출
         val username = jwtTokenProvider.getUsernameFromToken(token)
+
         //username
         logger.info("username.$username")
 
