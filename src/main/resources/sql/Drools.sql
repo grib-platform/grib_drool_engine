@@ -43,3 +43,72 @@ create table tb_drools_modify_history
 );
 
 
+----
+CREATE TABLE tb_iot_rule (
+                             id               BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '고유 ID',    -- 룰 고유 ID
+                             ruleGroup        VARCHAR(100)      NOT NULL COMMENT 'ruleGroup 명',           -- 룰 이름
+                             conditions       TEXT              NOT NULL COMMENT '조건 JSON TEXT',           -- 조건(복잡한 경우 JSON으로 저장)
+                             actions          TEXT              NOT NULL COMMENT '결과 값 text',           -- 액션(복잡한 경우 JSON으로 저장)
+                             priority         INT               DEFAULT 1 COMMENT '우선 순위',          -- 우선순위 (높을수록 먼저 적용)
+                             active           BOOLEAN           DEFAULT TRUE COMMENT '사용 여부',       -- 사용/미사용 여부
+                             created_by       VARCHAR(255)      NOT NULL COMMENT '등록자',
+                             updated_by       VARCHAR(255)      NULL COMMENT '수정자',
+                             created_at       DATETIME          DEFAULT CURRENT_TIMESTAMP COMMENT '등록일',
+                             updated_at       DATETIME          DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일'
+);
+
+-- 일치 (match / equal to)
+INSERT INTO tb_iot_rule(ruleGroup, conditions, actions, priority, active, created_by, updated_by, created_at, updated_at)
+values(
+          'TemperatureValveRules',
+          '{"type" :"string" , "functionName": "temperature", "operator":"MATCH", "functionValue": 25}',
+          '{ "actionType" : "sendAlert" , "message" :"온도가 일치 합니다." }',
+          1, true,'GIRB_CURRENT_000002', '', now(), now() );
+
+-- 초과 (greater than) GT
+INSERT INTO tb_iot_rule(ruleGroup, conditions, actions, priority, active, created_by, updated_by, created_at, updated_at)
+values(
+          'TemperatureValveRules',
+          '{"type" :"default" , "functionName": "temperature", "operator":"GT", "functionValue": 30}',
+          '{ "actionType" : "sendAlert" , "message" :"온도가 초과 하였습니다." }',
+          2, true,'GIRB_CURRENT_000002', '', now(), now() );
+
+-- 이상 (greater than equal to) GTE
+INSERT INTO tb_iot_rule(ruleGroup, conditions, actions, priority, active, created_by, updated_by, created_at, updated_at)
+values(
+          'TemperatureValveRules',
+          '{"type" :"default" , "functionName": "temperature", "operator":"GTE", "functionValue": 28}',
+          '{ "actionType" : "sendAlert" , "message" :"온도가 28도 이상 입니다." }',
+          3, true,'GIRB_CURRENT_000002', '', now(), now() );
+
+-- 미만 (less than) LT
+INSERT INTO tb_iot_rule(ruleGroup, conditions, actions, priority, active, created_by, updated_by, created_at, updated_at)
+values(
+          'TemperatureValveRules',
+          '{"type" :"default" , "functionName": "humidity", "operator":"LT", "functionValue": 40}',
+          '{ "actionType" : "sendAlert" , "message" :"온도가 40도 미만 입니다. 습도 조절 하세요." }',
+          4, true,'GIRB_CURRENT_000002', '', now(), now() );
+
+-- 이하 ( less than or equal to)
+INSERT INTO tb_iot_rule(ruleGroup, conditions, actions, priority, active, created_by, updated_by, created_at, updated_at)
+values(
+          'TemperatureValveRules',
+          '{"type" :"default" , "functionName": "temperature", "operator":"LTE", "functionValue": 20}',
+          '{ "actionType" : "sendAlert" , "message" :"온도가 40도 이하 입니다." }',
+          5, true,'GIRB_CURRENT_000002', '', now(), now() );
+
+
+-- 범위 , 내부 (inside) INSIDE
+INSERT INTO tb_iot_rule(ruleGroup, conditions, actions, priority, active, created_by, updated_by, created_at, updated_at)
+values(
+          'TemperatureValveRules',
+          '{"type" :"range" , "functionName": "temperature", "operator":"INSIDE", "minValue": 20, "maxValue": 25}',
+          '{ "actionType" : "sendAlert" , "message" :"온도가 20~25도 내부" }',
+          6, true,'GIRB_CURRENT_000002', '', now(), now() );
+
+INSERT INTO tb_iot_rule(ruleGroup, conditions, actions, priority, active, created_by, updated_by, created_at, updated_at)
+values(
+          'TemperatureValveRules',
+          '{"type" :"range" , "functionName": "temperature", "operator":"OUTSIDE", "minValue": 10, "maxValue": 30}',
+          '{ "actionType" : "sendAlert" , "message" :"온도가 10~30도 외부" }',
+          7, true,'GIRB_CURRENT_000002', '', now(), now() );

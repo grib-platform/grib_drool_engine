@@ -1,9 +1,11 @@
 package kr.co.grib.drools.utils
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import kr.co.grib.drools.api.HRules.dto.FnData
 import kr.co.grib.drools.api.HRules.dto.RuleDto
 import kr.co.grib.drools.api.rules.dto.RuleRequestDto
 import kr.co.grib.drools.api.rules.templateManager.dto.RuleTemplateDto
+import com.fasterxml.jackson.core.type.TypeReference
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import kotlin.reflect.full.memberProperties
@@ -12,6 +14,9 @@ import kotlin.reflect.full.memberProperties
 inline fun <reified T> T.getLogger(): Logger = LoggerFactory.getLogger(T::class.java)
 
 object Utiles {
+
+    //redis 직렬화를 위해
+    private val objectMapper = ObjectMapper()
 
     //<editor-fold desc="variable to Map">
     fun getVariableToMap(data: Any): Map<String,Any?>{
@@ -244,4 +249,28 @@ object Utiles {
         }
     }
     //</editor-fold desc="rule 평가">
+
+    //<editor-fold desc="json string to Map">
+    fun getJsonToMap(jsonStr: String): Map<String,Any> =
+        objectMapper.readValue(jsonStr, object : TypeReference<Map<String, Any>>() {})
+    //</editor-fold desc="json string to Map">
+
+    //<editor-fold desc="json string to List<map>">
+    fun getJsonToList(jsonStr: String): List<Map<String,Any>> =
+        objectMapper.readValue(jsonStr, object : TypeReference<List<Map<String,Any>>>() {})
+    //</editor-fold desc="json String to List<map>">
+
+    //<editor-fold desc="json string to List<객체>">
+    fun <T> getJsonToDto(jsonStr: String, dtoClass: Class<T>): T =
+        objectMapper.readValue(jsonStr, dtoClass)
+    //<editor-fold desc="json string to List<객체>">
+
+
+
+
+
+
+
+
+
 }

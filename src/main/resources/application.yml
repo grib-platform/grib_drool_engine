@@ -37,6 +37,8 @@ spring:
     database: mysql
     database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
       ddl-auto: none
     show-sql: true
   jwt:
@@ -45,6 +47,10 @@ spring:
     level:
       root: debug
       kr.co.grib.drools: debug
+  data:
+    redis:
+      host: 192.168.0.240
+      port: 6379
 
 
 ---
@@ -70,6 +76,8 @@ spring:
     database: mysql
     database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
       ddl-auto: none
     show-sql: true
   jwt:
@@ -78,6 +86,10 @@ spring:
     level:
       root: debug
       kr.co.grib.drools: info
+  data:
+    redis:
+      host: huring.grib-iot.com
+      port: 9507
 
 ---
 server:
@@ -102,6 +114,7 @@ spring:
       ddl-auto: none
     show-sql: true
     database-platform: org.hibernate.dialect.H2Dialect
+
 
 
 
