@@ -4,7 +4,7 @@ import kr.co.grib.drools.api.CRules.Service.CRuleService
 import kr.co.grib.drools.api.CRules.define.CStatusCode
 import kr.co.grib.drools.api.CRules.dto.CRuleDataRequest
 import kr.co.grib.drools.api.CRules.dto.CRuleResponseCtlDto
-import kr.co.grib.drools.api.CRules.dto.RedisRuleDto
+import kr.co.grib.drools.api.CRules.dto.CRuleResponseDto
 import kr.co.grib.drools.utils.Utiles
 import kr.co.grib.drools.utils.getLogger
 import org.springframework.data.redis.core.StringRedisTemplate
@@ -49,12 +49,33 @@ class CRuleServiceImpl(
 
             }
 
-           // val check = Utiles.getJsonToDto(jsonString, RedisRuleDto::class.java)
-            val checkList: List<RedisRuleDto> = Utiles.getJsonToListDto(jsonString)
+            val theRule = Utiles.getStringParseRule(Utiles.getJsonToListDto(jsonString))
 
+            val checkRule = req.functionInfo.map { fn ->
+                Utiles.getCRuleMatchedAction(fn, theRule)
+            }
 
+            //평가 결과가 없는 경우
+            if (checkRule.isNullOrEmpty()){
+                rtn.response = listOf(
+                    CRuleResponseDto(
+                        code = CStatusCode.EVALUATE_RULE_IS_EMPTY.name,
+                        message = CStatusCode.EVALUATE_RULE_IS_EMPTY.toString()
+                    )
+                )
+            }
 
+            val result = checkRule.flatten()
+            rtn.response = result.map { act ->
+                CRuleResponseDto(
+                    code =  act.actionType,
+                    message =  act.message
+                )
 
+            }
+            rtn.success = true
+            rtn.code = CStatusCode.SUCCESS.name
+            rtn.message = CStatusCode.SUCCESS
         }catch (e: Exception){
             logger.error("doPostCRuleExecute.error.{}", e)
         }

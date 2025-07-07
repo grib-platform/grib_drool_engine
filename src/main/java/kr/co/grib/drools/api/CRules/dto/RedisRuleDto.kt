@@ -16,16 +16,16 @@ data class RedisRuleDto (
 )
 
 data class ConditionsDto(
-    val type: String ,
-    val functionName: String,
-    val operation: String,
+    val type: String="",
+    val functionName: String="",
+    val operator: String ="",
     val functionValue: Double? = null,
     val minValue: Double?= null,
     val maxValue: Double?= null
 )
 
 data class ActionDto(
-    val actionType: String,
-    val message: String
+    val actionType: String = "",
+    val message: String =""
 )
 //</editor-fold desc="For redis string to object">

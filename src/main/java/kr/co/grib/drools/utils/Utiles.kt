@@ -7,6 +7,7 @@ import kr.co.grib.drools.api.rules.dto.RuleRequestDto
 import kr.co.grib.drools.api.rules.templateManager.dto.RuleTemplateDto
 import com.fasterxml.jackson.core.type.TypeReference
 import kr.co.grib.drools.api.CRules.dto.ActionDto
+import kr.co.grib.drools.api.CRules.dto.CFnData
 import kr.co.grib.drools.api.CRules.dto.ConditionsDto
 import kr.co.grib.drools.api.CRules.dto.RedisRuleDto
 import org.slf4j.Logger
@@ -285,6 +286,35 @@ object Utiles {
     }
     //<editor-fold desc="redis String Rule to Object ">
 
+    //<editor-fold desc="센서 값에 대한 매칭 되는 모든 룰을 반환">
+    fun getCRuleMatchedAction(
+        sensorInfo: CFnData,
+        rules:  List<Triple<ConditionsDto, ActionDto,Boolean>>
+    ): List<ActionDto> {
+        val rtn  = mutableListOf<ActionDto>()
+        for ((cond, act,active) in rules) {
+            //active 유무
+            if (!active) continue
+            if (sensorInfo.functionName !=  cond.functionName) continue
+            //sensor value
+            val value = sensorInfo.functionValue.toDouble()
+            val math = when(cond.operator) {
+                "MATCH" -> value == (cond.functionValue ?: Double.NaN)
+                "GT" ->  value >  (cond.functionValue ?: Double.MIN_VALUE)
+                "GTE" -> value >= (cond.functionValue ?: Double.MIN_VALUE)
+                "LT" -> value < (cond.functionValue ?: Double.MAX_VALUE)
+                "LTE" -> value <= (cond.functionValue ?: Double.MAX_VALUE)
+                "INSIDE" ->  value >= (cond.minValue ?: Double.MIN_VALUE) &&
+                             value <= (cond.maxValue ?: Double.MAX_VALUE)
+                "OUTSIDE" -> value < (cond.minValue ?: Double.MIN_VALUE) ||
+                             value > (cond.maxValue ?: Double.MAX_VALUE)
+                else -> false
+            }
+            if (math) rtn.add(act)
+        }
+        return rtn
+    }
+    //</editor-fold desc="센서 값에 대한 매칭 되는 모든 룰을 반환">
 
 
 
