@@ -1,9 +1,15 @@
 package kr.co.grib.drools.utils
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import kr.co.grib.drools.api.HRules.dto.FnData
 import kr.co.grib.drools.api.HRules.dto.RuleDto
 import kr.co.grib.drools.api.rules.dto.RuleRequestDto
 import kr.co.grib.drools.api.rules.templateManager.dto.RuleTemplateDto
+import com.fasterxml.jackson.core.type.TypeReference
+import kr.co.grib.drools.api.CRules.dto.ActionDto
+import kr.co.grib.drools.api.CRules.dto.CFnData
+import kr.co.grib.drools.api.CRules.dto.ConditionsDto
+import kr.co.grib.drools.api.CRules.dto.RedisRuleDto
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import kotlin.reflect.full.memberProperties
@@ -12,6 +18,9 @@ import kotlin.reflect.full.memberProperties
 inline fun <reified T> T.getLogger(): Logger = LoggerFactory.getLogger(T::class.java)
 
 object Utiles {
+
+    //redis 직렬화를 위해
+    private val objectMapper = ObjectMapper()
 
     //<editor-fold desc="variable to Map">
     fun getVariableToMap(data: Any): Map<String,Any?>{
@@ -244,4 +253,72 @@ object Utiles {
         }
     }
     //</editor-fold desc="rule 평가">
+
+    //<editor-fold desc="json string to Map">
+    fun getJsonToMap(jsonStr: String): Map<String,Any> =
+        objectMapper.readValue(jsonStr, object : TypeReference<Map<String, Any>>() {})
+    //</editor-fold desc="json string to Map">
+
+    //<editor-fold desc="json string to List<map>">
+    fun getJsonToList(jsonStr: String): List<Map<String,Any>> =
+        objectMapper.readValue(jsonStr, object : TypeReference<List<Map<String,Any>>>() {})
+    //</editor-fold desc="json String to List<map>">
+
+    //<editor-fold desc="json string to List<map>">
+    fun getJsonToListDto(jsonStr: String): List<RedisRuleDto> =
+        objectMapper.readValue(jsonStr, object : TypeReference<List<RedisRuleDto>>() {})
+    //</editor-fold desc="json String to List<map>">
+
+    //<editor-fold desc="json string to List<객체>">
+    fun <T> getJsonToDto(jsonStr: String, dtoClass: Class<T>): T =
+        objectMapper.readValue(jsonStr, dtoClass)
+    //<editor-fold desc="json string to List<객체>">
+
+    //<editor-fold desc="redis String Rule to Object ">
+    fun getStringParseRule(
+        ruleList: List<RedisRuleDto>
+    ): List<Triple<ConditionsDto, ActionDto, Boolean>> {
+        return ruleList.map { raw ->
+            val condition = getJsonToDto(raw.conditions, ConditionsDto::class.java)
+            val action = getJsonToDto(raw.actions, ActionDto::class.java)
+            Triple(condition, action, raw.active)
+        }
+    }
+    //<editor-fold desc="redis String Rule to Object ">
+
+    //<editor-fold desc="센서 값에 대한 매칭 되는 모든 룰을 반환">
+    fun getCRuleMatchedAction(
+        sensorInfo: CFnData,
+        rules:  List<Triple<ConditionsDto, ActionDto,Boolean>>
+    ): List<ActionDto> {
+        val rtn  = mutableListOf<ActionDto>()
+        for ((cond, act,active) in rules) {
+            //active 유무
+            if (!active) continue
+            if (sensorInfo.functionName !=  cond.functionName) continue
+            //sensor value
+            val value = sensorInfo.functionValue.toDouble()
+            val math = when(cond.operator) {
+                "MATCH" -> value == (cond.functionValue ?: Double.NaN)
+                "GT" ->  value >  (cond.functionValue ?: Double.MIN_VALUE)
+                "GTE" -> value >= (cond.functionValue ?: Double.MIN_VALUE)
+                "LT" -> value < (cond.functionValue ?: Double.MAX_VALUE)
+                "LTE" -> value <= (cond.functionValue ?: Double.MAX_VALUE)
+                "INSIDE" ->  value >= (cond.minValue ?: Double.MIN_VALUE) &&
+                             value <= (cond.maxValue ?: Double.MAX_VALUE)
+                "OUTSIDE" -> value < (cond.minValue ?: Double.MIN_VALUE) ||
+                             value > (cond.maxValue ?: Double.MAX_VALUE)
+                else -> false
+            }
+            if (math) rtn.add(act)
+        }
+        return rtn
+    }
+    //</editor-fold desc="센서 값에 대한 매칭 되는 모든 룰을 반환">
+
+
+
+
+
+
 }
