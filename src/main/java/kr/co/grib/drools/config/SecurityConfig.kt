@@ -37,7 +37,7 @@ class SecurityConfig (
                     .anyRequest().authenticated() // 그 외 요청은 인증 필요
             }
             // TODO. 1.  test 로 일시 주석
-            //.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter::class.java) // JWT 필터 등록
+            .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter::class.java) // JWT 필터 등록
 
         return http.build()
     }
