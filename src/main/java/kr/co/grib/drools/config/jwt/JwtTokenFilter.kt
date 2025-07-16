@@ -32,13 +32,13 @@ class JwtTokenFilter (
 
         //TODO. 삭제 요망
         //<editor-fold desc="JWT 로그인 연동 제외 :  test 용 ">
-        if(activeProfile == "local"){
-            //TODO. test를 위해 임의 지정
-            val username = "GIRB_CURRENT_000002"
-            request.setAttribute("username", username)
-            filterChain.doFilter(request,response)
-            return
-        }
+//        if(activeProfile == "local"){
+//            //TODO. test를 위해 임의 지정
+//            val username = "GIRB_CURRENT_000002"
+//            request.setAttribute("username", username)
+//            filterChain.doFilter(request,response)
+//            return
+//        }
         //</editor-fold desc="JWT 로그인 연동 제외 :  test 용 ">
 
 
