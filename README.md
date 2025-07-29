@@ -48,4 +48,6 @@ thymeleaf 를 사용하여 template화
 ## 배포 
 ```
  jenkins 
+ [DEV] port :  0627  --> 외부 포트 open 희망 
+ 
 ```
