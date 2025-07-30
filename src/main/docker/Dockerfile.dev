@@ -13,7 +13,7 @@ COPY build/libs/*.jar  dev-iot.jar
 RUN chmod 777 dev-iot.jar
 
 # 5. 컨테이너 포트 노출
-EXPOSE 0627
+EXPOSE 9627
 
 # 6. 애플리케이션 실행 명령어
 ENTRYPOINT ["java" , "-jar", "dev-iot.jar"]
