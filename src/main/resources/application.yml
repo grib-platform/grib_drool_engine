@@ -61,7 +61,7 @@ spring:
     activate:
       on-profile: dev
   datasource:
-    url: jdbc:mysql://huring.grib-iot.com:9506/drools_dev
+    url: jdbc:mysql://192.168.0.240:3306/drools_dev
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: grib
     password: grib12!@
@@ -88,8 +88,8 @@ spring:
       kr.co.grib.drools: info
   data:
     redis:
-      host: huring.grib-iot.com
-      port: 9507
+      host: 192.168.0.240
+      port: 6379
 
 ---
 server:
