@@ -2,9 +2,11 @@ package kr.co.grib.drools.api.CRules.Service.Impl
 
 import kr.co.grib.drools.api.CRules.Service.CRuleService
 import kr.co.grib.drools.api.CRules.define.CStatusCode
+import kr.co.grib.drools.api.CRules.dto.CRuleCreateRequest
 import kr.co.grib.drools.api.CRules.dto.CRuleDataRequest
 import kr.co.grib.drools.api.CRules.dto.CRuleResponseCtlDto
 import kr.co.grib.drools.api.CRules.dto.CRuleResponseDto
+import kr.co.grib.drools.api.CRules.repository.IotRulesRepo
 import kr.co.grib.drools.utils.Utiles
 import kr.co.grib.drools.utils.getLogger
 import org.springframework.data.redis.core.StringRedisTemplate
@@ -12,7 +14,8 @@ import org.springframework.stereotype.Service
 
 @Service
 class CRuleServiceImpl(
-    private val stringRedisTemplate: StringRedisTemplate
+    private val stringRedisTemplate: StringRedisTemplate,
+    private val iotRulesRepo: IotRulesRepo
 ) : CRuleService {
 
     private val logger = getLogger()
@@ -81,6 +84,52 @@ class CRuleServiceImpl(
         }
         return rtn
     }
+
+    //<editor-fold desc="[POST] /create cash rule 생성">
+    override fun doPostCRuleCreate(
+        req: CRuleCreateRequest
+    ): CRuleResponseCtlDto
+    {
+        var rtn  = CRuleResponseCtlDto()
+        try {
+            if (req.ruleGroup.isNullOrEmpty()) {
+                rtn.success = false
+                rtn.code = CStatusCode.RULE_GROUP_IS_EMPTY.name
+                rtn.message = CStatusCode.RULE_GROUP_IS_EMPTY
+                return rtn
+            }
+
+            if (req.conditions == null) {
+                rtn.success = false
+                rtn.code = CStatusCode.RULE_REQ_CONDITIONS_IS_EMPTY.name
+                rtn.message = CStatusCode.RULE_REQ_CONDITIONS_IS_EMPTY
+                return rtn
+            }
+
+            if (req.actions == null) {
+                rtn.success = false
+                rtn.code = CStatusCode.RULE_REQ_ACTIONS_IS_EMPTY.name
+                rtn.message = CStatusCode.RULE_REQ_ACTIONS_IS_EMPTY
+                return rtn
+            }
+
+            // 기존의  coditions와 같은지 , actions와 같은지.
+            val checkRule = iotRulesRepo.selectRulesInfo(req.ruleGroup)
+            if (checkRule.isNullOrEmpty()){
+                //신규 등록
+            } else  {
+                // 추가 , conditions와 actions가 같은지,  active가 false 인지 아닌지
+
+            }
+
+
+        }catch (e: Exception){
+            logger.error("doPostCRuleCreate.error.{}", e)
+        }
+
+        return rtn
+    }
+    //</editor-fold desc="[POST] /create cash rule 생성">
 
 
 }

@@ -34,4 +34,31 @@ class IotRulesRepo (
     }
     //</editor-fold desc="select  rules">
 
+    //<editor-fold desc="select groupRules">
+    fun selectRulesInfo(
+        ruleGroup: String
+    ) :List<RuleResponseDto> ? {
+
+        return queryFactory
+            .select(
+                Projections.constructor(
+                    RuleResponseDto::class.java,
+                    iotRules.ruleGroup,
+                    iotRules.conditions,
+                    iotRules.actions,
+                    iotRules.active,
+                    iotRules.priority
+                )
+            )
+            .from(iotRules)
+            .where(
+                iotRules.ruleGroup.eq(ruleGroup),
+                iotRules.active.eq(true)
+            )
+            .fetch()
+    }
+
+    //</editor-fold desc="select groupRules">
+
+
 }

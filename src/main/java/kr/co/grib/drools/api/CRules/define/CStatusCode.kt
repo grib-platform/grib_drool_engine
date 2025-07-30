@@ -8,6 +8,9 @@ enum class CStatusCode (@get:JsonValue val code: String){
 
     RULE_GROUP_IS_EMPTY("rule.group.is.empty"),
     RULE_INFO_IS_EMPTY("rule.info.is.empty"),
+    RULE_REQ_CONDITIONS_IS_EMPTY("rule.request.conditions.is.empty"),
+    RULE_REQ_ACTIONS_IS_EMPTY("rule.request.actions.is.empty"),
+
     REDIS_RULE_IS_EMPTY("redis.rule.is.empty"),
 
     EVALUATE_RULE_IS_EMPTY("evaluate.rule.is.empty")
