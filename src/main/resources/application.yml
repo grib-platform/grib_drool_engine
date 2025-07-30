@@ -55,7 +55,7 @@ spring:
 
 ---
 server:
-  port: 0627
+  port: 9627
 spring:
   config:
     activate:
