@@ -6,6 +6,7 @@ import kr.co.grib.drools.api.HRules.dto.RuleDto
 import kr.co.grib.drools.api.rules.dto.RuleRequestDto
 import kr.co.grib.drools.api.rules.templateManager.dto.RuleTemplateDto
 import com.fasterxml.jackson.core.type.TypeReference
+import com.fasterxml.jackson.databind.JsonNode
 import kr.co.grib.drools.api.CRules.dto.ActionDto
 import kr.co.grib.drools.api.CRules.dto.CFnData
 import kr.co.grib.drools.api.CRules.dto.ConditionsDto
@@ -260,8 +261,10 @@ object Utiles {
     //</editor-fold desc="json string to Map">
 
     //<editor-fold desc="object to json">
-    fun getObjectToJson(obj: Any): String =
-        objectMapper.writeValueAsString(obj)
+    fun getObjectToJson(obj: Any): String {
+        val node: JsonNode = objectMapper.valueToTree(obj)
+        return node.toString()
+    }
     //<editor-fold desc="object to json">
 
     //<editor-fold desc="json string to List<map>">
@@ -326,20 +329,12 @@ object Utiles {
         reqContions:  Any,
         condtions: String
     ): Boolean {
-        val result = false
-
-
-
+        val check = getObjectToJson(reqContions)
+        val result = objectMapper.readTree(check) == objectMapper.readTree(condtions)
 
         return result
-
     }
-
-
     //</editor-fold desc="condition이 등록된 애랑 같은지 판단">
-
-
-
 
 
 }

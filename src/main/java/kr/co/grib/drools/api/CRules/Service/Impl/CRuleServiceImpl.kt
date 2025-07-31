@@ -7,6 +7,8 @@ import kr.co.grib.drools.api.CRules.dto.CRuleDataRequest
 import kr.co.grib.drools.api.CRules.dto.CRuleResponseCtlDto
 import kr.co.grib.drools.api.CRules.dto.CRuleResponseDto
 import kr.co.grib.drools.api.CRules.repository.IotRulesRepo
+import kr.co.grib.drools.api.CRules.rules.RuleCacheLoader
+import kr.co.grib.drools.config.RequestInfoProvider
 import kr.co.grib.drools.utils.Utiles
 import kr.co.grib.drools.utils.getLogger
 import org.springframework.data.redis.core.StringRedisTemplate
@@ -14,7 +16,9 @@ import org.springframework.stereotype.Service
 
 @Service
 class CRuleServiceImpl(
+    private val requestInfoProvider: RequestInfoProvider,
     private val stringRedisTemplate: StringRedisTemplate,
+    private val ruleCacheLoader: RuleCacheLoader,
     private val iotRulesRepo: IotRulesRepo
 ) : CRuleService {
 
@@ -88,9 +92,9 @@ class CRuleServiceImpl(
     //<editor-fold desc="[POST] /create cash rule 생성">
     override fun doPostCRuleCreate(
         req: CRuleCreateRequest
-    ): CRuleResponseCtlDto
-    {
-        var rtn  = CRuleResponseCtlDto()
+    ): CRuleResponseCtlDto {
+        val username = requestInfoProvider.getUserName()
+        var rtn = CRuleResponseCtlDto()
         try {
             if (req.ruleGroup.isNullOrEmpty()) {
                 rtn.success = false
@@ -113,17 +117,33 @@ class CRuleServiceImpl(
                 return rtn
             }
 
-            // 기존의  coditions와 같은지 , actions와 같은지.
-            val checkRule = iotRulesRepo.selectRulesInfo(req.ruleGroup)
-            if (checkRule.isNullOrEmpty()){
-                //신규 등록
-            } else  {
-                // 추가 , conditions와 actions가 같은지,  active가 false 인지 아닌지
-
+            // 기존의  coditions와 같은지
+            val checkRule = iotRulesRepo.selectCRulesInfoByGroupRule(req.ruleGroup)
+            if(checkRule != null){
+                checkRule.let { it ->
+                    it.forEach { item ->
+                        val check = Utiles.getChkConditions(req.conditions, item.conditions)
+                        if (check)
+                        {
+                            rtn.success = false
+                            rtn.code = CStatusCode.RULE_REQ_CONDITIONS_EXISTS.name
+                            rtn.message = CStatusCode.RULE_REQ_CONDITIONS_EXISTS
+                            return rtn
+                        }
+                    }
+                }
             }
 
+            // 등록
+            iotRulesRepo.insertCRules(req, username)
+            //redis  refresh
+            ruleCacheLoader.loadRulesToRedis()
 
-        }catch (e: Exception){
+
+            rtn.success = true
+            rtn.code = CStatusCode.RULE_CREATE_SUCCESS.code
+            rtn.message = CStatusCode.RULE_CREATE_SUCCESS
+        } catch (e: Exception) {
             logger.error("doPostCRuleCreate.error.{}", e)
         }
 
