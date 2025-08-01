@@ -6,9 +6,11 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import kr.co.grib.drools.api.CRules.Service.CRuleService
 import kr.co.grib.drools.api.CRules.dto.CRuleCreateRequest
 import kr.co.grib.drools.api.CRules.dto.CRuleDataRequest
+import kr.co.grib.drools.api.CRules.dto.CRuleListResponseCtlDto
 import kr.co.grib.drools.api.CRules.dto.CRuleResponseCtlDto
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -21,18 +23,6 @@ import org.springframework.web.bind.annotation.RestController
 class CRuleController (
     private val cRuleService: CRuleService
 ){
-
-    //<editor-fold desc="[GET] /select cash rule 전체 조회">
-    @Operation(summary = "전체 조회" , description = "전체 rule 조회")
-    @GetMapping("/select")
-    fun doGetCRuleSelect(): ResponseEntity<CRuleResponseCtlDto> =
-        ResponseEntity(
-            cRuleService.doPostCRuleExecute(req),
-            HttpStatus.OK
-        )
-
-    //<editor-fold desc="[GET] /select cash rule 전체 조회">
-
     //<editor-fold desc="[POST] /execute cash rule 실행 ">
     @Operation(summary = "조건 실행" , description = "cash에 저장한  rule 실행")
     @PostMapping("/execute")
@@ -59,12 +49,24 @@ class CRuleController (
         )
     //</editor-fold desc="[POST] /create cash rule 생성">
 
-    //<editor-fold desc="[DELETE] /remove cash rule 수정">
+    //<editor-fold desc="[GET] /select cash rule 전체 조회">
+    @Operation(summary = "전체 조회" , description = "전체 rule 조회")
+    @GetMapping("/select")
+    fun doGetCRuleSelect(): ResponseEntity<CRuleListResponseCtlDto> =
+        ResponseEntity(
+            cRuleService.doGetCRuleSelect(),
+            HttpStatus.OK
+        )
+    //<editor-fold desc="[GET] /select cash rule 전체 조회">
 
-    //<editor-fold desc="[DELETE] /remove cash rule 수정">
-
+    // 그냥 삭제 -> 다건
     //<editor-fold desc="[DELETE] /remove cash rule 삭제">
 
     //<editor-fold desc="[DELETE] /remove cash rule 삭제">
+
+    // condition과 action을 수정 하게  ->  다건
+    //<editor-fold desc="[PATCH] /update cash rule 수정">
+
+    //<editor-fold desc="[PATCH] /update cash rule 수정">
 
 }

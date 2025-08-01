@@ -6,6 +6,7 @@ import jakarta.persistence.EntityManager
 import kr.co.grib.drools.api.CRules.Entity.IotRules
 import kr.co.grib.drools.api.CRules.Entity.QIotRules
 import kr.co.grib.drools.api.CRules.dto.CRuleCreateRequest
+import kr.co.grib.drools.api.CRules.dto.RuleListResponseDto
 import kr.co.grib.drools.api.CRules.dto.RuleResponseDto
 import kr.co.grib.drools.utils.Utiles
 import org.springframework.stereotype.Repository
@@ -20,6 +21,22 @@ class IotRulesRepo (
 ){
     //Q class
     private val iotRules = QIotRules.iotRules
+
+    //<editor-fold desc="select All rules List">
+    fun selectRulesList()
+    : List<RuleListResponseDto> ?{
+        return queryFactory
+            .select(
+                Projections.constructor(
+                    RuleListResponseDto::class.java,
+                    iotRules
+                )
+            )
+            .from(iotRules)
+            .fetch()
+    }
+    //</editor-fold desc="select All rules List">
+
 
     //<editor-fold desc="select  rules">
     fun selectRuleText()

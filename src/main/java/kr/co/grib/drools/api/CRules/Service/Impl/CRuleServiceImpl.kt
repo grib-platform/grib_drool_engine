@@ -2,10 +2,7 @@ package kr.co.grib.drools.api.CRules.Service.Impl
 
 import kr.co.grib.drools.api.CRules.Service.CRuleService
 import kr.co.grib.drools.api.CRules.define.CStatusCode
-import kr.co.grib.drools.api.CRules.dto.CRuleCreateRequest
-import kr.co.grib.drools.api.CRules.dto.CRuleDataRequest
-import kr.co.grib.drools.api.CRules.dto.CRuleResponseCtlDto
-import kr.co.grib.drools.api.CRules.dto.CRuleResponseDto
+import kr.co.grib.drools.api.CRules.dto.*
 import kr.co.grib.drools.api.CRules.repository.IotRulesRepo
 import kr.co.grib.drools.api.CRules.rules.RuleCacheLoader
 import kr.co.grib.drools.config.RequestInfoProvider
@@ -23,6 +20,34 @@ class CRuleServiceImpl(
 ) : CRuleService {
 
     private val logger = getLogger()
+
+    override fun doGetCRuleSelect()
+    : CRuleListResponseCtlDto {
+        var rtn = CRuleListResponseCtlDto()
+        try {
+            val ruleData = iotRulesRepo.selectRulesList() ?: emptyList()
+            val cRuleList: List<CRuleListResponseDto> = ruleData.map { rule ->
+                CRuleListResponseDto(
+                    id  = rule.id,
+                    ruleGroup =  rule.ruleGroup,
+                    conditions = rule.conditions,
+                    actions = rule.actions,
+                    priority = rule.priority,
+                    active = rule.active,
+                    createdBy = rule.createdBy,
+                    createdAt = rule.createdAt
+                )
+            }
+
+            rtn.data = cRuleList
+            rtn.success = true
+            rtn.code = CStatusCode.SUCCESS.name
+            rtn.message = CStatusCode.SUCCESS
+        }catch (e: Exception){
+            logger.error("doGetCRuleSelect.Exception.e.{}", e)
+        }
+        return rtn
+    }
 
     override fun doPostCRuleExecute(
         req: CRuleDataRequest
