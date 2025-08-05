@@ -95,6 +95,4 @@ class RuleController (
         )
     //</editor-fold desc="[POST] /execute rule 파일 실행">
 
-    //조회 --> 이거 전에 한번 검사 받자
-
 }

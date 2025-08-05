@@ -13,6 +13,7 @@
 ## API test
 ```
  local :  http://localhost:8020/swagger-ui/index.html
+ dev   :  http://huring.grib-iot.com:9514/swagger-ui/index.html/
 ```
 
 ## drl 파일 양식 (text 파일)
@@ -48,6 +49,9 @@ thymeleaf 를 사용하여 template화
 ## 배포 
 ```
  jenkins 
- [DEV] port :  0627  --> 외부 포트 open 희망 
+ [DEV] port :  9627
+ [외부 link] :  http://huring.grib-iot.com:9514/swagger-ui/index.html#/   
+ [oauth 화면] :  
+ [oauth 계정] :  GIRB_CURRENT_000002  / grib12!@ 
  
 ```
