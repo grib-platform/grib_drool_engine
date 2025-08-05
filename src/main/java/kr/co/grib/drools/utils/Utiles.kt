@@ -6,6 +6,7 @@ import kr.co.grib.drools.api.HRules.dto.RuleDto
 import kr.co.grib.drools.api.rules.dto.RuleRequestDto
 import kr.co.grib.drools.api.rules.templateManager.dto.RuleTemplateDto
 import com.fasterxml.jackson.core.type.TypeReference
+import com.fasterxml.jackson.databind.JsonNode
 import kr.co.grib.drools.api.CRules.dto.ActionDto
 import kr.co.grib.drools.api.CRules.dto.CFnData
 import kr.co.grib.drools.api.CRules.dto.ConditionsDto
@@ -259,6 +260,13 @@ object Utiles {
         objectMapper.readValue(jsonStr, object : TypeReference<Map<String, Any>>() {})
     //</editor-fold desc="json string to Map">
 
+    //<editor-fold desc="object to json">
+    fun getObjectToJson(obj: Any): String {
+        val node: JsonNode = objectMapper.valueToTree(obj)
+        return node.toString()
+    }
+    //<editor-fold desc="object to json">
+
     //<editor-fold desc="json string to List<map>">
     fun getJsonToList(jsonStr: String): List<Map<String,Any>> =
         objectMapper.readValue(jsonStr, object : TypeReference<List<Map<String,Any>>>() {})
@@ -316,9 +324,17 @@ object Utiles {
     }
     //</editor-fold desc="센서 값에 대한 매칭 되는 모든 룰을 반환">
 
+    //<editor-fold desc="condition이 등록된 애랑 같은지 판단">
+    fun getChkConditions(
+        reqContions:  Any,
+        condtions: String
+    ): Boolean {
+        val check = getObjectToJson(reqContions)
+        val result = objectMapper.readTree(check) == objectMapper.readTree(condtions)
 
-
-
+        return result
+    }
+    //</editor-fold desc="condition이 등록된 애랑 같은지 판단">
 
 
 }

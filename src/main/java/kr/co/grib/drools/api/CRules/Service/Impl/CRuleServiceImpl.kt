@@ -2,9 +2,10 @@ package kr.co.grib.drools.api.CRules.Service.Impl
 
 import kr.co.grib.drools.api.CRules.Service.CRuleService
 import kr.co.grib.drools.api.CRules.define.CStatusCode
-import kr.co.grib.drools.api.CRules.dto.CRuleDataRequest
-import kr.co.grib.drools.api.CRules.dto.CRuleResponseCtlDto
-import kr.co.grib.drools.api.CRules.dto.CRuleResponseDto
+import kr.co.grib.drools.api.CRules.dto.*
+import kr.co.grib.drools.api.CRules.repository.IotRulesRepo
+import kr.co.grib.drools.api.CRules.rules.RuleCacheLoader
+import kr.co.grib.drools.config.RequestInfoProvider
 import kr.co.grib.drools.utils.Utiles
 import kr.co.grib.drools.utils.getLogger
 import org.springframework.data.redis.core.StringRedisTemplate
@@ -12,10 +13,41 @@ import org.springframework.stereotype.Service
 
 @Service
 class CRuleServiceImpl(
-    private val stringRedisTemplate: StringRedisTemplate
+    private val requestInfoProvider: RequestInfoProvider,
+    private val stringRedisTemplate: StringRedisTemplate,
+    private val ruleCacheLoader: RuleCacheLoader,
+    private val iotRulesRepo: IotRulesRepo
 ) : CRuleService {
 
     private val logger = getLogger()
+
+    override fun doGetCRuleSelect()
+    : CRuleListResponseCtlDto {
+        var rtn = CRuleListResponseCtlDto()
+        try {
+            val ruleData = iotRulesRepo.selectRulesList() ?: emptyList()
+            val cRuleList: List<CRuleListResponseDto> = ruleData.map { rule ->
+                CRuleListResponseDto(
+                    id  = rule.id,
+                    ruleGroup =  rule.ruleGroup,
+                    conditions = rule.conditions,
+                    actions = rule.actions,
+                    priority = rule.priority,
+                    active = rule.active,
+                    createdBy = rule.createdBy,
+                    createdAt = rule.createdAt
+                )
+            }
+
+            rtn.data = cRuleList
+            rtn.success = true
+            rtn.code = CStatusCode.SUCCESS.name
+            rtn.message = CStatusCode.SUCCESS
+        }catch (e: Exception){
+            logger.error("doGetCRuleSelect.Exception.e.{}", e)
+        }
+        return rtn
+    }
 
     override fun doPostCRuleExecute(
         req: CRuleDataRequest
@@ -81,6 +113,68 @@ class CRuleServiceImpl(
         }
         return rtn
     }
+
+    //<editor-fold desc="[POST] /create cash rule 생성">
+    override fun doPostCRuleCreate(
+        req: CRuleCreateRequest
+    ): CRuleResponseCtlDto {
+        val username = requestInfoProvider.getUserName()
+        var rtn = CRuleResponseCtlDto()
+        try {
+            if (req.ruleGroup.isNullOrEmpty()) {
+                rtn.success = false
+                rtn.code = CStatusCode.RULE_GROUP_IS_EMPTY.name
+                rtn.message = CStatusCode.RULE_GROUP_IS_EMPTY
+                return rtn
+            }
+
+            if (req.conditions == null) {
+                rtn.success = false
+                rtn.code = CStatusCode.RULE_REQ_CONDITIONS_IS_EMPTY.name
+                rtn.message = CStatusCode.RULE_REQ_CONDITIONS_IS_EMPTY
+                return rtn
+            }
+
+            if (req.actions == null) {
+                rtn.success = false
+                rtn.code = CStatusCode.RULE_REQ_ACTIONS_IS_EMPTY.name
+                rtn.message = CStatusCode.RULE_REQ_ACTIONS_IS_EMPTY
+                return rtn
+            }
+
+            // 기존의  coditions와 같은지
+            val checkRule = iotRulesRepo.selectCRulesInfoByGroupRule(req.ruleGroup)
+            if(checkRule != null){
+                checkRule.let { it ->
+                    it.forEach { item ->
+                        val check = Utiles.getChkConditions(req.conditions, item.conditions)
+                        if (check)
+                        {
+                            rtn.success = false
+                            rtn.code = CStatusCode.RULE_REQ_CONDITIONS_EXISTS.name
+                            rtn.message = CStatusCode.RULE_REQ_CONDITIONS_EXISTS
+                            return rtn
+                        }
+                    }
+                }
+            }
+
+            // 등록
+            iotRulesRepo.insertCRules(req, username)
+            //redis  refresh
+            ruleCacheLoader.loadRulesToRedis()
+
+
+            rtn.success = true
+            rtn.code = CStatusCode.RULE_CREATE_SUCCESS.code
+            rtn.message = CStatusCode.RULE_CREATE_SUCCESS
+        } catch (e: Exception) {
+            logger.error("doPostCRuleCreate.error.{}", e)
+        }
+
+        return rtn
+    }
+    //</editor-fold desc="[POST] /create cash rule 생성">
 
 
 }

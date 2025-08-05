@@ -19,7 +19,13 @@ class RuleCacheLoader (
 
     //<editor-fold desc="DB에서 rule 가져 오기">
     override fun run(args: ApplicationArguments?) {
+        loadRulesToRedis()
+    }
+    //</editor-fold desc="DB에서 rule 가져 오기">
 
+
+    //<editor-fold desc="runnable 로직 분리">
+    fun loadRulesToRedis(){
         //TODO. 만약에 db에 저장된 rule이 10만개 이면 10만개 모두를 서비스가 시작이 될때, 불러 와야 하는 점이 있다.
         //TODO. 이 부분에 대해서는 좀 더 고려 해 볼 필요가 있다.
         //TODO. 변경 해야 하는 부분은 execute 할때 redis에 질의 해서 가져 올 수 있게 해준다.
@@ -44,5 +50,7 @@ class RuleCacheLoader (
             redisTemplate.opsForValue().set(redisKey, redisValue)
         }
     }
-    //</editor-fold desc="DB에서 rule 가져 오기">
+    //</editor-fold desc="runnable 로직 분리">
+
+
 }
