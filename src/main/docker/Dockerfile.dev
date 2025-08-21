@@ -4,16 +4,16 @@
 FROM eclipse-temurin:17-jre-alpine
 
 # 2. WORK DIR 설정
-WORKDIR /DEV-IOT
+WORKDIR /DEV-RULE-ENGINE
 
 # 3. 빌드 된 jar 파일 복사
-COPY build/libs/*.jar  dev-iot.jar
+COPY build/libs/*.jar  dev-ruleEngine.jar
 
 # 4. 권한 설정
-RUN chmod 777 dev-iot.jar
+RUN chmod 777 dev-ruleEngine.jar
 
 # 5. 컨테이너 포트 노출
 EXPOSE 9627
 
 # 6. 애플리케이션 실행 명령어
-ENTRYPOINT ["java" , "-jar", "dev-iot.jar"]
+ENTRYPOINT ["java" , "-jar", "dev-ruleEngine.jar"]
