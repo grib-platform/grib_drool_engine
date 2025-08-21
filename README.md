@@ -49,7 +49,7 @@ thymeleaf 를 사용하여 template화
 ## 배포 
 ```
  jenkins 
- [DEV] port :  9627
+ [DEV link] :  http://192.168.0.240:9627/swagger-ui/index.html#/
  [외부 link] :  http://huring.grib-iot.com:9514/swagger-ui/index.html#/   
  [oauth 화면] :  
  [oauth 계정] :  GIRB_CURRENT_000002  / grib12!@ 
