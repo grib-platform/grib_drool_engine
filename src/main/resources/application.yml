@@ -42,7 +42,7 @@ spring:
       ddl-auto: none
     show-sql: true
   jwt:
-    secret: $2a$10$nz4X/L.yxOIij476l/R3POjlin.joh6ykIONIAUmbytgraegGVZty
+    secret: $2a$10$8.Q.gxUmGJP36W.uzANIsen8h.gmWJnfQAvHRH6BAIZ7pdYwM/hxG
   logging:
     level:
       root: debug
@@ -81,7 +81,7 @@ spring:
       ddl-auto: none
     show-sql: true
   jwt:
-    secret: $2a$10$nz4X/L.yxOIij476l/R3POjlin.joh6ykIONIAUmbytgraegGVZty
+    secret: $2a$10$8.Q.gxUmGJP36W.uzANIsen8h.gmWJnfQAvHRH6BAIZ7pdYwM/hxG
   logging:
     level:
       root: debug
