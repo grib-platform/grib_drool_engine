@@ -5,7 +5,7 @@ import java.time.LocalDateTime
 
 data class RuleListResponseDto (
     @Schema(description = "tb_iot_rule 고유 ID")
-    val id: Int ,
+    val id: Long ,
 
     @Schema(description = "ruleGroup")
     val ruleGroup: String,

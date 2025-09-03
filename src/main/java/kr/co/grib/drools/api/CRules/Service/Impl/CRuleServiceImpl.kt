@@ -28,7 +28,7 @@ class CRuleServiceImpl(
             val ruleData = iotRulesRepo.selectRulesList() ?: emptyList()
             val cRuleList: List<CRuleListResponseDto> = ruleData.map { rule ->
                 CRuleListResponseDto(
-                    id  = rule.id,
+                    id = rule.id,
                     ruleGroup =  rule.ruleGroup,
                     conditions = rule.conditions,
                     actions = rule.actions,
