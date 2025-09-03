@@ -2,8 +2,8 @@ package kr.co.grib.drools.api.CRules.dto
 
 import java.time.LocalDateTime
 
-data class CRuleListResponseDto (
-    val id: Int,
+data class CRuleListResponseDto(
+    val id: Long,
     val ruleGroup: String,
     val conditions: String,
     val actions: String,

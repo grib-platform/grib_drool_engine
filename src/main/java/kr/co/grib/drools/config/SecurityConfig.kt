@@ -30,11 +30,11 @@ class SecurityConfig (
                         "/swagger-ui/**",
                         "/v3/api-docs/**",
                         "/swagger-ui.html",
-                        "/api-docs/**").permitAll() // 인증없이 접근 허용
-                    .requestMatchers(
+                        "/api-docs/**",
                         "/api/v1/rule/**",
                         "/api/v1/hRule/**",
-                        "/api/v1/cRule/**").authenticated()
+                        "/api/v1/cRule/**"
+                    ).permitAll() // 인증없이 접근 허용
                     .anyRequest().authenticated() // 그 외 요청은 인증 필요
             }
             // TODO. 1.  test 로 일시 주석

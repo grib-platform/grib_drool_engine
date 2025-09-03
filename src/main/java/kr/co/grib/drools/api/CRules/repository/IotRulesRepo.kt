@@ -29,7 +29,17 @@ class IotRulesRepo (
             .select(
                 Projections.constructor(
                     RuleListResponseDto::class.java,
-                    iotRules
+                    iotRules.id,
+                    iotRules.ruleGroup,
+                    iotRules.conditions,
+                    iotRules.actions,
+                    iotRules.priority,
+                    iotRules.active,
+                    iotRules.createdBy,
+                    iotRules.createdAt,
+                    iotRules.updatedBy,
+                    iotRules.updatedAt
+
                 )
             )
             .from(iotRules)
