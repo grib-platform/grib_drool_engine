@@ -3,10 +3,14 @@ package kr.co.grib.drools.config
 import kr.co.grib.drools.config.jwt.JwtTokenFilter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.security.config.Customizer
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import org.springframework.web.cors.CorsConfiguration
+import org.springframework.web.cors.CorsConfigurationSource
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
 /**
  * Spring Security 설정
@@ -22,6 +26,7 @@ class SecurityConfig (
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http
             .csrf { it.disable() }  // REST API이므로 CSRF 비활성화
+            .cors(Customizer.withDefaults())
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }  // 세션 상태 비저장
             .authorizeHttpRequests { auth ->
                 auth
@@ -42,5 +47,28 @@ class SecurityConfig (
 
         return http.build()
     }
+
+    //<editor-fold desc="화면 cors 문제">
+    @Bean
+    fun corsConfigurationSource(): CorsConfigurationSource {
+        val config = CorsConfiguration().apply {
+            allowedOrigins = listOf(
+                "http://192.168.50.25:3000", // React 기본 포트
+                "http://localhost:3000",
+                "http://huring.grib-iot.com:9515",
+                "http://huring.grib-iot.com:9516",
+                "http://huring.grib-iot.com:9502",
+                "http://192.168.0.240:9000"
+            )
+            allowedMethods = listOf("GET", "POST", "PUT", "DELETE", "OPTIONS")
+            allowedHeaders = listOf("*")
+            allowCredentials = true
+        }
+
+        val source = UrlBasedCorsConfigurationSource()
+        source.registerCorsConfiguration("/**", config)
+        return source
+    }
+//</editor-fold desc="화면 cors 문제">
 
 }
