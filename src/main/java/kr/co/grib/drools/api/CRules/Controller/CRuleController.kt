@@ -4,10 +4,7 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
 import kr.co.grib.drools.api.CRules.Service.CRuleService
-import kr.co.grib.drools.api.CRules.dto.CRuleCreateRequest
-import kr.co.grib.drools.api.CRules.dto.CRuleDataRequest
-import kr.co.grib.drools.api.CRules.dto.CRuleListResponseCtlDto
-import kr.co.grib.drools.api.CRules.dto.CRuleResponseCtlDto
+import kr.co.grib.drools.api.CRules.dto.*
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -50,14 +47,29 @@ class CRuleController (
     //</editor-fold desc="[POST] /create cash rule 생성">
 
     //<editor-fold desc="[GET] /select cash rule 전체 조회">
-    @Operation(summary = "전체 조회" , description = "전체 rule 조회")
-    @GetMapping("/select")
-    fun doGetCRuleSelect(): ResponseEntity<CRuleListResponseCtlDto> =
+//    @Operation(summary = "RULE 전체 조회" , description = "전체 rule 조회")
+//    @PostMapping("/select")
+//    fun doGetCRuleSelect(): ResponseEntity<CRuleListResponseCtlDto> =
+//        ResponseEntity(
+//            cRuleService.doGetCRuleSelect(),
+//            HttpStatus.OK
+//        )
+    //<editor-fold desc="[GET] /select cash rule 전체 조회">
+
+    //<editor-fold desc="[POST] /selectRulelist cash rule list 조회">
+    @Operation(summary = "RULE 전체 조회(PAGING 포함)" , description = "전체 rule 조회")
+    @PostMapping("/selectRulelist")
+    fun doPostCRuleSelectList(
+        @Parameter(required = true, description = "Rule list 객체")
+        @RequestBody cruleReq: CRuleListRequestDto
+    ): ResponseEntity<CRuleListResponseCtlDto> =
         ResponseEntity(
-            cRuleService.doGetCRuleSelect(),
+            cRuleService.doPostCRuleSelectList(cruleReq),
             HttpStatus.OK
         )
-    //<editor-fold desc="[GET] /select cash rule 전체 조회">
+    //</editor-fold desc="[POST] /selectRulelist cash rule list 조회">
+
+
 
     // 그냥 삭제 -> 다건
     //<editor-fold desc="[DELETE] /remove cash rule 삭제">

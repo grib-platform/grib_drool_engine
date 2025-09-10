@@ -49,6 +49,24 @@ class CRuleServiceImpl(
         return rtn
     }
 
+    override fun doPostCRuleSelectList(
+        req: CRuleListRequestDto
+    ): CRuleListResponseCtlDto {
+        var rtn = CRuleListResponseCtlDto()
+        var totalCount: Int = 0
+
+        try {
+
+
+
+
+
+        }catch (e: Exception){
+            logger.error("doPostCRuleSelectList.Exception.e.{}", e)
+        }
+        return rtn
+    }
+
     override fun doPostCRuleExecute(
         req: CRuleDataRequest
     ): CRuleResponseCtlDto {
