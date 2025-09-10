@@ -55,12 +55,14 @@ class SecurityConfig (
             allowedOrigins = listOf(
                 "http://192.168.50.25:3000", // React 기본 포트
                 "http://localhost:3000",
+                "http://192.168.30.52:3000",
                 "http://huring.grib-iot.com:9515",
                 "http://huring.grib-iot.com:9516",
                 "http://huring.grib-iot.com:9502",
-                "http://192.168.0.240:9000"
+                "http://192.168.0.240:9000",
+
             )
-            allowedMethods = listOf("GET", "POST", "PUT", "DELETE", "OPTIONS")
+            allowedMethods = listOf("GET", "POST", "PUT", "DELETE","PATCH", "OPTIONS")
             allowedHeaders = listOf("*")
             allowCredentials = true
         }
