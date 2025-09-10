@@ -1,11 +1,14 @@
 package kr.co.grib.drools.api.CRules.repository
 
+import com.querydsl.core.types.Order
+import com.querydsl.core.types.OrderSpecifier
 import com.querydsl.core.types.Projections
 import com.querydsl.jpa.impl.JPAQueryFactory
 import jakarta.persistence.EntityManager
 import kr.co.grib.drools.api.CRules.Entity.IotRules
 import kr.co.grib.drools.api.CRules.Entity.QIotRules
 import kr.co.grib.drools.api.CRules.dto.CRuleCreateRequest
+import kr.co.grib.drools.api.CRules.dto.CRuleListRequestDto
 import kr.co.grib.drools.api.CRules.dto.RuleListResponseDto
 import kr.co.grib.drools.api.CRules.dto.RuleResponseDto
 import kr.co.grib.drools.utils.Utiles
@@ -46,6 +49,27 @@ class IotRulesRepo (
             .fetch()
     }
     //</editor-fold desc="select All rules List">
+
+//    fun selectRuleListPaging(
+//        req: CRuleListRequestDto
+//    ): List<RuleListResponseDto>{
+//        // 정렬
+//        val sortOrder = if (req.orderBy.equals("desc",  ignoreCase = true)) Order.DESC else Order.ASC
+//        val orderSpecifier = when(req.sortBy) {
+//            "created_at" -> OrderSpecifier(sortOrder, iotRules.createdAt)
+//            "updated_at" -> OrderSpecifier(sortOrder, iotRules.updatedAt)
+//            "priority" -> OrderSpecifier(sortOrder, iotRules.priority)
+//            else -> OrderSpecifier(sortOrder, iotRules.createdAt)
+//        }
+//
+//        // 조건 빌더
+//
+//
+//
+//
+//    }
+//
+
 
 
     //<editor-fold desc="select  rules">
