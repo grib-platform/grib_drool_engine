@@ -1,5 +1,6 @@
 package kr.co.grib.drools.api.CRules.repository
 
+import com.querydsl.core.BooleanBuilder
 import com.querydsl.core.types.Order
 import com.querydsl.core.types.OrderSpecifier
 import com.querydsl.core.types.Projections
@@ -15,6 +16,7 @@ import kr.co.grib.drools.utils.Utiles
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Repository
@@ -50,25 +52,35 @@ class IotRulesRepo (
     }
     //</editor-fold desc="select All rules List">
 
-//    fun selectRuleListPaging(
-//        req: CRuleListRequestDto
-//    ): List<RuleListResponseDto>{
-//        // 정렬
-//        val sortOrder = if (req.orderBy.equals("desc",  ignoreCase = true)) Order.DESC else Order.ASC
-//        val orderSpecifier = when(req.sortBy) {
-//            "created_at" -> OrderSpecifier(sortOrder, iotRules.createdAt)
-//            "updated_at" -> OrderSpecifier(sortOrder, iotRules.updatedAt)
-//            "priority" -> OrderSpecifier(sortOrder, iotRules.priority)
-//            else -> OrderSpecifier(sortOrder, iotRules.createdAt)
-//        }
-//
-//        // 조건 빌더
-//
-//
-//
-//
-//    }
-//
+    fun selectRuleListPaging(
+        req: CRuleListRequestDto
+    ): List<RuleListResponseDto>{
+        // 정렬
+        val sortOrder = if (req.orderBy.equals("desc",  ignoreCase = true)) Order.DESC else Order.ASC
+        val orderSpecifier = when(req.sortBy) {
+            "created_at" -> OrderSpecifier(sortOrder, iotRules.createdAt)
+            "updated_at" -> OrderSpecifier(sortOrder, iotRules.updatedAt)
+            "priority" -> OrderSpecifier(sortOrder, iotRules.priority)
+            else -> OrderSpecifier(sortOrder, iotRules.createdAt)
+        }
+
+        // 조건 빌더
+        val builder = BooleanBuilder()
+
+        // 날짜 조건
+        req.periodFrom?.let {
+            builder.and(iotRules.createdAt.goe(LocalDate.parse(it).atStartOfDay()))
+        }
+        req.periodTo?.let {
+            builder.and(iotRules.createdAt.goe(LocalDate.parse(it).atTime(23, 59, 59)))
+        }
+
+        // keyword 조건
+
+
+
+    }
+
 
 
 
