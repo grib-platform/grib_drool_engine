@@ -21,5 +21,5 @@ class CRuleListPagingDto(
     @Schema(description = "totalCount")
     var totalCount: Int ?= null,
     @Schema(description = "totalPages")
-    var totalPages: Long = 0,
+    var totalPages: Int = 0,
 )
