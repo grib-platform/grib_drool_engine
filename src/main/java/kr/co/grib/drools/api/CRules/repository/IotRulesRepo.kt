@@ -219,4 +219,17 @@ class IotRulesRepo (
     }
     //</editor-fold desc="insert rules">
 
+    //<editor-fold desc="rule 삭제">
+    @Transactional
+    fun deleteRule(
+        ruleId: Long
+    ): Long {
+        return queryFactory
+            .delete(iotRules)
+            .where(iotRules.id.eq(ruleId))
+            .execute()
+    }
+    //<editor-fold desc="rule 삭제">
+
+
 }

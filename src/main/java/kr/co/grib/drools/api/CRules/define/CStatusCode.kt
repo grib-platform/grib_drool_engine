@@ -6,6 +6,7 @@ enum class CStatusCode (@get:JsonValue val code: String){
     INIT("init"),
     SUCCESS(""),
 
+    RULE_ID_IS_EMPTY("rule.id.is.empty"),
     RULE_GROUP_IS_EMPTY("rule.group.is.empty"),
     RULE_INFO_IS_EMPTY("rule.info.is.empty"),
     RULE_REQ_CONDITIONS_IS_EMPTY("rule.request.conditions.is.empty"),
