@@ -6,13 +6,11 @@ import kr.co.grib.drools.api.CRules.define.CStatusCode
 import kr.co.grib.drools.api.CRules.dto.*
 import kr.co.grib.drools.api.CRules.repository.IotRulesRepo
 import kr.co.grib.drools.api.CRules.rules.RuleCacheLoader
-import kr.co.grib.drools.api.rules.define.StatusCode
 import kr.co.grib.drools.config.RequestInfoProvider
 import kr.co.grib.drools.utils.Utiles
 import kr.co.grib.drools.utils.getLogger
 import org.springframework.data.redis.core.StringRedisTemplate
 import org.springframework.stereotype.Service
-import kotlin.math.ceil
 
 @Service
 class CRuleServiceImpl(
@@ -77,7 +75,7 @@ class CRuleServiceImpl(
                 pageNumber =  req.pageNumber,
                 pageSize = req.pageSize,
                 totalCount = iotRulesRepo.countCRulesInfo(),
-                totalPages = ceil((iotRulesRepo.countCRulesInfo() / req.pageSize).toDouble()).toLong()
+                totalPages = (iotRulesRepo.countCRulesInfo() + req.pageSize - 1) / req.pageSize
             )
 
             rtn.data = data
@@ -206,7 +204,6 @@ class CRuleServiceImpl(
             iotRulesRepo.insertCRules(req, username)
             //redis  refresh
             ruleCacheLoader.loadRulesToRedis()
-
 
             rtn.success = true
             rtn.code = CStatusCode.RULE_CREATE_SUCCESS.code
