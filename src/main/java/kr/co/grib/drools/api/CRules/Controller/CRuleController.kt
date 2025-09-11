@@ -56,7 +56,7 @@ class CRuleController (
 
     //<editor-fold desc="[POST] /selectRulelist cash rule list 조회">
     @Operation(summary = "RULE 전체 조회(PAGING 포함)" , description = "전체 rule 조회")
-    @PostMapping("/")
+    @PostMapping("")
     fun doPostCRuleSelectList(
         @Parameter(required = true, description = "Rule list 객체")
         @RequestBody cruleReq: CRuleListRequestDto
@@ -70,7 +70,7 @@ class CRuleController (
 
     //<editor-fold desc="[DELETE] /remove cash rule 삭제">
     @Operation(summary = "RULE 삭제" , description = "RULEID로 Rule 삭제")
-    @DeleteMapping("/")
+    @DeleteMapping("")
     fun doDeleteCRule(
         @Parameter(required = true, description = "ruleId")
         @RequestParam ruleId: Int
