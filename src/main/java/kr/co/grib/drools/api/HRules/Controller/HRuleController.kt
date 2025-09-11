@@ -1,5 +1,6 @@
 package kr.co.grib.drools.api.HRules.Controller
 
+import io.swagger.v3.oas.annotations.Hidden
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
+@Hidden
 @RestController
 @Tag(name="Without Drools engine API" , description = "service 에서 Drools engine 사용하지 않는 api를 기술 합니다.")
 @RequestMapping("/api/v1/hRule")
