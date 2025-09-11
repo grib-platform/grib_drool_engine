@@ -4,6 +4,16 @@ import io.swagger.v3.oas.annotations.media.Schema
 import kr.co.grib.drools.api.base.dto.CBaseCtlDto
 
 class CRuleListResponseCtlDto (
+
+    @Schema(description = "data")
+    var pagingInfo: CRuleListPagingDto ?= null,
+
+    @Schema(description = "data")
+    var data: List<CRuleListResponseDto> ?= null
+): CBaseCtlDto()
+
+
+class CRuleListPagingDto(
     @Schema(description = "pageNumber")
     var pageNumber: Int ?= null,
     @Schema(description = "pageSize")
@@ -11,8 +21,5 @@ class CRuleListResponseCtlDto (
     @Schema(description = "totalCount")
     var totalCount: Int ?= null,
     @Schema(description = "totalPages")
-    var totalPages: Int ?= null,
-
-    @Schema(description = "data")
-    var data: List<CRuleListResponseDto> ?= null
-): CBaseCtlDto()
+    var totalPages: Long = 0,
+)
