@@ -57,7 +57,6 @@ class JwtTokenFilter (
 
         // 토큰 유효성 검증 실패 시 에러 처리
         val token = JwtFilterUtil.doExtractToken(request)
-        logger.info("token.$token")
         if (token == null){
             JwtFilterUtil.doErrorResponse(
                 response,
@@ -71,7 +70,6 @@ class JwtTokenFilter (
         }
 
         if (!JwtFilterUtil.isTokenValid(jwtTokenProvider, token)) {
-            logger.info("token.isTokenValid.before.$token")
             JwtFilterUtil.doErrorResponse(
                 response,
                 BaseCtlDto(

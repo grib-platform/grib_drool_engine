@@ -60,7 +60,6 @@ class JwtTokenProvider (
     fun validateToken(token: String): Boolean {
         return try {
             val claims = getClaimsFromToken(token)
-            logger.info("claims.$claims")
             // 토큰 만료일자가 현재 시간 이후인지 체크
             !claims.expiration.before(Date())
         } catch (ex: Exception) {

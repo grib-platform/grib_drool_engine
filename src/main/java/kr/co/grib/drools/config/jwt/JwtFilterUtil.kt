@@ -34,7 +34,6 @@ object JwtFilterUtil {
         request: HttpServletRequest
     ): Boolean {
         val header = request.getHeader(HttpHeaders.AUTHORIZATION) ?: return false
-        logger.info(" header.check.$header")
         return header.startsWith("Bearer ")
     }
     //</editor-fold desc="Authorization 해더가 존재 하며 "Bearer  "로 시작 하는지 여부 확인">
