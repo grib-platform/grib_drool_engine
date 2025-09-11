@@ -10,6 +10,7 @@ import kr.co.grib.drools.utils.Utiles
 import kr.co.grib.drools.utils.getLogger
 import org.springframework.data.redis.core.StringRedisTemplate
 import org.springframework.stereotype.Service
+import kotlin.math.ceil
 
 @Service
 class CRuleServiceImpl(
@@ -54,12 +55,33 @@ class CRuleServiceImpl(
     ): CRuleListResponseCtlDto {
         var rtn = CRuleListResponseCtlDto()
         var totalCount: Int = 0
-
         try {
 
+            val list = iotRulesRepo.selectRuleListPaging(req) ?: emptyList()
+            val data: List<CRuleListResponseDto> =  list.map {  rule ->
+                CRuleListResponseDto(
+                    id = rule.id,
+                    ruleGroup = rule.ruleGroup,
+                    conditions = rule.conditions,
+                    actions = rule.actions,
+                    priority = rule.priority,
+                    active = rule.active,
+                    createdBy = rule.createdBy,
+                    createdAt = rule.createdAt,
+                )
+            }
+            val paging = CRuleListPagingDto(
+                pageNumber =  req.pageNumber,
+                pageSize = req.pageSize,
+                totalCount = iotRulesRepo.countCRulesInfo(),
+                totalPages = ceil((iotRulesRepo.countCRulesInfo() / req.pageSize).toDouble()).toLong()
+            )
 
-
-
+            rtn.data = data
+            rtn.pagingInfo = paging
+            rtn.success = true
+            rtn.code = CStatusCode.SUCCESS.name
+            rtn.message = CStatusCode.SUCCESS
 
         }catch (e: Exception){
             logger.error("doPostCRuleSelectList.Exception.e.{}", e)

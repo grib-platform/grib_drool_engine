@@ -1,5 +1,6 @@
 package kr.co.grib.drools.api.CRules.Controller
 
+import io.swagger.v3.oas.annotations.Hidden
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -47,13 +48,14 @@ class CRuleController (
     //</editor-fold desc="[POST] /create cash rule 생성">
 
     //<editor-fold desc="[GET] /select cash rule 전체 조회">
-//    @Operation(summary = "RULE 전체 조회" , description = "전체 rule 조회")
-//    @PostMapping("/select")
-//    fun doGetCRuleSelect(): ResponseEntity<CRuleListResponseCtlDto> =
-//        ResponseEntity(
-//            cRuleService.doGetCRuleSelect(),
-//            HttpStatus.OK
-//        )
+    @Hidden
+    @Operation(summary = "RULE 전체 조회" , description = "전체 rule 조회")
+    @PostMapping("/select")
+    fun doGetCRuleSelect(): ResponseEntity<CRuleListResponseCtlDto> =
+        ResponseEntity(
+            cRuleService.doGetCRuleSelect(),
+            HttpStatus.OK
+        )
     //<editor-fold desc="[GET] /select cash rule 전체 조회">
 
     //<editor-fold desc="[POST] /selectRulelist cash rule list 조회">
