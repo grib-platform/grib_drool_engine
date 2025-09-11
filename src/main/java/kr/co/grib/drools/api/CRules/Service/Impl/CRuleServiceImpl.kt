@@ -1,10 +1,12 @@
 package kr.co.grib.drools.api.CRules.Service.Impl
 
+import com.fasterxml.jackson.core.TreeCodec
 import kr.co.grib.drools.api.CRules.Service.CRuleService
 import kr.co.grib.drools.api.CRules.define.CStatusCode
 import kr.co.grib.drools.api.CRules.dto.*
 import kr.co.grib.drools.api.CRules.repository.IotRulesRepo
 import kr.co.grib.drools.api.CRules.rules.RuleCacheLoader
+import kr.co.grib.drools.api.rules.define.StatusCode
 import kr.co.grib.drools.config.RequestInfoProvider
 import kr.co.grib.drools.utils.Utiles
 import kr.co.grib.drools.utils.getLogger
@@ -17,7 +19,8 @@ class CRuleServiceImpl(
     private val requestInfoProvider: RequestInfoProvider,
     private val stringRedisTemplate: StringRedisTemplate,
     private val ruleCacheLoader: RuleCacheLoader,
-    private val iotRulesRepo: IotRulesRepo
+    private val iotRulesRepo: IotRulesRepo,
+    private val treeCodec: TreeCodec
 ) : CRuleService {
 
     private val logger = getLogger()
@@ -216,5 +219,31 @@ class CRuleServiceImpl(
     }
     //</editor-fold desc="[POST] /create cash rule 생성">
 
+    //<editor-fold desc="[DELETE] /remove cash rule 삭제">
+    override fun doDeleteCRule(
+        ruleId: Int
+    ): CRuleResponseCtlDto {
+        val rtn = CRuleResponseCtlDto()
+        try {
+           if (ruleId == null){
+               rtn.success = false
+               rtn.code = CStatusCode.RULE_ID_IS_EMPTY.name
+               rtn.message = CStatusCode.RULE_ID_IS_EMPTY
+               return rtn
+           }
+
+            iotRulesRepo.deleteRule(ruleId.toLong())
+            //redis  refresh
+            ruleCacheLoader.loadRulesToRedis()
+
+            rtn.success = true
+            rtn.code = CStatusCode.SUCCESS.name
+            rtn.message = CStatusCode.SUCCESS
+        }catch (e: Exception){
+            logger.error("doDeleteCRule.error.{}", e)
+        }
+        return rtn
+    }
+    //</editor-fold desc="[DELETE] /remove cash rule 삭제">
 
 }

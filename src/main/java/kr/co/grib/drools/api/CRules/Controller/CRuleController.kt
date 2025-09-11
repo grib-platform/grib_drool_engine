@@ -8,12 +8,7 @@ import kr.co.grib.drools.api.CRules.Service.CRuleService
 import kr.co.grib.drools.api.CRules.dto.*
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.DeleteMapping
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @Tag(name = "Rule is in the Redis cash  API", description = "redis에 룰을 저장하고 룰을 조회 하는 api를 기술 합니다.")
@@ -58,9 +53,10 @@ class CRuleController (
         )
     //<editor-fold desc="[GET] /select cash rule 전체 조회">
 
+
     //<editor-fold desc="[POST] /selectRulelist cash rule list 조회">
     @Operation(summary = "RULE 전체 조회(PAGING 포함)" , description = "전체 rule 조회")
-    @PostMapping("/selectRulelist")
+    @PostMapping("/")
     fun doPostCRuleSelectList(
         @Parameter(required = true, description = "Rule list 객체")
         @RequestBody cruleReq: CRuleListRequestDto
@@ -72,11 +68,19 @@ class CRuleController (
     //</editor-fold desc="[POST] /selectRulelist cash rule list 조회">
 
 
-
-    // 그냥 삭제 -> 다건
     //<editor-fold desc="[DELETE] /remove cash rule 삭제">
+    @Operation(summary = "RULE 삭제" , description = "RULEID로 Rule 삭제")
+    @DeleteMapping("/")
+    fun doDeleteCRule(
+        @Parameter(required = true, description = "ruleId")
+        @RequestParam ruleId: Int
+    ): ResponseEntity<CRuleResponseCtlDto> =
+        ResponseEntity(
+            cRuleService.doDeleteCRule(ruleId),
+            HttpStatus.OK
+        )
 
-    //<editor-fold desc="[DELETE] /remove cash rule 삭제">
+    //</editor-fold desc="[DELETE] /remove cash rule 삭제">
 
     // condition과 action을 수정 하게  ->  다건
     //<editor-fold desc="[PATCH] /update cash rule 수정">
