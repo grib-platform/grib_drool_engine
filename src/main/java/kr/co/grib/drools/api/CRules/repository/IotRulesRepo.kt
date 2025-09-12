@@ -87,13 +87,13 @@ class IotRulesRepo (
         // keyword 조건
         if(!req.keyword.isNullOrEmpty() && !req.keywordColumn.isNullOrEmpty()) {
             when(req.keywordColumn){
-                "ruleId" -> builder.and(iotRules.id.eq(req.keyword.toLong()))
+                "id" -> builder.and(iotRules.id.eq(req.keyword.toLong()))
                 "ruleGroup" -> builder.and(iotRules.ruleGroup.lower().like("%${req.keyword.lowercase()}%"))
                 "message" -> builder.and(
                     iotRules.actions.like("%${req.keyword}%")
                 ) // action 안의 json값의 message에 대한 like 검색
                 "priority" -> builder.and(iotRules.priority.stringValue().eq(req.keyword))
-                "active" -> builder.and(iotRules.active.stringValue().eq(req.keyword) )
+                "active" -> builder.and(iotRules.active.stringValue().eq(Utiles.getAtiveDeactive(req.keyword)) )
             }
         }
 
@@ -209,11 +209,11 @@ class IotRulesRepo (
         }
         if (!req.keyword.isNullOrEmpty() && !req.keywordColumn.isNullOrEmpty()) {
             when(req.keywordColumn){
-                "ruleId" -> builder.and(iotRules.id.eq(req.keyword.toLong()))
+                "id" -> builder.and(iotRules.id.eq(req.keyword.toLong()))
                 "ruleGroup" -> builder.and(iotRules.ruleGroup.lower().like("%${req.keyword.lowercase()}%"))
                 "message" -> builder.and(iotRules.actions.like("%${req.keyword}%"))
                 "priority" -> builder.and(iotRules.priority.stringValue().eq(req.keyword))
-                "active" -> builder.and(iotRules.active.stringValue().eq(req.keyword))
+                "active" ->  builder.and(iotRules.active.stringValue().eq(Utiles.getAtiveDeactive(req.keyword)) )
             }
         }
 

@@ -346,5 +346,14 @@ object Utiles {
     }
     //</editor-fold desc="Json String에서 message 만 뽑기">
 
+    //<editor-fold desc="active Vs deactive">
+    fun getAtiveDeactive(
+        str: String
+    ): String {
+        if (str.equals("active")) return "true" else return "false"
+    }
+    //<editor-fold desc="active Vs deactive">
+
+
 
 }
