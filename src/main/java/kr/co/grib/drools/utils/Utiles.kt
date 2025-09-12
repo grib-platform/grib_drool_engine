@@ -336,15 +336,34 @@ object Utiles {
     }
     //</editor-fold desc="condition이 등록된 애랑 같은지 판단">
 
-    //<editor-fold desc="Json String에서 message 만 뽑기">
+    //<editor-fold desc="Json String에서 특정 String뽑기">
     fun getStringJsonToString(
-        str :String
+        str :String,
+        getStr: String
     ): String {
         val mapper = ObjectMapper()
         val node = mapper.readTree(str)   // 바로 파싱 가능
-        return node.get("message")?.asText() ?: ""
+        return node.get(getStr)?.asText() ?: ""
     }
-    //</editor-fold desc="Json String에서 message 만 뽑기">
+    //</editor-fold desc="Json String에서 특정 String뽑기">
+
+    //<editor-fold desc="JsonFunctionVale">
+    fun getStringJsonToFunctionValue(
+        str :String
+    ): String {
+        val mapper = ObjectMapper()
+        val node = mapper.readTree(str)
+
+        return if (node.has("functionValue")) {
+            node.get("functionValue").asText()
+        } else {
+            val min = node.get("minValue")?.asText()
+            val max = node.get("maxValue")?.asText()
+            if (min != null && max != null) "$min~$max" else ""
+        }
+    }
+    //</editor-fold desc="JsonFunctionVale">
+
 
     //<editor-fold desc="active Vs deactive">
     fun getAtiveDeactive(
