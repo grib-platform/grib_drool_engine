@@ -27,7 +27,7 @@ class CRuleListRequestDto (
     @DateTimeFormat(pattern = "YYYY.mm.dd")
     val periodTo: String,
 
-    @Schema(description = "keywordColumn, 검색 조건 기준(ruleId, ruleGroup, message, priority, activate)")
+    @Schema(description = "keywordColumn, 검색 조건 기준(id, ruleGroup, message, priority, activate)")
     val keywordColumn: String,
 
     @Schema(description = "keyword, 검색어")
