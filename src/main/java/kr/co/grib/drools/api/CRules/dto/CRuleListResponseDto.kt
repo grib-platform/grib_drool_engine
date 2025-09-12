@@ -9,6 +9,7 @@ data class CRuleListResponseDto(
     val actions: String,
     val priority: Int,
     val active: Boolean,
+    val message: String,
     val createdBy: String,
     val createdAt: LocalDateTime
 )

@@ -336,5 +336,15 @@ object Utiles {
     }
     //</editor-fold desc="condition이 등록된 애랑 같은지 판단">
 
+    //<editor-fold desc="Json String에서 message 만 뽑기">
+    fun getStringJsonToString(
+        str :String
+    ): String {
+        val mapper = ObjectMapper()
+        val node = mapper.readTree(str)   // 바로 파싱 가능
+        return node.get("message")?.asText() ?: ""
+    }
+    //</editor-fold desc="Json String에서 message 만 뽑기">
+
 
 }

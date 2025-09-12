@@ -31,13 +31,14 @@ class CRuleServiceImpl(
             val cRuleList: List<CRuleListResponseDto> = ruleData.map { rule ->
                 CRuleListResponseDto(
                     id = rule.id,
-                    ruleGroup =  rule.ruleGroup,
+                    ruleGroup = rule.ruleGroup,
                     conditions = rule.conditions,
                     actions = rule.actions,
                     priority = rule.priority,
                     active = rule.active,
                     createdBy = rule.createdBy,
-                    createdAt = rule.createdAt
+                    createdAt = rule.createdAt,
+                    message = "test"
                 )
             }
 
@@ -55,7 +56,7 @@ class CRuleServiceImpl(
         req: CRuleListRequestDto
     ): CRuleListResponseCtlDto {
         var rtn = CRuleListResponseCtlDto()
-        var totalCount: Int = 0
+        var totalPage: Int = 0
         try {
 
             val list = iotRulesRepo.selectRuleListPaging(req) ?: emptyList()
@@ -67,15 +68,17 @@ class CRuleServiceImpl(
                     actions = rule.actions,
                     priority = rule.priority,
                     active = rule.active,
+                    message = Utiles.getStringJsonToString(rule.actions),
                     createdBy = rule.createdBy,
                     createdAt = rule.createdAt,
                 )
             }
+            totalPage = (list.size + req.pageSize - 1) / req.pageSize
             val paging = CRuleListPagingDto(
                 pageNumber =  req.pageNumber,
                 pageSize = req.pageSize,
-                totalCount = iotRulesRepo.countCRulesInfo(),
-                totalPages = (iotRulesRepo.countCRulesInfo() + req.pageSize - 1) / req.pageSize
+                totalCount = list.size,
+                totalPages = totalPage
             )
 
             rtn.data = data
