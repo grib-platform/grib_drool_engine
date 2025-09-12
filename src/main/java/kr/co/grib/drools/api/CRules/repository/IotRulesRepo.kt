@@ -196,6 +196,34 @@ class IotRulesRepo (
     }
     //</editor-fold desc="count rules">
 
+    //<editor-fold desc="count rules">
+    fun countRuleList(req: CRuleListRequestDto): Long {
+        val builder = BooleanBuilder()
+        val formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd")
+
+        if (!req.periodFrom.isNullOrEmpty()) {
+            builder.and(iotRules.createdAt.goe(LocalDate.parse(req.periodFrom, formatter).atStartOfDay()))
+        }
+        if (!req.periodTo.isNullOrEmpty()) {
+            builder.and(iotRules.createdAt.loe(LocalDate.parse(req.periodTo, formatter).atTime(23, 59, 59)))
+        }
+        if (!req.keyword.isNullOrEmpty() && !req.keywordColumn.isNullOrEmpty()) {
+            when(req.keywordColumn){
+                "ruleId" -> builder.and(iotRules.id.eq(req.keyword.toLong()))
+                "ruleGroup" -> builder.and(iotRules.ruleGroup.lower().like("%${req.keyword.lowercase()}%"))
+                "message" -> builder.and(iotRules.actions.like("%${req.keyword}%"))
+                "priority" -> builder.and(iotRules.priority.stringValue().eq(req.keyword))
+                "active" -> builder.and(iotRules.active.stringValue().eq(req.keyword))
+            }
+        }
+
+        return queryFactory
+            .select(iotRules.count())
+            .from(iotRules)
+            .where(builder)
+            .fetchOne() ?: 0L
+    }
+    //</editor-fold desc="count rules">
 
 
     //<editor-fold desc="insert rules">
