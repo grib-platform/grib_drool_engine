@@ -101,7 +101,7 @@ class IotRulesRepo (
         val offset = ((req.pageNumber -1 ) * req.pageSize ).toLong()
         val limit = req.pageSize.toLong()
 
-        return queryFactory
+        val query =  queryFactory
             .select(
                 Projections.constructor(
                     RuleListResponseDto::class.java,
@@ -120,9 +120,11 @@ class IotRulesRepo (
             .from(iotRules)
             .where(builder)
             .orderBy(orderSpecifier)
-            .offset(offset)
-            .limit(limit)
-            .fetch()
+
+        if (!req.keyword.isNullOrEmpty() || !req.periodFrom.isNullOrEmpty() || !req.periodTo.isNullOrEmpty()) {
+            query.offset(offset).limit(limit)
+        }
+        return query.fetch()
     }
 
 
