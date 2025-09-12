@@ -39,7 +39,11 @@ class CRuleServiceImpl(
                     active = rule.active,
                     createdBy = rule.createdBy,
                     createdAt = rule.createdAt,
-                    message = "test"
+                    message = "",
+                    functionValue = "",
+                    functionName = "",
+                    actionType = "",
+                    operator = ""
                 )
             }
 
@@ -69,7 +73,11 @@ class CRuleServiceImpl(
                     actions = rule.actions,
                     priority = rule.priority,
                     active = rule.active,
-                    message = Utiles.getStringJsonToString(rule.actions),
+                    message = Utiles.getStringJsonToString(rule.actions, "message"),
+                    functionName = Utiles.getStringJsonToString(rule.conditions, "functionName"),
+                    functionValue =  Utiles.getStringJsonToFunctionValue(rule.conditions),
+                    actionType =  Utiles.getStringJsonToString(rule.actions, "actionType"),
+                    operator = Utiles.getStringJsonToString(rule.conditions, "operator"),
                     createdBy = rule.createdBy,
                     createdAt = rule.createdAt,
                 )
