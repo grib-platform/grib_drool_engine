@@ -11,6 +11,7 @@ import kr.co.grib.drools.utils.Utiles
 import kr.co.grib.drools.utils.getLogger
 import org.springframework.data.redis.core.StringRedisTemplate
 import org.springframework.stereotype.Service
+import kotlin.math.ceil
 
 @Service
 class CRuleServiceImpl(
@@ -78,7 +79,7 @@ class CRuleServiceImpl(
                 pageNumber =  req.pageNumber,
                 pageSize = req.pageSize,
                 totalCount = list.size,
-                totalPages = totalPage
+                totalPages = ceil(list.size.toDouble() / req.pageSize).toInt()
             )
 
             rtn.data = data
