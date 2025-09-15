@@ -23,6 +23,11 @@ interface CRuleService {
     fun doDeleteCRule(ruleId: Int): CRuleResponseCtlDto
     //</editor-fold desc="[DELETE] /remove cash rule 삭제">
 
+    //<editor-fold desc="[PATCH] / cash rule 수정">
+    fun doPatchRule(req: CRuleUpdateRequestDto): CRuleResponseCtlDto
+    //<editor-fold desc="[PATCH] / cash rule 수정">
+
+
 
 
 }

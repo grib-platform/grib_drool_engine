@@ -253,6 +253,102 @@ class CRuleServiceImpl(
         }
         return rtn
     }
+
     //</editor-fold desc="[DELETE] /remove cash rule 삭제">
+
+    //<editor-fold desc="[PATCH] / cash rule 수정">
+    override fun doPatchRule(
+        req: CRuleUpdateRequestDto
+    ): CRuleResponseCtlDto {
+        val rtn = CRuleResponseCtlDto()
+        val username = requestInfoProvider.getUserName()
+        try {
+
+            //ruleGroup 체크
+            if(req.ruleGroup.isNullOrEmpty()){
+                rtn.success = false
+                rtn.message = CStatusCode.RULE_GROUP_IS_EMPTY
+                rtn.code = CStatusCode.RULE_GROUP_IS_EMPTY.name
+                return rtn
+            }
+
+            //functionName 체크
+            if (req.conditions.functionName.isNullOrEmpty()) {
+                rtn.success = false
+                rtn.message = CStatusCode.RULE_CONDITIONS_FUNCTIONNAME_IS_EMPTY
+                rtn.code = CStatusCode.RULE_CONDITIONS_FUNCTIONNAME_IS_EMPTY.name
+                return rtn
+            }
+
+
+            //functionValue 체크
+            if (req.conditions.functionValue == null || req.conditions.functionValue <0) {
+                rtn.success = false
+                rtn.message = CStatusCode.RULE_CONDITIONS_FUNCTIONVALUE_IS_EMPTY
+                rtn.code = CStatusCode.RULE_CONDITIONS_FUNCTIONVALUE_IS_EMPTY.name
+                return rtn
+            }
+
+            // operator가 range인 경우 minValue, maxValue 체크
+            if (req.conditions.operator.equals("range") &&
+                    (req.conditions.minValue == null || req.conditions.minValue <= 0) )
+            {
+                rtn.success = false
+                rtn.message = CStatusCode.RULE_CONDITIONS_MINVALUES_IS_EMPTY
+                rtn.code = CStatusCode.RULE_CONDITIONS_MINVALUES_IS_EMPTY.name
+                return rtn
+            }
+
+            if (req.conditions.operator.equals("range") &&
+                (req.conditions.maxValue == null || req.conditions.maxValue <= 0) ){
+                rtn.success = false
+                rtn.message = CStatusCode.RULE_CONDITIONS_MAXVALUES_IS_EMPTY
+                rtn.code = CStatusCode.RULE_CONDITIONS_MAXVALUES_IS_EMPTY.name
+                return rtn
+            }
+
+            //actionType 체크
+            if (req.actions.actionType.isNullOrEmpty()) {
+                rtn.success = false
+                rtn.message  = CStatusCode.RULE_ACTIONS_ACTION_TYPE_IS_EMPTY
+                rtn.code = CStatusCode.RULE_ACTIONS_ACTION_TYPE_IS_EMPTY.name
+                return rtn
+            }
+
+            //message 체크
+            if (req.actions.message.isNullOrEmpty()) {
+                rtn.success = false
+                rtn.message  = CStatusCode.RULE_ACTIONS_MESSAGE_IS_EMPTY
+                rtn.code = CStatusCode.RULE_ACTIONS_MESSAGE_IS_EMPTY.name
+                return rtn
+            }
+
+            val conditions = Utiles.getDtoToJsonString(req.conditions)
+            val actions = Utiles.getDtoToJsonString(req.actions)
+            val active = Utiles.getAtiveDeactiveBoolean(req.active)
+            logger.info("check.conditions.{}", conditions)
+            logger.info("check.actions.{}" , actions)
+            logger.info("check.active.{}" , active)
+
+            // 수정
+            iotRulesRepo.updateRule(req.ruleId.toLong(),
+                                    req.ruleGroup,
+                                    conditions,
+                                    actions,
+                                    active,
+                                    username)
+
+            //redis  refresh
+            ruleCacheLoader.loadRulesToRedis()
+            rtn.success = true
+            rtn.code = CStatusCode.SUCCESS.name
+            rtn.message = CStatusCode.SUCCESS
+
+        }catch (e: Exception){
+            logger.error("doPatchRule.error.{}", e)
+        }
+        return rtn
+    }
+    //</editor-fold desc="[PATCH] / cash rule 수정">
 
 }

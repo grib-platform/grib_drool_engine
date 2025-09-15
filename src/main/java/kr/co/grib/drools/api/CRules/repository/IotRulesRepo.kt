@@ -7,12 +7,10 @@ import com.querydsl.core.types.Projections
 import com.querydsl.core.types.dsl.Expressions
 import com.querydsl.jpa.impl.JPAQueryFactory
 import jakarta.persistence.EntityManager
+import jakarta.persistence.EntityNotFoundException
 import kr.co.grib.drools.api.CRules.Entity.IotRules
 import kr.co.grib.drools.api.CRules.Entity.QIotRules
-import kr.co.grib.drools.api.CRules.dto.CRuleCreateRequest
-import kr.co.grib.drools.api.CRules.dto.CRuleListRequestDto
-import kr.co.grib.drools.api.CRules.dto.RuleListResponseDto
-import kr.co.grib.drools.api.CRules.dto.RuleResponseDto
+import kr.co.grib.drools.api.CRules.dto.*
 import kr.co.grib.drools.utils.Utiles
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Propagation
@@ -259,6 +257,38 @@ class IotRulesRepo (
             .execute()
     }
     //<editor-fold desc="rule 삭제">
+
+
+    //<editor-fold desc="rule 수정">
+    @Transactional
+    fun updateRule(
+        ruleId: Long,
+        ruleGroup: String,
+        conditons: String,
+        actions: String,
+        active: Boolean,
+        userName: String
+    ) {
+        val updateCount = queryFactory
+            .update(iotRules)
+            .set(iotRules.ruleGroup, ruleGroup)
+            .set(iotRules.conditions, conditons)
+            .set(iotRules.actions, actions)
+            .set(iotRules.active, active)
+            .set(iotRules.updatedAt, LocalDateTime.now())
+            .set(iotRules.updatedBy, userName)
+            .where(iotRules.id.eq(ruleId))
+            .execute()
+        if (updateCount == 0L) {
+            throw EntityNotFoundException("Rule ID $ruleId not found")
+        }
+
+    }
+
+
+    //<editor-fold desc="rule 수정">
+
+
 
 
 }

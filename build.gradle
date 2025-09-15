@@ -70,6 +70,11 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'com.fasterxml:classmate:1.5.1'
 
+    //json 관련
+    implementation(platform("org.springframework.boot:spring-boot-dependencies:3.5.0"))
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
+
     //test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
