@@ -3,7 +3,7 @@ package kr.co.grib.drools.api.CRules.dto
 import java.time.LocalDateTime
 
 data class CRuleListResponseDto(
-    val id: Long,
+    val ruleId: Long,
     val ruleGroup: String,
     val conditions: String,
     val actions: String,

@@ -31,7 +31,7 @@ class CRuleServiceImpl(
             val ruleData = iotRulesRepo.selectRulesList() ?: emptyList()
             val cRuleList: List<CRuleListResponseDto> = ruleData.map { rule ->
                 CRuleListResponseDto(
-                    id = rule.id,
+                    ruleId = rule.id,
                     ruleGroup = rule.ruleGroup,
                     conditions = rule.conditions,
                     actions = rule.actions,
@@ -67,7 +67,7 @@ class CRuleServiceImpl(
             val list = iotRulesRepo.selectRuleListPaging(req) ?: emptyList()
             val data: List<CRuleListResponseDto> =  list.map {  rule ->
                 CRuleListResponseDto(
-                    id = rule.id,
+                    ruleId = rule.id,
                     ruleGroup = rule.ruleGroup,
                     conditions = rule.conditions,
                     actions = rule.actions,
