@@ -1,5 +1,6 @@
 package kr.co.grib.drools.api.rules.controller
 
+import io.swagger.v3.oas.annotations.Hidden
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -20,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
-
+@Hidden
 @RestController
 @Tag(name="Service to Drool Engine API" , description = "service 에서 Drools engine 처리 api를 기술 합니다. ")
 @RequestMapping("/api/v1/rule")
