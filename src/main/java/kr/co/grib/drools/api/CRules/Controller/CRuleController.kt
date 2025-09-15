@@ -82,9 +82,19 @@ class CRuleController (
 
     //</editor-fold desc="[DELETE] /remove cash rule 삭제">
 
-    // condition과 action을 수정 하게  ->  다건
     //<editor-fold desc="[PATCH] /update cash rule 수정">
+    @Operation(summary = "RULE 수정" , description = "RULEID로 Rule 수정")
+    @PatchMapping("")
+    fun doPatchCRule(
+        @Parameter(required = true, description = "ruleId")
+        @RequestBody ruleReq: CRuleUpdateRequestDto,
 
-    //<editor-fold desc="[PATCH] /update cash rule 수정">
+    ): ResponseEntity<CRuleResponseCtlDto> =
+        ResponseEntity(
+            cRuleService.doPatchRule(ruleReq),
+            HttpStatus.OK
+        )
+
+    //</editor-fold desc="[PATCH] /update cash rule 수정">
 
 }

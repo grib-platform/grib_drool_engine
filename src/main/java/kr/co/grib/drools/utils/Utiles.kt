@@ -1,5 +1,6 @@
 package kr.co.grib.drools.utils
 
+import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.databind.ObjectMapper
 import kr.co.grib.drools.api.HRules.dto.FnData
 import kr.co.grib.drools.api.HRules.dto.RuleDto
@@ -7,6 +8,8 @@ import kr.co.grib.drools.api.rules.dto.RuleRequestDto
 import kr.co.grib.drools.api.rules.templateManager.dto.RuleTemplateDto
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.module.kotlin.KotlinModule
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import kr.co.grib.drools.api.CRules.dto.ActionDto
 import kr.co.grib.drools.api.CRules.dto.CFnData
 import kr.co.grib.drools.api.CRules.dto.ConditionsDto
@@ -14,6 +17,7 @@ import kr.co.grib.drools.api.CRules.dto.RedisRuleDto
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import kotlin.reflect.full.memberProperties
+
 
 //logger  관련
 inline fun <reified T> T.getLogger(): Logger = LoggerFactory.getLogger(T::class.java)
@@ -372,6 +376,28 @@ object Utiles {
         if (str.equals("active")) return "true" else return "false"
     }
     //<editor-fold desc="active Vs deactive">
+
+    //<editor-fold desc="active Vs deactive boolean">
+    fun getAtiveDeactiveBoolean(
+        str: String
+    ): Boolean {
+        if (str.equals("active")) return true else return false
+    }
+    //<editor-fold desc="active Vs deactive boolean">
+
+    //<editor-fold desc="Dto object to json">
+    fun getDtoToJsonString(
+        dto: Any
+    ): String {
+        val objectMapper = jacksonObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL)
+        val jsonStr: String  = objectMapper.writeValueAsString(dto)
+        return jsonStr;
+    }
+
+    //<editor-fold desc="Dto object to json">
+
+
+
 
 
 
