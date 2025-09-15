@@ -325,17 +325,14 @@ class CRuleServiceImpl(
 
             val conditions = Utiles.getDtoToJsonString(req.conditions)
             val actions = Utiles.getDtoToJsonString(req.actions)
-            val active = Utiles.getAtiveDeactiveBoolean(req.active)
-            logger.info("check.conditions.{}", conditions)
-            logger.info("check.actions.{}" , actions)
-            logger.info("check.active.{}" , active)
+
 
             // 수정
             iotRulesRepo.updateRule(req.ruleId.toLong(),
                                     req.ruleGroup,
                                     conditions,
                                     actions,
-                                    active,
+                                    req.active,
                                     username)
 
             //redis  refresh
