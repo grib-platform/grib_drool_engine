@@ -13,8 +13,8 @@ class CRuleUpdateRequestDto (
     val conditions: CRuleConditionRequestDto,
     @Schema(description = "actions")
     val actions: CRuleActionRequestDto,
-    @Schema(description = "active 여부" , example = "active/deactivate")
-    val active: String,
+    @Schema(description = "active 여부" , example = "true/false")
+    val active: Boolean,
 
 
 )
