@@ -53,23 +53,26 @@ class SecurityConfig (
     fun corsConfigurationSource(): CorsConfigurationSource {
         val config = CorsConfiguration().apply {
             allowedOrigins = listOf(
-                "http://192.168.50.25:3000", // React 기본 포트
-                "http://localhost:3000",
-                "http://192.168.30.52:3000",
-                "http://huring.grib-iot.com:9515",
-                "http://huring.grib-iot.com:9516",
-                "http://huring.grib-iot.com:9502",
-                "http://192.168.0.240:9000",
+                "https://192.168.50.25:3000", // React 기본 포트
+                "https://localhost:3000",
+                "https://192.168.30.52:3000",
+                "https://huring.grib-iot.com:9515",
+                "https://huring.grib-iot.com:9516",
+                "https://huring.grib-iot.com:9502",
+                "https://192.168.0.240:9000",
 
             )
             allowedMethods = listOf("GET", "POST", "PUT", "DELETE","PATCH", "OPTIONS")
             allowedHeaders = listOf("*")
-            allowCredentials = true
+            // 프론트에서 읽어야 하는 응답 헤더(파일명/리다이렉트/토큰 등)
+            exposedHeaders = listOf("Content-Disposition", "Authorization", "Location")
+            // 프리플라이트 캐시(초)
+            maxAge = 3600
         }
 
-        val source = UrlBasedCorsConfigurationSource()
-        source.registerCorsConfiguration("/**", config)
-        return source
+        return UrlBasedCorsConfigurationSource().apply {
+            registerCorsConfiguration("/**", config)
+        }
     }
 //</editor-fold desc="화면 cors 문제">
 
