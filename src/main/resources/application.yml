@@ -51,8 +51,6 @@ spring:
     redis:
       host: huring.grib-iot.com
       port: 9507
-
-
 ---
 server:
   port: 9627
