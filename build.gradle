@@ -96,3 +96,8 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
         jvmTarget = '17'  // Java 버전에 맞춰서
     }
 }
+
+// docker image build 시 혼선을 피하기 위해 plain.jar를 disable
+tasks.named('jar') {
+	enabled = false
+}
