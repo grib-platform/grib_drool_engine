@@ -1,0 +1,15 @@
+server:
+  port: 8080
+spring:
+  profiles:
+    active: local
+  datasource:
+    url: jdbc:mysql://thingx.grib-iot.com:9506/drools_dev
+    username: <username>
+    password: <password>
+  jwt:
+    secret: $2a$10$8.Q.gxUmGJP36W.uzANIsen8h.gmWJnfQAvHRH6BAIZ7pdYwM/hxG
+  data:
+    redis:
+      host: thingx.grib-iot.com
+      port: 9507

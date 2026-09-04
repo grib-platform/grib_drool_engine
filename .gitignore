@@ -39,3 +39,4 @@ out/
 
 ### for secrets ###
 http/http-client.private.env.json
+config/application.yml
