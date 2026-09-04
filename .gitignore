@@ -40,3 +40,7 @@ out/
 ### for secrets ###
 http/http-client.private.env.json
 config/application.yml
+docker-test/config/*/secrets.yml
+
+### for http test ###
+http/reports/

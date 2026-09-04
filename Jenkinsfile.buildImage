@@ -1,0 +1,115 @@
+def GIT_URL = 'https://github.com/grib-platform/grib_drool_engine.git'
+def GIT_BRANCH = 'dev'
+def GIT_CREDENCIAL = 'githubServiceAccountCredential'
+
+pipeline {
+    agent any
+    environment {
+        // 필요한 환경 설정 정보
+        REGISTRY_NAME = "grib-docker-registry.kr.ncr.ntruss.com"
+        IMAGE_NAME = "rule-engine"
+    }
+    
+    parameters {
+        string(
+            name: 'SUFFIX', 
+            defaultValue: '', 
+            description: 'IMAGE TAG Custom Suffix',
+            trim: true
+        )
+    }
+
+    stages {
+        stage('Init') {
+            steps {
+                script {
+                    env.IMAGE_TAG = sh(
+                        script: 'date +%Y%m%d',
+                        returnStdout: true
+                    ).trim() + "-${env.BUILD_NUMBER}"
+                    if (params.SUFFIX != null && params.SUFFIX != "") {
+                        env.IMAGE_TAG = "${IMAGE_TAG}-${SUFFIX}"
+                    }
+                    currentBuild.description = "Image: ${IMAGE_NAME}:${IMAGE_TAG}\n"
+                }
+            }
+        }
+        stage('github connection') {
+            steps {
+                script{
+                    echo "start github connect...."
+                    try{
+                        def scmVars = git branch: "$GIT_BRANCH", credentialsId: "$GIT_CREDENCIAL", url: "$GIT_URL"
+                        env.GIT_COMMIT = scmVars.GIT_COMMIT
+                        currentBuild.description = "Image: ${IMAGE_NAME}:${IMAGE_TAG}\n" +
+                                                "Commit: ${env.GIT_COMMIT}\n"
+                    }catch(error) {
+                        print(error)
+                        currentBuild.result = "FAILURE"
+                    }
+                }
+            }
+        }
+
+        stage('Build') {
+            steps {
+                script{
+                    echo "start gradle build"
+                    try{
+                        sh 'chmod +x ./gradlew'
+                        sh './gradlew clean build -x test'
+                        sh 'chmod 644 ./gradlew'
+                        echo "gradle build success!!!"
+                    }catch(e){
+                        echo "gradle build fail"
+                        print(e)
+                        currentBuild.result = "FAILURE"
+                    }
+                }
+            }
+        }
+
+        stage('Docker build') {
+            steps {
+                script{
+                    echo "## Docker file build ### "
+                    try{
+                        sh 'docker ps'
+                        sh 'docker build --build-arg GIT_COMMIT=${GIT_COMMIT} -t ${REGISTRY_NAME}/${IMAGE_NAME}:${IMAGE_TAG} .'
+                        echo "docker build SUCCESS -  '${REGISTRY_NAME}/${IMAGE_NAME}:${IMAGE_TAG}'"
+                    }catch(e){
+                        echo "docker build fail"
+                        print(e)
+                        currentBuild.result = "FAILURE"
+                    }
+                }
+            }
+        }
+        
+        stage('Docker publish') {
+            steps{
+                script{
+                    withCredentials([usernamePassword(credentialsId: 'grib-docker-registry-write', 
+                                          usernameVariable: 'DOCKER_USER', 
+                                          passwordVariable: 'DOCKER_PASS')]) {
+                        sh 'docker login -u "$DOCKER_USER" -p "$DOCKER_PASS" ${REGISTRY_NAME}'
+                    }
+
+                    // 20260731-6
+                    echo "docker push ${REGISTRY_NAME}/${IMAGE_NAME}:${IMAGE_TAG}"
+                    sh "docker push ${REGISTRY_NAME}/${IMAGE_NAME}:${IMAGE_TAG}"
+                }
+            }
+            
+        }
+    }
+
+    post {
+        success {
+            echo "echo deploy success"
+        }
+        failure {
+            echo "echo deploy fail"
+        }
+    }
+}

@@ -1,0 +1,12 @@
+spring:
+  config:
+    import:
+      - optional:file:/app/config/secrets.yml
+  profiles:
+    active: "dev"
+  datasource:
+    url: jdbc:mysql://thingx.grib-iot.com:9506/drools_dev
+  data:
+    redis:
+      host: thingx.grib-iot.com
+      port: 9507

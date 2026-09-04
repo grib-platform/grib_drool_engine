@@ -14,8 +14,8 @@ Content-Type: application/json
     ]
 }
 
-# > {%
-# client.test("test for DB - status is 200", function() {
-#     client.assert(response.status === 200, "expected 200, got " + response.status);
-# });
-# %}
+> {%
+client.test("test for DB - status is 200", function() {
+    client.assert(response.status === 200, "expected 200, got " + response.status);
+});
+%}

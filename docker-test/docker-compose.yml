@@ -1,0 +1,20 @@
+services:
+  rule-engine:
+    image: rule-engine:latest
+    ports:
+      - "19627:8080"
+    configs:
+      - source: rule-engine-application
+        target: /app/config/application.yml
+    secrets:
+      - source: rule-engine-secrets
+        target: /app/config/secrets.yml
+    restart: unless-stopped
+
+configs:
+  rule-engine-application:
+    file: ./config/rule-engine/application.yml
+
+secrets:
+  rule-engine-secrets:
+    file: ./config/rule-engine/secrets.yml
