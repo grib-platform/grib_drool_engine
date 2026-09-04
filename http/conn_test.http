@@ -1,0 +1,21 @@
+### test for DB
+POST {{SERVICE_BASE_URL}}/api/v1/hRule
+Authorization: Bearer {{ACTIVE_JWT}}
+Content-Type: application/json
+
+{
+    "deviceId": "test_rule_1",
+    "functionInfo": [
+        {
+            "functionName": "ACTION_TYPE_1",
+            "type": "test_action_value"
+            "funcationValue": 0
+        }
+    ]
+}
+
+# > {%
+# client.test("test for DB - status is 200", function() {
+#     client.assert(response.status === 200, "expected 200, got " + response.status);
+# });
+# %}
